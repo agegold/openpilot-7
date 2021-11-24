@@ -1106,7 +1106,7 @@ static void draw_navi_button(UIState *s) {
   if (s->scene.mapbox_running) {
     nvgFontSize(s->vg, 50);
     nvgText(s->vg,btn_xc1,btn_yc-17,"MAP",NULL);
-    nvgText(s->vg,btn_xc1,btn_yc+17,"Srch",NULL);
+    nvgText(s->vg,btn_xc1,btn_yc+17,"Search",NULL);
   } else {
     nvgText(s->vg,btn_xc1,btn_yc,"NAVI",NULL);
   }
