@@ -70,7 +70,7 @@ void HomeWindow::showDriverView(bool show) {
 
 void HomeWindow::mousePressEvent(QMouseEvent* e) {
   // OPKR add map
-  if (QUIState::ui_state.scene.started && map_overlay_btn.ptInRect(e->x(), e->y()) && !QUIState::ui_state.scene.mapbox_running) {
+  if (QUIState::ui_state.scene.started && map_overlay_btn.ptInRect(e->x(), e->y())) {
     QSoundEffect effect1;
     effect1.setSource(QUrl::fromLocalFile("/data/openpilot/selfdrive/assets/sounds/warning_1.wav"));
     //effect1.setLoopCount(1);
@@ -83,7 +83,11 @@ void HomeWindow::mousePressEvent(QMouseEvent* e) {
     }
     effect1.setVolume(volume1);
     effect1.play();
-    QProcess::execute("am start --activity-task-on-home com.opkr.maphack/com.opkr.maphack.MainActivity");
+    if (!QUIState::ui_state.scene.mapbox_running) {
+      QProcess::execute("am start --activity-task-on-home com.opkr.maphack/com.opkr.maphack.MainActivity");
+    } else {
+      QProcess::execute("pkill com.android.chrome");
+    }
     QUIState::ui_state.scene.map_on_top = false;
     QUIState::ui_state.scene.map_on_overlay = true;
     return;
