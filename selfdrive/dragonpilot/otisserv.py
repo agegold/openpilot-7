@@ -121,7 +121,7 @@ class OtisServ(BaseHTTPRequestHandler):
     # nav confirmed
     if postvars is not None:
       if "lat" in postvars and postvars.get("lat")[0] != "" and "lon" in postvars and postvars.get("lon")[0] != "":
-        Params().put("NavDestination", "{\"latitude\": %f, \"longitude\": %f, \"name\": %s}" % (float(postvars.get("lat")[0]), float(postvars.get("lon")[0]), postvars.get("name")[0]))
+        Params().put("NavDestination", "{\"latitude\": %f, \"longitude\": %f, \"name\": %s}" % (float(postvars.get("lat")[0]), float(postvars.get("lon")[0]), postvars.get("name")))
 
       # search
       if not use_gmap and "addr_val" in postvars:
