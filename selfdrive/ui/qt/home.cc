@@ -85,6 +85,8 @@ void HomeWindow::mousePressEvent(QMouseEvent* e) {
     effect1.play();
     if (!QUIState::ui_state.scene.mapbox_running) {
       QProcess::execute("am start --activity-task-on-home com.opkr.maphack/com.opkr.maphack.MainActivity");
+    } else if (QUIState::ui_state.scene.mapbox_running && !QUIState::ui_state.scene.map_on_top && QUIState::ui_state.scene.map_on_overlay) {
+      Params().remove("NavDestination");
     } else {
       QProcess::execute("pkill com.android.chrome");
     }
