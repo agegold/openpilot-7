@@ -138,7 +138,10 @@ class NaviControl():
     #if not mapValid or trafficType == 0:
     #  return  cruise_set_speed_kph
 
-    if int(self.sm['liveMapData'].speedLimit) and self.osm_speedlimit_enabled:  # osm speedlimit
+    if CS.map_enabled and self.liveNaviData.safetySign == 124: #과속방지턱이 있으면 주행속도에 연동하여 제한속도 30km/h까지 가변으로 감속하기
+      cruise_set_speed_kph = interp(v_ego_kph, [40, 60, 80], [30, 35, 40])
+      self.onSpeedControl = True
+    elif int(self.sm['liveMapData'].speedLimit) and self.osm_speedlimit_enabled:  # osm speedlimit
       self.onSpeedControl = True
       spdTarget = self.sm['liveMapData'].speedLimit
       cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
