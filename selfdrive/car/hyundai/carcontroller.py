@@ -328,7 +328,7 @@ class CarController():
         else:
           self.cruise_gap_auto_switch_timer += 1 
           # pass
-	if CS.out.cruiseState.standstill:
+    if CS.out.cruiseState.standstill:
       self.standstill_status = 1
       if self.opkr_autoresume:
         # run only first time when the car stopped
