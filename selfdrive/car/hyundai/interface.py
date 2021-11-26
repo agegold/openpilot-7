@@ -60,13 +60,10 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 1.
 
-    # Neokii
-    ret.longitudinalTuning.kpBP = [0., 10.*CV.KPH_TO_MS, 20.*CV.KPH_TO_MS, 40.*CV.KPH_TO_MS, 70.*CV.KPH_TO_MS, 100.*CV.KPH_TO_MS, 130.*CV.KPH_TO_MS]
-    ret.longitudinalTuning.kpV = [1.2, 0.93, 0.8, 0.68, 0.59, 0.51, 0.43]
-    # ret.longitudinalTuning.kpBP = [0., 4., 9., 17., 23., 31.]
-    # ret.longitudinalTuning.kpV = [1.0, 0.9, 0.8, 0.65, 0.5, 0.4]
+    ret.longitudinalTuning.kpBP = [0., 4., 9., 17., 23., 31.] # 0 / 14.4 / 32.4 / 61.2 / 82.8 / 111.6 kph
+    ret.longitudinalTuning.kpV = [1.2, 1.1, 1.0, 0.85, 0.7, 0.6]
     ret.longitudinalTuning.kiBP = [0., 4., 9., 17., 23., 31.]
-    ret.longitudinalTuning.kiV = [0.26, 0.23, 0.22, 0.18, 0.15, 0.13]
+    ret.longitudinalTuning.kiV = [0.28, 0.25, 0.24, 0.2, 0.17, 0.15]
 
     ret.longitudinalTuning.deadzoneBP = [0., 4.]
     ret.longitudinalTuning.deadzoneV = [0., 0.1]
