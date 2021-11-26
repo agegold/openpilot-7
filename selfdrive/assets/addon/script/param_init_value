@@ -66,6 +66,7 @@ SteerThreshold:150
 RecordingCount:200
 RecordingQuality:1
 CruiseGapAdjust:0
+DrivingCruiseGapAdjust:0
 AutoEnable:1
 CruiseAutoRes:0
 AutoResOption:0
@@ -93,7 +94,7 @@ OpkrLiveTunePanelEnable:0
 RadarLongHelper:1
 LiveSteerRatioPercent:-5
 StoppingDistAdj:0
-ShowError:0
+ShowError:1
 AutoResLimitTime:0
 VCurvSpeed30:40
 VCurvSpeed50:50

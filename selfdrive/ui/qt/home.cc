@@ -89,6 +89,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e) {
       Params().remove("NavDestination");
     } else {
       QProcess::execute("pkill com.android.chrome");
+      QProcess::execute("rm -rf /data/data/com.android.chrome/app_tabs/0");
     }
     QUIState::ui_state.scene.map_on_top = false;
     QUIState::ui_state.scene.map_on_overlay = true;

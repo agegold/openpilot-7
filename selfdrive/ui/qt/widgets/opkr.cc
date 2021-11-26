@@ -4881,8 +4881,8 @@ VCurvSpeed::VCurvSpeed() : AbstractControl("", "", "") {
     }
     if (value >= value2 ) {
       value = value2;
-    } else if (value <= 30 ) {
-      value = 30;
+    } else if (value <= 20 ) {
+      value = 20;
     }
     QString values = QString::number(value);
     params.put("VCurvSpeed30", values.toStdString());
@@ -4991,7 +4991,7 @@ void VCurvSpeed::refresh4() {
   btn4.setText("↕");
 }
 
-VCurvSpeedUD::VCurvSpeedUD() : AbstractControl("VisionCurvDecel(ModelSpeed: km/h)", "Adjust the curve deceleration speed according to the model speed. (interpolation value)", "../assets/offroad/icon_shell.png") {
+VCurvSpeedUD::VCurvSpeedUD() : AbstractControl("VisionCurvDecel(ModelSpeed: CarSpeed)", "Adjust the curve deceleration speed according to the model speed. (interpolation value)", "../assets/offroad/icon_shell.png") {
 
   btn.setStyleSheet(R"(
     padding: 0;
@@ -5370,8 +5370,7 @@ OPKRServerAPI::OPKRServerAPI() : AbstractControl("User's API", "Set Your API ser
       QString users_api_host = InputDialog::getText("Input Your API(url or ip):", this);
       if (users_api_host.length() > 0) {
         QString cmd0 = QString::fromStdString("Your Input is\n") + users_api_host + QString::fromStdString("\nPress OK to apply&reboot");
-        const char* p1 = cmd0.toStdString().c_str();
-        if (ConfirmationDialog::confirm(p1, this)) {
+        if (ConfirmationDialog::confirm(cmd0, this)) {
           params.put("OPKRServerAPI", users_api_host.toStdString());
           params.put("OPKRServer", "2");
           QProcess::execute("rm -f /data/params/d/DongleId");

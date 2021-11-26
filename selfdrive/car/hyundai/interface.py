@@ -60,7 +60,7 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 1.
 
-    ret.longitudinalTuning.kpBP = [0., 4., 9., 17., 23., 31.]
+    ret.longitudinalTuning.kpBP = [0., 4., 9., 17., 23., 31.] # 0 / 14.4 / 32.4 / 61.2 / 82.8 / 111.6 kph
     ret.longitudinalTuning.kpV = [1.2, 1.1, 1.0, 0.85, 0.7, 0.6]
     ret.longitudinalTuning.kiBP = [0., 4., 9., 17., 23., 31.]
     ret.longitudinalTuning.kiV = [0.28, 0.25, 0.24, 0.2, 0.17, 0.15]
@@ -75,10 +75,12 @@ class CarInterface(CarInterfaceBase):
     ret.stoppingControl = False
     ret.vEgoStopping = 0.5  # 1.0
     ret.vEgoStarting = 0.5
-    ret.startAccel = -0.2 # 0.0
+    ret.startAccel = -0.8 # Neokii
+    # ret.startAccel = -0.2 # 0.0
     ret.stopAccel = -0.5 # 0.0
     ret.stoppingDecelRate = 0.2 # 0.8
-    ret.startingAccelRate = 0.8 # 3.2
+    ret.startingAccelRate = 5.0  # Neokii : brake_travel/s while releasing on restart    
+    # ret.startingAccelRate = 0.8 # 3.2
 
     ret.vCruisekph = 0
     ret.resSpeed = 0
@@ -209,7 +211,7 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
     elif candidate in [CAR.GRANDEUR_IG_FL, CAR.GRANDEUR_IG_FL_HEV]:
-      ret.mass = 1675. + STD_CARGO_KG
+      ret.mass = 1725. + STD_CARGO_KG
       ret.wheelbase = 2.885
     elif candidate == CAR.VELOSTER:
       ret.mass = 3558. * CV.LB_TO_KG

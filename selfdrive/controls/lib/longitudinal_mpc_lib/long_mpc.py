@@ -27,7 +27,7 @@ SOURCES = ['lead0', 'lead1', 'cruise']
 
 X_DIM = 3
 U_DIM = 1
-PARAM_DIM= 4
+PARAM_DIM= 5
 COST_E_DIM = 5
 COST_DIM = COST_E_DIM + 1
 CONSTR_DIM = 4
@@ -197,7 +197,6 @@ def gen_long_mpc_solver():
 
 class LongitudinalMpc():
   def __init__(self, e2e=False, desired_TR=T_REACT):
-    self.dynamic_follow = DynamicFollow()
     self.e2e = e2e
     self.desired_TR = desired_TR
     self.v_ego = 0.

@@ -138,7 +138,10 @@ class NaviControl():
     #if not mapValid or trafficType == 0:
     #  return  cruise_set_speed_kph
 
-    if int(self.sm['liveMapData'].speedLimit) and self.osm_speedlimit_enabled:  # osm speedlimit
+    if CS.map_enabled and self.liveNaviData.safetySign == 124: #과속방지턱이 있으면 주행속도에 연동하여 제한속도 30km/h까지 가변으로 감속하기
+      cruise_set_speed_kph = interp(v_ego_kph, [40, 60, 80], [30, 35, 40])
+      self.onSpeedControl = True
+    elif int(self.sm['liveMapData'].speedLimit) and self.osm_speedlimit_enabled:  # osm speedlimit
       self.onSpeedControl = True
       spdTarget = self.sm['liveMapData'].speedLimit
       cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
@@ -178,7 +181,7 @@ class NaviControl():
         self.map_speed_block = False
       cam_distance_calc = 0
       cam_distance_calc = interp(v_ego_kph, [30, 60, 110], [2.6, 3.1, 3.9])  if CS.CP.sccBus == 0 else interp(v_ego_kph, [30, 60, 110], [2.5, 3.0, 3.8])
-      consider_speed = interp((v_ego_kph - self.map_speed), [0, 50], [1, 2.25])
+      consider_speed = interp((v_ego_kph - (self.map_speed * (CV.MPH_TO_KPH if CS.is_set_speed_in_mph else 1))), [0, 50], [1, 2.25])
       min_control_dist = interp(self.map_speed, [30, 110], [40, 250])
       final_cam_decel_start_dist = cam_distance_calc*consider_speed*v_ego_kph * (1 + self.safetycam_decel_dist_gain*0.01)
       if self.map_speed_dist < final_cam_decel_start_dist:
