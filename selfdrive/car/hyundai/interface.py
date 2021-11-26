@@ -60,7 +60,7 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 1.
 
-    ret.longitudinalTuning.kpBP = [0., 4., 9., 17., 23., 31.]
+    ret.longitudinalTuning.kpBP = [0., 4., 9., 17., 23., 31.] # 0 / 14.4 / 32.4 / 61.2 / 82.8 / 111.6 kph
     ret.longitudinalTuning.kpV = [1.2, 1.1, 1.0, 0.85, 0.7, 0.6]
     ret.longitudinalTuning.kiBP = [0., 4., 9., 17., 23., 31.]
     ret.longitudinalTuning.kiV = [0.28, 0.25, 0.24, 0.2, 0.17, 0.15]
