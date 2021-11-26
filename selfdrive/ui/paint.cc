@@ -1285,6 +1285,7 @@ static void ui_draw_vision_header(UIState *s) {
   ui_draw_vision_speed(s);
   ui_draw_vision_event(s);
   if (!s->scene.comma_stock_ui) {
+    ui_draw_turn_signal(s);    
     bb_ui_draw_UI(s);
     ui_draw_tpms(s);
     if (s->scene.controls_state.getEnabled()) {
