@@ -855,6 +855,7 @@ public:
   SpeedLimitOffset();
 
 private:
+  QPushButton btn;
   QPushButton btnplus;
   QPushButton btnminus;
   QLabel label;
