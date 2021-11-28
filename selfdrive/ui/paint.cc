@@ -614,76 +614,6 @@ static void ui_draw_vision_speed(UIState *s) {
   const int viz_speed_x = s->fb_w/2 - viz_speed_w/2;
   const int header_h2 = 400;
 
-  // turning blinker from kegman, moving signal by OPKR
-  if (scene.leftBlinker && !scene.comma_stock_ui) {
-    nvgBeginPath(s->vg);
-    nvgMoveTo(s->vg, viz_speed_x, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x - viz_speed_w/4, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x - viz_speed_w/2, header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x - viz_speed_w/4, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x - viz_speed_w/4, header_h2/2);
-    nvgClosePath(s->vg);
-    nvgFillColor(s->vg, nvgRGBA(255,230,70,(scene.blinker_blinkingrate<=120 && scene.blinker_blinkingrate>=50)?70:0));
-    nvgFill(s->vg);
-    nvgBeginPath(s->vg);
-    nvgMoveTo(s->vg, viz_speed_x - 125, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x - 125 - viz_speed_w/4, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x - 125 - viz_speed_w/2, header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x - 125 - viz_speed_w/4, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x - 125, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x - 125 - viz_speed_w/4, header_h2/2);
-    nvgClosePath(s->vg);
-    nvgFillColor(s->vg, nvgRGBA(255,230,70,(scene.blinker_blinkingrate<=100 && scene.blinker_blinkingrate>=50)?140:0));
-    nvgFill(s->vg);
-    nvgBeginPath(s->vg);
-    nvgMoveTo(s->vg, viz_speed_x - 250, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x - 250 - viz_speed_w/4, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x - 250 - viz_speed_w/2, header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x - 250 - viz_speed_w/4, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x - 250, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x - 250 - viz_speed_w/4, header_h2/2);
-    nvgClosePath(s->vg);
-    nvgFillColor(s->vg, nvgRGBA(255,230,70,(scene.blinker_blinkingrate<=80 && scene.blinker_blinkingrate>=50)?210:0));
-    nvgFill(s->vg);
-  }
-  if (scene.rightBlinker && !scene.comma_stock_ui) {
-    nvgBeginPath(s->vg);
-    nvgMoveTo(s->vg, viz_speed_x + viz_speed_w, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + viz_speed_w/4, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + viz_speed_w/2, header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + viz_speed_w/4, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + viz_speed_w/4, header_h2/2);
-    nvgClosePath(s->vg);
-    nvgFillColor(s->vg, nvgRGBA(255,230,70,(scene.blinker_blinkingrate<=120 && scene.blinker_blinkingrate>=50)?70:0));
-    nvgFill(s->vg);
-    nvgBeginPath(s->vg);
-    nvgMoveTo(s->vg, viz_speed_x + viz_speed_w + 125, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 125 + viz_speed_w/4, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 125 + viz_speed_w/2, header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 125 + viz_speed_w/4, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 125, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 125 + viz_speed_w/4, header_h2/2);
-    nvgClosePath(s->vg);
-    nvgFillColor(s->vg, nvgRGBA(255,230,70,(scene.blinker_blinkingrate<=100 && scene.blinker_blinkingrate>=50)?140:0));
-    nvgFill(s->vg);
-    nvgBeginPath(s->vg);
-    nvgMoveTo(s->vg, viz_speed_x + viz_speed_w + 250, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 250 + viz_speed_w/4, header_h2/4);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 250 + viz_speed_w/2, header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 250 + viz_speed_w/4, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 250, header_h2/4 + header_h2/2);
-    nvgLineTo(s->vg, viz_speed_x + viz_speed_w + 250 + viz_speed_w/4, header_h2/2);
-    nvgClosePath(s->vg);
-    nvgFillColor(s->vg, nvgRGBA(255,230,70,(scene.blinker_blinkingrate<=80 && scene.blinker_blinkingrate>=50)?210:0));
-    nvgFill(s->vg);
-    }
-  if (scene.leftBlinker || scene.rightBlinker) {
-    scene.blinker_blinkingrate -= 5;
-    if(scene.blinker_blinkingrate < 0) scene.blinker_blinkingrate = 120;
-  }
-
   NVGcolor val_color = COLOR_WHITE;
 
   if (scene.brakePress && !scene.comma_stock_ui) {
@@ -738,41 +668,105 @@ static void ui_draw_vision_event(UIState *s) {
   if (!s->scene.comma_stock_ui) ui_draw_debug(s);
 }
 
-static void ui_draw_turn_signal(UIState *s) {
-  UIScene &scene = s->scene;  
-  const int turn_signal_size = 300;
-  const int turn_signal_x_left = (s->fb_w/2 - 200);
-  const int turn_signal_x_right = (s->fb_w/2 + 200);
-  const int turn_signal_y = 540;
-  const int turn_signal_img_size_w = (turn_signal_size * 1);
-  const int turn_signal_img_size_h = (turn_signal_size * 1);
-  const int turn_signal_img_x_left = (turn_signal_x_left - (turn_signal_img_size_w / 2));
-  const int turn_signal_img_x_right = (turn_signal_x_right - (turn_signal_img_size_w / 2));
-  const int turn_signal_img_y = (turn_signal_y - (turn_signal_size / 4));  
-  float turn_signal_img_alpha;
-  
-  // turning blinker from kegman, moving signal by OPKR
-  if ((scene.leftBlinker || scene.rightBlinker) && !scene.comma_stock_ui){
-    scene.blinker_blinkingrate -= 5;
-    if(scene.blinker_blinkingrate<0) scene.blinker_blinkingrate = 67; // blinker_blinkingrate 는 IG/FL 깜빡이 주기에 거의 맞춤
+static void ui_draw_turn_signal(UIState *s) { // Neokii
+  static int blink_index = 0;
+  static int blink_wait = 0;
+  static double prev_ts = 0.0;
 
-    if (scene.blinker_blinkingrate>=30) {
-      turn_signal_img_alpha = 0.95f;
-    } else {
-      turn_signal_img_alpha = 0.0f;
+  if(blink_wait > 0) {
+    blink_wait--;
+    blink_index = 0;
+  }
+  else {
+    auto car_state = (*s->sm)["carState"].getCarState();
+    bool left_on = car_state.getLeftBlinker();
+    bool right_on = car_state.getRightBlinker();
+    const float img_alpha = 0.8f;
+    const int fb_w = s->fb_w / 2 - 200;
+    const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
+    const int w = fb_w / 37;
+    const int h = 40;
+    const int gap = fb_w / 18;
+    const int margin = fb_w / 5;
+    const int base_y = bdr_s + 10;
+    const int draw_count = 8;
+    int x = center_x;
+    int y = base_y;
+
+    if(left_on) {
+      for(int i = 0; i < draw_count; i++) {
+        float alpha = img_alpha;
+        int d = std::abs(blink_index - i);
+        if(d > 0)
+          alpha /= d*2;
+        ui_draw_image(s, {x - w - margin, y, w, h}, "turn_signal_l", alpha);
+        x -= gap + w;
+      }
     }
-  } else {
-    scene.blinker_blinkingrate = 67;
-  }
 
-  if(scene.leftBlinker) {
-    ui_draw_image(s, {turn_signal_img_x_left, turn_signal_img_y, turn_signal_img_size_w, turn_signal_img_size_h}, "turn_signal_left", turn_signal_img_alpha);
-  }
-  if(scene.rightBlinker) {
-    ui_draw_image(s, {turn_signal_img_x_right, turn_signal_img_y, turn_signal_img_size_w, turn_signal_img_size_h}, "turn_signal_right", turn_signal_img_alpha);
+    x = center_x;
+    if(right_on) {
+      for(int i = 0; i < draw_count; i++) {
+        float alpha = img_alpha;
+        int d = std::abs(blink_index - i);
+        if(d > 0)
+          alpha /= d*2;
+        ui_draw_image(s, {x + margin, y, w, h}, "turn_signal_r", alpha);
+        x += gap + w;
+      }
+    }
+
+    if(left_on || right_on) {
+      double now = millis_since_boot();
+      if(now - prev_ts > 900/UI_FREQ) {
+        prev_ts = now;
+        blink_index++;
+      }
+      if(blink_index >= draw_count) {
+        blink_index = draw_count - 1;
+        blink_wait = UI_FREQ/4;
+      }
+    }
+    else {
+      blink_index = 0;
+    }
   }
 }
 
+// static void ui_draw_turn_signal(UIState *s) {
+//   UIScene &scene = s->scene;  
+//   const int turn_signal_size = 300;
+//   const int turn_signal_x_left = (s->fb_w/2 - 200);
+//   const int turn_signal_x_right = (s->fb_w/2 + 200);
+//   const int turn_signal_y = 540;
+//   const int turn_signal_img_size_w = (turn_signal_size * 1);
+//   const int turn_signal_img_size_h = (turn_signal_size * 1);
+//   const int turn_signal_img_x_left = (turn_signal_x_left - (turn_signal_img_size_w / 2));
+//   const int turn_signal_img_x_right = (turn_signal_x_right - (turn_signal_img_size_w / 2));
+//   const int turn_signal_img_y = (turn_signal_y - (turn_signal_size / 4));  
+//   float turn_signal_img_alpha;
+  
+//   // turning blinker from kegman, moving signal by OPKR
+//   if ((scene.leftBlinker || scene.rightBlinker) && !scene.comma_stock_ui){
+//     scene.blinker_blinkingrate -= 5;
+//     if(scene.blinker_blinkingrate<0) scene.blinker_blinkingrate = 67; // blinker_blinkingrate 는 IG/FL 깜빡이 주기에 거의 맞춤
+
+//     if (scene.blinker_blinkingrate>=30) {
+//       turn_signal_img_alpha = 0.95f;
+//     } else {
+//       turn_signal_img_alpha = 0.0f;
+//     }
+//   } else {
+//     scene.blinker_blinkingrate = 67;
+//   }
+
+//   if(scene.leftBlinker) {
+//     ui_draw_image(s, {turn_signal_img_x_left, turn_signal_img_y, turn_signal_img_size_w, turn_signal_img_size_h}, "turn_signal_left", turn_signal_img_alpha);
+//   }
+//   if(scene.rightBlinker) {
+//     ui_draw_image(s, {turn_signal_img_x_right, turn_signal_img_y, turn_signal_img_size_w, turn_signal_img_size_h}, "turn_signal_right", turn_signal_img_alpha);
+//   }
+// }
 
 //BB START: functions added for the display of various items
 static int bb_ui_draw_measure(UIState *s, const char* bb_value, const char* bb_uom, const char* bb_label,
@@ -1310,10 +1304,10 @@ static void ui_draw_vision_header(UIState *s) {
   }
 }
 
-//blind spot warning by OPKR
+//blind spot warning by OPKR and modified gradient color by Hoya
 static void ui_draw_blindspot_mon(UIState *s) {
   UIScene &scene = s->scene;
-  const int width = 100;
+  const int width = 200;
   const int height = s->fb_h;
 
   const int left_x = 0;
@@ -1323,6 +1317,8 @@ static void ui_draw_blindspot_mon(UIState *s) {
 
   const Rect rect_l = {left_x, left_y, width, height};
   const Rect rect_r = {right_x, right_y, width, height};
+  NVGpaint gradient_L = nvgLinearGradient(s->vg, rect_l, nvgRGBAf(1, 0, 0, 0.8), nvgRGBAf(0, 0, 0, 0));
+  NVGpaint gradient_R = nvgLinearGradient(s->vg, rect_r, nvgRGBAf(0, 0, 0, 0), nvgRGBAf(1, 0, 0, 0.8));  
 
   int car_valid_status = 0;
   bool car_valid_left = scene.leftblindspot;
@@ -1353,11 +1349,12 @@ static void ui_draw_blindspot_mon(UIState *s) {
     } else {
       scene.blindspot_blinkingrate = 120;
     }
+
     if(car_valid_left) {
-      ui_fill_rect(s->vg, rect_l, COLOR_ORANGE_ALPHA(car_valid_alpha), 0);
+      ui_fill_rect(s->vg, rect_l, gradient_L);
     }
     if(car_valid_right) {
-      ui_fill_rect(s->vg, rect_r, COLOR_ORANGE_ALPHA(car_valid_alpha), 0);
+      ui_fill_rect(s->vg, rect_r, gradient_R);
     }
   }
 }
@@ -1665,9 +1662,12 @@ void ui_nvg_init(UIState *s) {
     {"gear_D", "../assets/addon/img/gearD.png"},
     {"gear_X", "../assets/addon/img/gearX.png"},
     {"gear_BG", "../assets/addon/img/gearBG.png"},    
-    {"turn_signal_left", "../assets/addon/img/turnSignal_L.png"},
-    {"turn_signal_right", "../assets/addon/img/turnSignal_R.png"},
+    // {"turn_signal_left", "../assets/addon/img/turnSignal_L.png"},
+    // {"turn_signal_right", "../assets/addon/img/turnSignal_R.png"},
+    {"turn_signal_l", "../assets/images/turn_signal_l.png"},
+    {"turn_signal_r", "../assets/images/turn_signal_r.png"},    
     {"tire_pressure", "../assets/images/img_tire_pressure.png"},
+    
   };
   for (auto [name, file] : images) {
     s->images[name] = nvgCreateImage(s->vg, file, 1);
