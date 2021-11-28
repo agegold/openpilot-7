@@ -610,10 +610,6 @@ static void ui_draw_vision_speed(UIState *s) {
   const float speed = std::max(0.0, (*s->sm)["carState"].getCarState().getVEgo()*(s->scene.is_metric ? 3.6 : 2.2369363));
   const std::string speed_str = std::to_string((int)std::nearbyint(speed));
   UIScene &scene = s->scene;  
-  const int viz_speed_w = 250;
-  const int viz_speed_x = s->fb_w/2 - viz_speed_w/2;
-  const int header_h2 = 400;
-
   NVGcolor val_color = COLOR_WHITE;
 
   if (scene.brakePress && !scene.comma_stock_ui) {
@@ -1317,8 +1313,7 @@ static void ui_draw_blindspot_mon(UIState *s) {
 
   const Rect rect_l = {left_x, left_y, width, height};
   const Rect rect_r = {right_x, right_y, width, height};
-  NVGpaint gradient_L = nvgLinearGradient(s->vg, rect_l, nvgRGBAf(1, 0, 0, 0.8), nvgRGBAf(0, 0, 0, 0));
-  NVGpaint gradient_R = nvgLinearGradient(s->vg, rect_r, nvgRGBAf(0, 0, 0, 0), nvgRGBAf(1, 0, 0, 0.8));  
+  NVGpaint gradient_blindspot
 
   int car_valid_status = 0;
   bool car_valid_left = scene.leftblindspot;
@@ -1351,10 +1346,14 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      ui_fill_rect(s->vg, rect_l, gradient_L);
+      gradient_blindspot = nvgLinearGradient(s->vg, {left_x, left_y + height, width, 0}, 
+                                                    nvgRGBAf(1, 0, 0, 0.8), nvgRGBAf(0, 0, 0, 0));
+      ui_fill_rect(s->vg, rect_l, gradient_blindspot);
     }
     if(car_valid_right) {
-      ui_fill_rect(s->vg, rect_r, gradient_R);
+      gradient_blindspot = nvgLinearGradient(s->vg, {right_x, right_y, width, height}, 
+                                                    nvgRGBAf(0, 0, 0, 0), nvgRGBAf(1, 0, 0, 0.8));
+      ui_fill_rect(s->vg, rect_r, gradient_blindspot);
     }
   }
 }
