@@ -1302,6 +1302,7 @@ static void ui_draw_vision_header(UIState *s) {
 
 //blind spot warning by OPKR and modified gradient color by Hoya
 static void ui_draw_blindspot_mon(UIState *s) {
+  NVGpaint gradient_blindspot;  
   UIScene &scene = s->scene;
   const int width = 200;
   const int height = s->fb_h;
@@ -1313,7 +1314,6 @@ static void ui_draw_blindspot_mon(UIState *s) {
 
   const Rect rect_l = {left_x, left_y, width, height};
   const Rect rect_r = {right_x, right_y, width, height};
-  NVGpaint gradient_blindspot;
 
   int car_valid_status = 0;
   bool car_valid_left = scene.leftblindspot;
@@ -1346,13 +1346,11 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      gradient_blindspot = nvgLinearGradient(s->vg, {left_x, left_y + height, width, 0}, 
-                                                    nvgRGBAf(1, 0, 0, 0.8), nvgRGBAf(0, 0, 0, 0));
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(80), COLOR_RED_ALPHA(0));
       ui_fill_rect(s->vg, rect_l, gradient_blindspot);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, {right_x, right_y, width, height}, 
-                                                    nvgRGBAf(0, 0, 0, 0), nvgRGBAf(1, 0, 0, 0.8));
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x, right_y, width, height, COLOR_RED_ALPHA(0), COLOR_RED_ALPHA(80));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot);
     }
   }
