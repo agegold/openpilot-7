@@ -1313,7 +1313,7 @@ static void ui_draw_blindspot_mon(UIState *s) {
 
   const Rect rect_l = {left_x, left_y, width, height};
   const Rect rect_r = {right_x, right_y, width, height};
-  NVGpaint gradient_blindspot
+  NVGpaint gradient_blindspot;
 
   int car_valid_status = 0;
   bool car_valid_left = scene.leftblindspot;
