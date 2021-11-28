@@ -1346,11 +1346,11 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(80), COLOR_RED_ALPHA(0));
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(200), COLOR_RED_ALPHA(50));
       ui_fill_rect(s->vg, rect_l, gradient_blindspot);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x, right_y, width, height, COLOR_RED_ALPHA(0), COLOR_RED_ALPHA(80));
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x , right_y, right_x + width, height, COLOR_RED_ALPHA(50), COLOR_RED_ALPHA(200));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot);
     }
   }
