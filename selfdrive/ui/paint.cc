@@ -682,8 +682,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 10;
     const int h = 140;
-    const int gap = 0; // fb_w / 50;
-    const int margin = 0; // fb_w / 20;
+    const int gap = -30; // fb_w / 50;
     const int base_y = bdr_s + 10;
     const int draw_count = 8;
     int x = center_x;
@@ -695,7 +694,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
         int d = std::abs(blink_index - i);
         if(d > 0)
           alpha /= d*2;
-        ui_draw_image(s, {x - w - margin, y, w, h}, "turn_signal_l", alpha);
+        ui_draw_image(s, {x - w, y, w, h}, "turn_signal_l", alpha);
         x -= gap + w;
       }
     }
@@ -707,7 +706,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
         int d = std::abs(blink_index - i);
         if(d > 0)
           alpha /= d*2;
-        ui_draw_image(s, {x + margin, y, w, h}, "turn_signal_r", alpha);
+        ui_draw_image(s, {x, y, w, h}, "turn_signal_r", alpha);
         x += gap + w;
       }
     }
