@@ -674,7 +674,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
     blink_index = 0;
   }
   else {
-    auto car_state = (*s->sm)["carState"].getCarState();
+    // auto car_state = (*s->sm)["carState"].getCarState();
     bool left_on = true; //car_state.getLeftBlinker();
     bool right_on = true; //car_state.getRightBlinker();
     const float img_alpha = 0.8f;
