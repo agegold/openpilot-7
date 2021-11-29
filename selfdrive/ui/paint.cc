@@ -680,9 +680,9 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
     const float img_alpha = 0.8f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
-    const int w = fb_w / 10;
+    const int w = fb_w / 5;
     const int h = 140;
-    const int gap = -30; // fb_w / 50;
+    const int gap = -20; // fb_w / 50;
     const int base_y = bdr_s + 10;
     const int draw_count = 8;
     int x = center_x;
