@@ -682,9 +682,9 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 6;
     const int h = 140;
-    const int gap = -48;
+    const int gap = -43;
     const int base_y = bdr_s + 10;
-    const int draw_count = 9;
+    const int draw_count = 8;
     int x = center_x;
     int y = base_y + 550;
 
@@ -713,13 +713,13 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 900/UI_FREQ) {
+      if(now - prev_ts > 1000/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
       if(blink_index >= draw_count) {
         blink_index = draw_count - 1;
-        blink_wait = UI_FREQ/4;
+        blink_wait = UI_FREQ/2;
       }
     }
     else {
