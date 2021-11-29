@@ -682,7 +682,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 6;
     const int h = 140;
-    const int gap = -50; // fb_w / 50;
+    const int gap = -47;
     const int base_y = bdr_s + 10;
     const int draw_count = 8;
     int x = center_x;
@@ -727,41 +727,6 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
     }
   }
 }
-
-// static void ui_draw_turn_signal(UIState *s) {
-//   UIScene &scene = s->scene;  
-//   const int turn_signal_size = 300;
-//   const int turn_signal_x_left = (s->fb_w/2 - 200);
-//   const int turn_signal_x_right = (s->fb_w/2 + 200);
-//   const int turn_signal_y = 540;
-//   const int turn_signal_img_size_w = (turn_signal_size * 1);
-//   const int turn_signal_img_size_h = (turn_signal_size * 1);
-//   const int turn_signal_img_x_left = (turn_signal_x_left - (turn_signal_img_size_w / 2));
-//   const int turn_signal_img_x_right = (turn_signal_x_right - (turn_signal_img_size_w / 2));
-//   const int turn_signal_img_y = (turn_signal_y - (turn_signal_size / 4));  
-//   float turn_signal_img_alpha;
-  
-//   // turning blinker from kegman, moving signal by OPKR
-//   if ((scene.leftBlinker || scene.rightBlinker) && !scene.comma_stock_ui){
-//     scene.blinker_blinkingrate -= 5;
-//     if(scene.blinker_blinkingrate<0) scene.blinker_blinkingrate = 67; // blinker_blinkingrate 는 IG/FL 깜빡이 주기에 거의 맞춤
-
-//     if (scene.blinker_blinkingrate>=30) {
-//       turn_signal_img_alpha = 0.95f;
-//     } else {
-//       turn_signal_img_alpha = 0.0f;
-//     }
-//   } else {
-//     scene.blinker_blinkingrate = 67;
-//   }
-
-//   if(scene.leftBlinker) {
-//     ui_draw_image(s, {turn_signal_img_x_left, turn_signal_img_y, turn_signal_img_size_w, turn_signal_img_size_h}, "turn_signal_left", turn_signal_img_alpha);
-//   }
-//   if(scene.rightBlinker) {
-//     ui_draw_image(s, {turn_signal_img_x_right, turn_signal_img_y, turn_signal_img_size_w, turn_signal_img_size_h}, "turn_signal_right", turn_signal_img_alpha);
-//   }
-// }
 
 //BB START: functions added for the display of various items
 static int bb_ui_draw_measure(UIState *s, const char* bb_value, const char* bb_uom, const char* bb_label,
