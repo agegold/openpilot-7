@@ -223,8 +223,8 @@ static void ui_draw_world(UIState *s) {
 // TPMS code added from Neokii
 static NVGcolor get_tpms_color(float tpms) {
     if(tpms < 30 || tpms > 45) // N/A
-        return nvgRGBA(255, 255, 255, 200);
-    if(tpms < 33 || tpms > 42)
+        return nvgRGBA(255, 0, 0, 200);
+    if(tpms < 32 || tpms > 41)
         return nvgRGBA(255, 90, 90, 200);
     return nvgRGBA(255, 255, 255, 200);
 }
@@ -674,15 +674,15 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     blink_index = 0;
   }
   else {
-    // auto car_state = (*s->sm)["carState"].getCarState();
-    bool left_on = true; // car_state.getLeftBlinker();
-    bool right_on = true; // car_state.getRightBlinker();
+    auto car_state = (*s->sm)["carState"].getCarState();
+    bool left_on = car_state.getLeftBlinker();
+    bool right_on = car_state.getRightBlinker();
     const float img_alpha = 0.8f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 6;
     const int h = 140;
-    const int gap = -43;
+    const int gap = -42;
     const int base_y = bdr_s + 10;
     const int draw_count = 8;
     int x = center_x;
