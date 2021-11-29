@@ -223,8 +223,8 @@ static void ui_draw_world(UIState *s) {
 // TPMS code added from Neokii
 static NVGcolor get_tpms_color(float tpms) {
     if(tpms < 30 || tpms > 45) // N/A
-        return nvgRGBA(255, 255, 255, 200);
-    if(tpms < 33 || tpms > 42)
+        return nvgRGBA(255, 0, 0, 200);
+    if(tpms < 32 || tpms > 41)
         return nvgRGBA(255, 90, 90, 200);
     return nvgRGBA(255, 255, 255, 200);
 }
@@ -664,7 +664,7 @@ static void ui_draw_vision_event(UIState *s) {
   if (!s->scene.comma_stock_ui) ui_draw_debug(s);
 }
 
-static void ui_draw_turn_signal(UIState *s) { // Neokii
+static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
   static int blink_index = 0;
   static int blink_wait = 0;
   static double prev_ts = 0.0;
@@ -682,7 +682,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 6;
     const int h = 140;
-    const int gap = -48;
+    const int gap = -42;
     const int base_y = bdr_s + 10;
     const int draw_count = 8;
     int x = center_x;
@@ -713,7 +713,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 900/UI_FREQ) {
+      if(now - prev_ts > 1000/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
@@ -1311,11 +1311,11 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(200), COLOR_RED_ALPHA(50));
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(220), COLOR_RED_ALPHA(20));
       ui_fill_rect(s->vg, rect_l, gradient_blindspot);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x , right_y, right_x + width, height, COLOR_RED_ALPHA(50), COLOR_RED_ALPHA(200));
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(20), COLOR_RED_ALPHA(220));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot);
     }
   }
@@ -1624,8 +1624,6 @@ void ui_nvg_init(UIState *s) {
     {"gear_D", "../assets/addon/img/gearD.png"},
     {"gear_X", "../assets/addon/img/gearX.png"},
     {"gear_BG", "../assets/addon/img/gearBG.png"},    
-    // {"turn_signal_left", "../assets/addon/img/turnSignal_L.png"},
-    // {"turn_signal_right", "../assets/addon/img/turnSignal_R.png"},
     {"turn_signal_l", "../assets/images/turn_signal_l.png"},
     {"turn_signal_r", "../assets/images/turn_signal_r.png"},    
     {"tire_pressure", "../assets/images/img_tire_pressure.png"},
