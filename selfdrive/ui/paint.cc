@@ -664,7 +664,7 @@ static void ui_draw_vision_event(UIState *s) {
   if (!s->scene.comma_stock_ui) ui_draw_debug(s);
 }
 
-static void ui_draw_turn_signal(UIState *s) { // Neokii
+static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
   static int blink_index = 0;
   static int blink_wait = 0;
   static double prev_ts = 0.0;
@@ -682,7 +682,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 6;
     const int h = 140;
-    const int gap = -45;
+    const int gap = -46;
     const int base_y = bdr_s + 10;
     const int draw_count = 9;
     int x = center_x;
@@ -1311,11 +1311,11 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(200), COLOR_RED_ALPHA(50));
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(220), COLOR_RED_ALPHA(20));
       ui_fill_rect(s->vg, rect_l, gradient_blindspot);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x , right_y, right_x + width, height, COLOR_RED_ALPHA(50), COLOR_RED_ALPHA(200));
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(20), COLOR_RED_ALPHA(220));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot);
     }
   }
