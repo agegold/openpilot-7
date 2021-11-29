@@ -684,7 +684,7 @@ static void ui_draw_turn_signal(UIState *s) { // Neokii
     const int h = 140;
     const int gap = -48;
     const int base_y = bdr_s + 10;
-    const int draw_count = 8;
+    const int draw_count = 9;
     int x = center_x;
     int y = base_y + 550;
 
@@ -1624,8 +1624,6 @@ void ui_nvg_init(UIState *s) {
     {"gear_D", "../assets/addon/img/gearD.png"},
     {"gear_X", "../assets/addon/img/gearX.png"},
     {"gear_BG", "../assets/addon/img/gearBG.png"},    
-    // {"turn_signal_left", "../assets/addon/img/turnSignal_L.png"},
-    // {"turn_signal_right", "../assets/addon/img/turnSignal_R.png"},
     {"turn_signal_l", "../assets/images/turn_signal_l.png"},
     {"turn_signal_r", "../assets/images/turn_signal_r.png"},    
     {"tire_pressure", "../assets/images/img_tire_pressure.png"},
