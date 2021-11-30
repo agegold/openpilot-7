@@ -301,9 +301,7 @@ static void ui_draw_standstill(UIState *s) {
   minute = int(scene.lateralPlan.standstillElapsedTime / 60);
   second = int(scene.lateralPlan.standstillElapsedTime) - (minute * 60);
 
-  scene.standStill = true;
-  
-  if (scene.standStill) {
+  if (true) { //scene.standStill) {
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
     if (scene.mapbox_running) {
       nvgFontSize(s->vg, 125);
