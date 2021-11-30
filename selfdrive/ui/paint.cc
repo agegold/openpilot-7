@@ -292,7 +292,7 @@ static void ui_draw_tpms(UIState *s)
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
 
-  int viz_standstill_x = s->fb_w/2 - 150;
+  int viz_standstill_x = s->fb_w/2 - 250;
   int viz_standstill_y = bdr_s + 160 + 250;
   
   int minute = 0;
@@ -1274,6 +1274,7 @@ static void ui_draw_vision_header(UIState *s) {
     ui_draw_turn_signal(s);    
     bb_ui_draw_UI(s);
     ui_draw_tpms(s);
+    ui_draw_standstill(s);
     if (s->scene.controls_state.getEnabled()) {
       ui_draw_standstill(s);
       draw_safetysign(s);
