@@ -169,6 +169,7 @@ def manager_init():
     ("IgnoreCANErroronISG", "0"),
     ("RESCountatStandstill", "20"),
     ("OpkrSpeedLimitOffsetOption", "0"),
+    ("OpkrSpeedLimitSignType", "0"),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))

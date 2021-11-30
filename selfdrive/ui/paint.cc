@@ -259,7 +259,7 @@ static void ui_draw_tpms(UIState *s)
     if (fl < 30 || fr < 30 || rl < 30 || rr < 30 || fl > 45 || fr > 45 || rl > 45 || rr > 45) {
       ui_draw_rect(s->vg, rect, COLOR_RED_ALPHA(200), 10, 20.);
       ui_fill_rect(s->vg, rect, COLOR_RED_ALPHA(50), 20);
-    } else if (fl < 33 || fr < 33 || rl < 33 || rr < 33 || fl > 42 || fr > 42 || rl > 42 || rr > 42) {
+    } else if (fl < 32 || fr < 32 || rl < 32 || rr < 32 || fl > 41 || fr > 41 || rl > 41 || rr > 41) {
       ui_draw_rect(s->vg, rect, COLOR_ORANGE_ALPHA(200), 10, 20.);
       ui_fill_rect(s->vg, rect, COLOR_ORANGE_ALPHA(50), 20);
     } else {
@@ -270,24 +270,24 @@ static void ui_draw_tpms(UIState *s)
     nvgBeginPath(s->vg);
     ui_draw_image(s, {x, y, w, h}, "tire_pressure", 0.8f);
 
-    nvgFontSize(s->vg, 40);
+    nvgFontSize(s->vg, 60);
     nvgFontFace(s->vg, "sans-bold");
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT);
     nvgFillColor(s->vg, get_tpms_color(fl));
-    nvgText(s->vg, x-5, y+50, get_tpms_text(fl).c_str(), NULL);
+    nvgText(s->vg, x-10, y+45, get_tpms_text(fl).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT);
     nvgFillColor(s->vg, get_tpms_color(fr));
-    nvgText(s->vg, x+w+5, y+50, get_tpms_text(fr).c_str(), NULL);
+    nvgText(s->vg, x+w+10, y+45, get_tpms_text(fr).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT);
     nvgFillColor(s->vg, get_tpms_color(rl));
-    nvgText(s->vg, x-5, y+h-10, get_tpms_text(rl).c_str(), NULL);
+    nvgText(s->vg, x-10, y+h-15, get_tpms_text(rl).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT);
     nvgFillColor(s->vg, get_tpms_color(rr));
-    nvgText(s->vg, x+w+5, y+h-10, get_tpms_text(rr).c_str(), NULL);
+    nvgText(s->vg, x+w+10, y+h-15, get_tpms_text(rr).c_str(), NULL);
 }
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
@@ -616,6 +616,8 @@ static void ui_draw_vision_speed(UIState *s) {
   	val_color = COLOR_RED;
   } else if (scene.brakeLights && !scene.comma_stock_ui) {
   	val_color = nvgRGBA(201, 34, 49, 100);
+  } else if (scene.gasPress && !scene.comma_stock_ui) {
+    val_color = nvgRGBA(0, 240, 0, 255);
   }
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   ui_draw_text(s, s->fb_w/2, 210, speed_str.c_str(), 96 * 2.5, val_color, "sans-bold");
@@ -1114,28 +1116,46 @@ static void draw_safetysign(UIState *s) {
   }
 
   if (safety_speed > 19 && !s->scene.comma_stock_ui) {
-    ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), diameter2/2);
-    ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200), 20, diameter/2);
+    if (s->scene.speedlimit_signtype) {
+      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), 20.);
+      ui_draw_rect(s->vg, rect_s, COLOR_BLACK_ALPHA(200), 10, 20.);
+      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-45, "SPEED", 55, COLOR_BLACK_ALPHA(200), "sans-bold");
+      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-10, "LIMIT", 55, COLOR_BLACK_ALPHA(200), "sans-bold");
+    } else {
+      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), diameter2/2);
+      ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200), 20, diameter/2);
+    }
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     if (safety_speed < 100) {
-      ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 160, COLOR_BLACK_ALPHA(200), "sans-bold");
+      if (s->scene.speedlimit_signtype) {
+        ui_draw_text(s, rect_s.centerX(), rect_s.centerY()+35, safetySpeed, 140, COLOR_BLACK_ALPHA(200), "sans-bold");
+      } else {
+        ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 160, COLOR_BLACK_ALPHA(200), "sans-bold");
+      }
     } else {
-      ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 115, COLOR_BLACK_ALPHA(200), "sans-bold");
+      if (s->scene.speedlimit_signtype) {
+        ui_draw_text(s, rect_s.centerX(), rect_s.centerY()+35, safetySpeed, 115, COLOR_BLACK_ALPHA(200), "sans-bold");
+      } else {
+        ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 115, COLOR_BLACK_ALPHA(200), "sans-bold");
+      }
     }
-    ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity), 20.);
-    ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200), 8, 20);
-    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200), "sans-bold");
+    if (safety_dist != 0) {
+      ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity), 20.);
+      ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200), 8, 20);
+      nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+      ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200), "sans-bold");
+    }
   } else if ((s->scene.mapSign == 195 || s->scene.mapSign == 197) && safety_speed == 0 && safety_dist != 0 && !s->scene.comma_stock_ui) {
     ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), diameter2/2);
     ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200), 20, diameter/2);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), "VAR\nSEC", 108, COLOR_BLACK_ALPHA(200), "sans-bold");
-
-    ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity), 20.);
-    ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200), 8, 20);
-    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200), "sans-bold");
+    if (safety_dist != 0) {
+      ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity), 20.);
+      ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200), 8, 20);
+      nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+      ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200), "sans-bold");
+    }
   }
 }
 
@@ -1255,9 +1275,7 @@ static void ui_draw_vision_header(UIState *s) {
       ui_draw_standstill(s);
     }
     draw_safetysign(s);
-    if (!s->scene.mapbox_running) {
-      draw_compass(s);
-    }
+    draw_compass(s);
     draw_navi_button(s);
     if (s->scene.end_to_end) {
       draw_laneless_button(s);
@@ -1300,8 +1318,8 @@ static void ui_draw_blindspot_mon(UIState *s) {
         car_valid_status = 0;
       }
       scene.blindspot_blinkingrate -= 6;
-      if(scene.blindspot_blinkingrate<0) scene.blindspot_blinkingrate = 120;
-      if (scene.blindspot_blinkingrate>=60) {
+      if (scene.blindspot_blinkingrate < 0) scene.blindspot_blinkingrate = 120;
+      if (scene.blindspot_blinkingrate >= 60) {
         car_valid_alpha = 150;
       } else {
         car_valid_alpha = 0;
@@ -1311,12 +1329,12 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(220), COLOR_RED_ALPHA(20));
-      ui_fill_rect(s->vg, rect_l, gradient_blindspot);
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(250), COLOR_RED_ALPHA(10));
+      ui_fill_rect(s->vg, rect_l, gradient_blindspot, 0);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(20), COLOR_RED_ALPHA(220));
-      ui_fill_rect(s->vg, rect_r, gradient_blindspot);
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(10), COLOR_RED_ALPHA(250));
+      ui_fill_rect(s->vg, rect_r, gradient_blindspot, 0);
     }
   }
 }
