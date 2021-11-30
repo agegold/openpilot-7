@@ -292,7 +292,7 @@ static void ui_draw_tpms(UIState *s)
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
 
-  int viz_standstill_x = s->fb_w/2 - 250;
+  int viz_standstill_x = s->fb_w/2;
   int viz_standstill_y = bdr_s + 160 + 250;
   
   int minute = 0;
