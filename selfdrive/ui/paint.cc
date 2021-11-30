@@ -259,7 +259,7 @@ static void ui_draw_tpms(UIState *s)
     if (fl < 30 || fr < 30 || rl < 30 || rr < 30 || fl > 45 || fr > 45 || rl > 45 || rr > 45) {
       ui_draw_rect(s->vg, rect, COLOR_RED_ALPHA(200), 10, 20.);
       ui_fill_rect(s->vg, rect, COLOR_RED_ALPHA(50), 20);
-    } else if (fl < 33 || fr < 33 || rl < 33 || rr < 33 || fl > 42 || fr > 42 || rl > 42 || rr > 42) {
+    } else if (fl < 32 || fr < 32 || rl < 32 || rr < 32 || fl > 41 || fr > 41 || rl > 41 || rr > 41) {
       ui_draw_rect(s->vg, rect, COLOR_ORANGE_ALPHA(200), 10, 20.);
       ui_fill_rect(s->vg, rect, COLOR_ORANGE_ALPHA(50), 20);
     } else {
@@ -616,6 +616,8 @@ static void ui_draw_vision_speed(UIState *s) {
   	val_color = COLOR_RED;
   } else if (scene.brakeLights && !scene.comma_stock_ui) {
   	val_color = nvgRGBA(201, 34, 49, 100);
+  } else if (scene.gasPress && !scene.comma_stock_ui) {
+    val_color = nvgRGBA(0, 240, 0, 255);
   }
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   ui_draw_text(s, s->fb_w/2, 210, speed_str.c_str(), 96 * 2.5, val_color, "sans-bold");
@@ -1114,28 +1116,38 @@ static void draw_safetysign(UIState *s) {
   }
 
   if (safety_speed > 19 && !s->scene.comma_stock_ui) {
-    ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), diameter2/2);
-    ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200), 20, diameter/2);
+    if (s->scene.speedlimit_signtype) {
+      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), 20.);
+      ui_draw_rect(s->vg, rect_s, COLOR_BLACK_ALPHA(200), 10, 20.);
+      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-50, "SPEED", 45, COLOR_GREEN_ALPHA(150), "sans-bold");
+      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-35, "LIMIT", 45, COLOR_GREEN_ALPHA(150), "sans-bold");
+    } else {
+      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), diameter2/2);
+      ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200), 20, diameter/2);
+    }
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     if (safety_speed < 100) {
       ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 160, COLOR_BLACK_ALPHA(200), "sans-bold");
     } else {
       ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 115, COLOR_BLACK_ALPHA(200), "sans-bold");
     }
-    ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity), 20.);
-    ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200), 8, 20);
-    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200), "sans-bold");
+    if (safety_dist != 0) {
+      ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity), 20.);
+      ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200), 8, 20);
+      nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+      ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200), "sans-bold");
+    }
   } else if ((s->scene.mapSign == 195 || s->scene.mapSign == 197) && safety_speed == 0 && safety_dist != 0 && !s->scene.comma_stock_ui) {
     ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), diameter2/2);
     ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200), 20, diameter/2);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), "VAR\nSEC", 108, COLOR_BLACK_ALPHA(200), "sans-bold");
-
-    ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity), 20.);
-    ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200), 8, 20);
-    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200), "sans-bold");
+    if (safety_dist != 0) {
+      ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity), 20.);
+      ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200), 8, 20);
+      nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+      ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200), "sans-bold");
+    }
   }
 }
 
@@ -1253,8 +1265,8 @@ static void ui_draw_vision_header(UIState *s) {
     ui_draw_tpms(s);
     if (s->scene.controls_state.getEnabled()) {
       ui_draw_standstill(s);
+      draw_safetysign(s);
     }
-    draw_safetysign(s);
     if (!s->scene.mapbox_running) {
       draw_compass(s);
     }

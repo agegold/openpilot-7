@@ -150,6 +150,7 @@ typedef struct UIScene {
   cereal::PandaState::PandaType pandaType;
 
   bool brakePress;
+  bool gasPress;
   bool brakeHold;
   bool touched = false;
   bool map_on_top = false;
@@ -172,6 +173,7 @@ typedef struct UIScene {
   bool leftBlinker;
   bool rightBlinker;
   int blinker_blinkingrate;
+  int tpms_blinkingrate = 120;
   int blindspot_blinkingrate = 120;
   int car_valid_status_changed = 0;
   float angleSteers;
@@ -240,6 +242,7 @@ typedef struct UIScene {
   bool tmux_error_check = false;
   float currentGear;
   float electGearStep;
+  bool speedlimit_signtype = false;  
   
   cereal::DeviceState::Reader deviceState;
   cereal::CarState::Reader car_state;
