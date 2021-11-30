@@ -242,7 +242,7 @@ typedef struct UIScene {
   bool tmux_error_check = false;
   float currentGear;
   float electGearStep;
-  bool speedlimit_signtype = false;  
+  bool speedlimit_signtype;
   
   cereal::DeviceState::Reader deviceState;
   cereal::CarState::Reader car_state;
