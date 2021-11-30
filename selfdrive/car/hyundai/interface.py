@@ -73,12 +73,21 @@ class CarInterface(CarInterfaceBase):
     ret.longitudinalTuning.kfV = [1., 1., 1., 1., 1., 1.]
 
     ret.stoppingControl = False
-    ret.vEgoStopping = 1.0  # 1.0, 0.5
+    # OPKR
+    # ret.vEgoStopping = 1.0  # 1.0, 0.5
+    # ret.vEgoStarting = 0.5
+    # ret.startAccel = 0.0 # 0.0, -0.2
+    # ret.stopAccel = 0.0 # 0.0, -0.5
+    # ret.stoppingDecelRate = 0.8 # 0.8, 0.2
+    # ret.startingAccelRate = 3.2 # 3.2, 0.8
+
+    # Neokii
+    ret.startAccel = -0.5
+    ret.stopAccel = 0.0 # -2.0
+    ret.startingAccelRate = 5.0  # brake_travel/s while releasing on restart
+    ret.stoppingDecelRate = 0.8 #0.3  # brake_travel/s while trying to stop
+    ret.vEgoStopping = 0.6
     ret.vEgoStarting = 0.5
-    ret.startAccel = 0.0 # 0.0, -0.2
-    ret.stopAccel = 0.0 # 0.0, -0.5
-    ret.stoppingDecelRate = 0.8 # 0.8, 0.2
-    ret.startingAccelRate = 3.2 # 3.2, 0.8
 
     ret.vCruisekph = 0
     ret.resSpeed = 0
