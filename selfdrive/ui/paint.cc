@@ -1318,8 +1318,8 @@ static void ui_draw_blindspot_mon(UIState *s) {
         car_valid_status = 0;
       }
       scene.blindspot_blinkingrate -= 6;
-      if(scene.blindspot_blinkingrate<0) scene.blindspot_blinkingrate = 120;
-      if (scene.blindspot_blinkingrate>=60) {
+      if (scene.blindspot_blinkingrate < 0) scene.blindspot_blinkingrate = 120;
+      if (scene.blindspot_blinkingrate >= 60) {
         car_valid_alpha = 150;
       } else {
         car_valid_alpha = 0;
@@ -1329,12 +1329,12 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(220), COLOR_RED_ALPHA(20));
-      ui_fill_rect(s->vg, rect_l, gradient_blindspot);
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(250), COLOR_RED_ALPHA(10));
+      ui_fill_rect(s->vg, rect_l, gradient_blindspot, 0);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(20), COLOR_RED_ALPHA(220));
-      ui_fill_rect(s->vg, rect_r, gradient_blindspot);
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(10), COLOR_RED_ALPHA(250));
+      ui_fill_rect(s->vg, rect_r, gradient_blindspot, 0);
     }
   }
 }
