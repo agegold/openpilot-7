@@ -715,13 +715,13 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 500/UI_FREQ) {
+      if(now - prev_ts > 400/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
       if(blink_index >= draw_count) {
         blink_index = draw_count - 1;
-        blink_wait = UI_FREQ/10;
+        blink_wait = UI_FREQ/20;
       }
     }
     else {
