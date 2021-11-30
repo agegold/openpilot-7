@@ -292,7 +292,7 @@ static void ui_draw_tpms(UIState *s)
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
 
-  int viz_standstill_x = s->fb_w - 560;
+  int viz_standstill_x = s->fb_w/2 - 150;
   int viz_standstill_y = bdr_s + 160 + 250;
   
   int minute = 0;
@@ -301,6 +301,8 @@ static void ui_draw_standstill(UIState *s) {
   minute = int(scene.lateralPlan.standstillElapsedTime / 60);
   second = int(scene.lateralPlan.standstillElapsedTime) - (minute * 60);
 
+  scene.standStill = true;
+  
   if (scene.standStill) {
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
     if (scene.mapbox_running) {
