@@ -270,24 +270,24 @@ static void ui_draw_tpms(UIState *s)
     nvgBeginPath(s->vg);
     ui_draw_image(s, {x, y, w, h}, "tire_pressure", 0.8f);
 
-    nvgFontSize(s->vg, 40);
+    nvgFontSize(s->vg, 60);
     nvgFontFace(s->vg, "sans-bold");
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT);
     nvgFillColor(s->vg, get_tpms_color(fl));
-    nvgText(s->vg, x-5, y+50, get_tpms_text(fl).c_str(), NULL);
+    nvgText(s->vg, x-10, y+45, get_tpms_text(fl).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT);
     nvgFillColor(s->vg, get_tpms_color(fr));
-    nvgText(s->vg, x+w+5, y+50, get_tpms_text(fr).c_str(), NULL);
+    nvgText(s->vg, x+w+10, y+45, get_tpms_text(fr).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT);
     nvgFillColor(s->vg, get_tpms_color(rl));
-    nvgText(s->vg, x-5, y+h-10, get_tpms_text(rl).c_str(), NULL);
+    nvgText(s->vg, x-10, y+h-15, get_tpms_text(rl).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT);
     nvgFillColor(s->vg, get_tpms_color(rr));
-    nvgText(s->vg, x+w+5, y+h-10, get_tpms_text(rr).c_str(), NULL);
+    nvgText(s->vg, x+w+10, y+h-15, get_tpms_text(rr).c_str(), NULL);
 }
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
