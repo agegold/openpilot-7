@@ -680,7 +680,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     //auto car_state = (*s->sm)["carState"].getCarState();
     bool left_on = true;//car_state.getLeftBlinker();
     bool right_on = true;//car_state.getRightBlinker();
-    const float img_alpha = 0.9f;
+    const float img_alpha = 1.0f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 18;
@@ -696,7 +696,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
         float alpha = img_alpha;
         int d = std::abs(blink_index - i);
         if(d > 0)
-          alpha /= d*1.2;
+          alpha /= d*1.1;
         ui_draw_image(s, {x - w, y, w, h}, "turn_signal_l", alpha);
         x -= gap + w;
       }
@@ -708,7 +708,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
         float alpha = img_alpha;
         int d = std::abs(blink_index - i);
         if(d > 0)
-          alpha /= d*1.2;
+          alpha /= d*1.1;
         ui_draw_image(s, {x, y, w, h}, "turn_signal_r", alpha);
         x += gap + w;
       }
@@ -716,7 +716,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 1000/UI_FREQ) {
+      if(now - prev_ts > 800/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
