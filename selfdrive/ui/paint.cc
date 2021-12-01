@@ -252,6 +252,7 @@ static void ui_draw_tpms(UIState *s)
     const int h = 123;
     int x = 1920 - 160;
     int y = 740;
+    int txt_x_gap = 5;
 
     const Rect rect = {x - w - 10, y - 5, w * 3 + 20, h + 10};
 
@@ -275,19 +276,19 @@ static void ui_draw_tpms(UIState *s)
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT);
     nvgFillColor(s->vg, get_tpms_color(fl));
-    nvgText(s->vg, x-10, y+45, get_tpms_text(fl).c_str(), NULL);
+    nvgText(s->vg, x - txt_x_gap, y + 45, get_tpms_text(fl).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT);
     nvgFillColor(s->vg, get_tpms_color(fr));
-    nvgText(s->vg, x+w+10, y+45, get_tpms_text(fr).c_str(), NULL);
+    nvgText(s->vg, x + w + txt_x_gap, y + 45, get_tpms_text(fr).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT);
     nvgFillColor(s->vg, get_tpms_color(rl));
-    nvgText(s->vg, x-10, y+h-15, get_tpms_text(rl).c_str(), NULL);
+    nvgText(s->vg, x - txt_x_gap, y + h - 15, get_tpms_text(rl).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT);
     nvgFillColor(s->vg, get_tpms_color(rr));
-    nvgText(s->vg, x+w+10, y+h-15, get_tpms_text(rr).c_str(), NULL);
+    nvgText(s->vg, x + w + txt_x_gap, y + h - 15, get_tpms_text(rr).c_str(), NULL);
 }
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
