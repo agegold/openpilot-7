@@ -309,14 +309,14 @@ static void ui_draw_standstill(UIState *s) {
       nvgFontSize(s->vg, 170);
     }
     nvgFillColor(s->vg, COLOR_ORANGE_ALPHA(240));
-    ui_print(s, scene.mapbox_running ? viz_standstill_x + 250 : viz_standstill_x, viz_standstill_y, "STOP");
+    ui_print(s, viz_standstill_x, viz_standstill_y, "STOP");
     if (scene.mapbox_running) {
       nvgFontSize(s->vg, 150);
     } else {
       nvgFontSize(s->vg, 200);
     }
     nvgFillColor(s->vg, COLOR_WHITE_ALPHA(240));
-    ui_print(s, scene.mapbox_running ? viz_standstill_x + 250 : viz_standstill_x, scene.mapbox_running ? viz_standstill_y+100 : viz_standstill_y+150, "%01d:%02d", minute, second);
+    ui_print(s, viz_standstill_x, scene.mapbox_running ? viz_standstill_y+100 : viz_standstill_y+150, "%01d:%02d", minute, second);
   }
 }
 
@@ -676,9 +676,9 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     blink_index = 0;
   }
   else {
-    auto car_state = (*s->sm)["carState"].getCarState();
-    bool left_on = car_state.getLeftBlinker();
-    bool right_on = car_state.getRightBlinker();
+    // auto car_state = (*s->sm)["carState"].getCarState();
+    bool left_on = true; //car_state.getLeftBlinker();
+    bool right_on = true; //car_state.getRightBlinker();
     const float img_alpha = 0.8f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
@@ -715,7 +715,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 500/UI_FREQ) {
+      if(now - prev_ts > 1000/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
