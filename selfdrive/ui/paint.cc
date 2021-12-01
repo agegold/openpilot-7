@@ -683,11 +683,11 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     const float img_alpha = 0.9f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
-    const int w = fb_w / 12;
+    const int w = fb_w / 18;
     const int h = 140;
-    const int gap = -21;
+    const int gap = -16;
     const int base_y = bdr_s + 10;
-    const int draw_count = 18;
+    const int draw_count = 28;
     int x = center_x;
     int y = base_y + 550;
 
@@ -696,7 +696,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
         float alpha = img_alpha;
         int d = std::abs(blink_index - i);
         if(d > 0)
-          alpha /= d*1.5;
+          alpha /= d*1.2;
         ui_draw_image(s, {x - w, y, w, h}, "turn_signal_l", alpha);
         x -= gap + w;
       }
@@ -708,7 +708,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
         float alpha = img_alpha;
         int d = std::abs(blink_index - i);
         if(d > 0)
-          alpha /= d*1.5;
+          alpha /= d*1.2;
         ui_draw_image(s, {x, y, w, h}, "turn_signal_r", alpha);
         x += gap + w;
       }
