@@ -292,7 +292,7 @@ static void ui_draw_tpms(UIState *s)
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
 
-  int viz_standstill_x = s->fb_w - 560;
+  int viz_standstill_x = s->fb_w/2;
   int viz_standstill_y = bdr_s + 160 + 250;
   
   int minute = 0;
@@ -309,14 +309,14 @@ static void ui_draw_standstill(UIState *s) {
       nvgFontSize(s->vg, 170);
     }
     nvgFillColor(s->vg, COLOR_ORANGE_ALPHA(240));
-    ui_print(s, scene.mapbox_running ? viz_standstill_x + 250 : viz_standstill_x, viz_standstill_y, "STOP");
+    ui_print(s, viz_standstill_x, viz_standstill_y, "STOP");
     if (scene.mapbox_running) {
       nvgFontSize(s->vg, 150);
     } else {
       nvgFontSize(s->vg, 200);
     }
     nvgFillColor(s->vg, COLOR_WHITE_ALPHA(240));
-    ui_print(s, scene.mapbox_running ? viz_standstill_x + 250 : viz_standstill_x, scene.mapbox_running ? viz_standstill_y+100 : viz_standstill_y+150, "%01d:%02d", minute, second);
+    ui_print(s, viz_standstill_x, scene.mapbox_running ? viz_standstill_y+100 : viz_standstill_y+150, "%01d:%02d", minute, second);
   }
 }
 
@@ -715,7 +715,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 500/UI_FREQ) {
+      if(now - prev_ts > 1000/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
@@ -1076,6 +1076,7 @@ static void bb_ui_draw_UI(UIState *s) {
 static void draw_safetysign(UIState *s) {
   const int diameter = 185;
   const int diameter2 = 170;
+  const int diameter3 = 197;
   int s_center_x = bdr_s + 305 + (s->scene.display_maxspeed_time>0 ? 184 : 0);
   const int s_center_y = bdr_s + 100;
   
@@ -1087,6 +1088,7 @@ static void draw_safetysign(UIState *s) {
 
   const Rect rect_s = {s_center_x - diameter/2, s_center_y - diameter/2, diameter, diameter};
   const Rect rect_si = {s_center_x - diameter2/2, s_center_y - diameter2/2, diameter2, diameter2};
+  const Rect rect_so = {s_center_x - diameter3/2, s_center_y - diameter3/2, diameter3, diameter3};
   const Rect rect_d = {d_center_x - d_width/2, d_center_y - d_height/2, d_width, d_height};
   char safetySpeed[16];
   char safetyDist[32];
@@ -1117,8 +1119,9 @@ static void draw_safetysign(UIState *s) {
 
   if (safety_speed > 19 && !s->scene.comma_stock_ui) {
     if (s->scene.speedlimit_signtype) {
-      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), 20.);
-      ui_draw_rect(s->vg, rect_s, COLOR_BLACK_ALPHA(200), 10, 20.);
+      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200), 16.);
+      ui_draw_rect(s->vg, rect_s, COLOR_BLACK_ALPHA(200), 9, 17.);
+      ui_draw_rect(s->vg, rect_so, COLOR_WHITE_ALPHA(200), 6, 20.);
       ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-45, "SPEED", 55, COLOR_BLACK_ALPHA(200), "sans-bold");
       ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-10, "LIMIT", 55, COLOR_BLACK_ALPHA(200), "sans-bold");
     } else {
@@ -1273,8 +1276,8 @@ static void ui_draw_vision_header(UIState *s) {
     ui_draw_tpms(s);
     if (s->scene.controls_state.getEnabled()) {
       ui_draw_standstill(s);
+      draw_safetysign(s);
     }
-    draw_safetysign(s);
     draw_compass(s);
     draw_navi_button(s);
     if (s->scene.end_to_end) {
