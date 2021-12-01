@@ -252,6 +252,7 @@ static void ui_draw_tpms(UIState *s)
     const int h = 123;
     int x = 1920 - 160;
     int y = 740;
+    int txt_x_gap = 5;
 
     const Rect rect = {x - w - 10, y - 5, w * 3 + 20, h + 10};
 
@@ -275,19 +276,19 @@ static void ui_draw_tpms(UIState *s)
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT);
     nvgFillColor(s->vg, get_tpms_color(fl));
-    nvgText(s->vg, x-10, y+45, get_tpms_text(fl).c_str(), NULL);
+    nvgText(s->vg, x - txt_x_gap, y + 45, get_tpms_text(fl).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT);
     nvgFillColor(s->vg, get_tpms_color(fr));
-    nvgText(s->vg, x+w+10, y+45, get_tpms_text(fr).c_str(), NULL);
+    nvgText(s->vg, x + w + txt_x_gap, y + 45, get_tpms_text(fr).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_RIGHT);
     nvgFillColor(s->vg, get_tpms_color(rl));
-    nvgText(s->vg, x-10, y+h-15, get_tpms_text(rl).c_str(), NULL);
+    nvgText(s->vg, x - txt_x_gap, y + h - 15, get_tpms_text(rl).c_str(), NULL);
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT);
     nvgFillColor(s->vg, get_tpms_color(rr));
-    nvgText(s->vg, x+w+10, y+h-15, get_tpms_text(rr).c_str(), NULL);
+    nvgText(s->vg, x + w + txt_x_gap, y + h - 15, get_tpms_text(rr).c_str(), NULL);
 }
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
@@ -679,14 +680,14 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     auto car_state = (*s->sm)["carState"].getCarState();
     bool left_on = car_state.getLeftBlinker();
     bool right_on = car_state.getRightBlinker();
-    const float img_alpha = 0.8f;
+    const float img_alpha = 1.0f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
-    const int w = fb_w / 12;
+    const int w = fb_w / 18;
     const int h = 140;
-    const int gap = -21;
+    const int gap = -16;
     const int base_y = bdr_s + 10;
-    const int draw_count = 18;
+    const int draw_count = 28;
     int x = center_x;
     int y = base_y + 550;
 
@@ -695,7 +696,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
         float alpha = img_alpha;
         int d = std::abs(blink_index - i);
         if(d > 0)
-          alpha /= d*2;
+          alpha /= d*1.1;
         ui_draw_image(s, {x - w, y, w, h}, "turn_signal_l", alpha);
         x -= gap + w;
       }
@@ -707,7 +708,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
         float alpha = img_alpha;
         int d = std::abs(blink_index - i);
         if(d > 0)
-          alpha /= d*2;
+          alpha /= d*1.1;
         ui_draw_image(s, {x, y, w, h}, "turn_signal_r", alpha);
         x += gap + w;
       }
@@ -715,7 +716,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 1000/UI_FREQ) {
+      if(now - prev_ts > 500/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
