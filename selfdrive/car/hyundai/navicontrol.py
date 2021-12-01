@@ -144,7 +144,7 @@ class NaviControl():
       cruise_set_speed_kph = interp(v_ego_kph, [40, 60, 80], [30, 35, 40])
       self.onSpeedControl = True
     elif int(self.sm['liveMapData'].speedLimit) > 19 and self.osm_speedlimit_enabled:  # osm speedlimit
-      if stock_navi_info_enabled and CS.safety_sign > 19:
+      if self.stock_navi_info_enabled and CS.safety_sign > 19:
         spdTarget = min(self.sm['liveMapData'].speedLimit, CS.safety_sign)
       else:
         spdTarget = self.sm['liveMapData'].speedLimit
