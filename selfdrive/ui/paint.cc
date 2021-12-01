@@ -301,7 +301,7 @@ static void ui_draw_standstill(UIState *s) {
   minute = int(scene.lateralPlan.standstillElapsedTime / 60);
   second = int(scene.lateralPlan.standstillElapsedTime) - (minute * 60);
 
-  if (true) { //scene.standStill) {
+  if (scene.standStill) {
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
     if (scene.mapbox_running) {
       nvgFontSize(s->vg, 125);
@@ -676,9 +676,9 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     blink_index = 0;
   }
   else {
-    // auto car_state = (*s->sm)["carState"].getCarState();
-    bool left_on = true; //car_state.getLeftBlinker();
-    bool right_on = true; //car_state.getRightBlinker();
+    auto car_state = (*s->sm)["carState"].getCarState();
+    bool left_on = car_state.getLeftBlinker();
+    bool right_on = car_state.getRightBlinker();
     const float img_alpha = 0.8f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
@@ -715,7 +715,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 2000/UI_FREQ) {
+      if(now - prev_ts > 1000/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
@@ -1274,7 +1274,6 @@ static void ui_draw_vision_header(UIState *s) {
     ui_draw_turn_signal(s);    
     bb_ui_draw_UI(s);
     ui_draw_tpms(s);
-    ui_draw_standstill(s);
     if (s->scene.controls_state.getEnabled()) {
       ui_draw_standstill(s);
       draw_safetysign(s);
