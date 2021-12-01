@@ -142,6 +142,8 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   addItem(new LabelControl("Dongle ID", getDongleId().value_or("N/A")));
   addItem(new LabelControl("Serial", params.get("HardwareSerial").c_str()));
 
+  addItem(new OpenpilotView());
+
   // offroad-only buttons
 
   auto dcamBtn = new ButtonControl("Driver Camera", "PREVIEW",
@@ -168,14 +170,6 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
     addItem(regulatoryBtn);
   }
 
-  addItem(new OpenpilotView());
-
-  QObject::connect(parent, &SettingsWindow::offroadTransition, [=](bool offroad) {
-    for (auto btn : findChildren<ButtonControl *>()) {
-      btn->setEnabled(offroad);
-    }
-  });
-
   auto resetCalibBtn = new ButtonControl("Reset Calibration", "RESET", " ");
   connect(resetCalibBtn, &ButtonControl::showDescription, this, &DevicePanel::updateCalibDescription);
   connect(resetCalibBtn, &ButtonControl::clicked, [&]() {
@@ -188,6 +182,13 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
     }
   });
   addItem(resetCalibBtn);
+
+  QObject::connect(parent, &SettingsWindow::offroadTransition, [=](bool offroad) {
+    for (auto btn : findChildren<ButtonControl *>()) {
+      btn->setEnabled(offroad);
+    }
+    resetCalibBtn->setEnabled(true);
+  });
 
   // power buttons
   QHBoxLayout *power_layout = new QHBoxLayout();
