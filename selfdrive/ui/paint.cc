@@ -687,7 +687,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     const int h = 140;
     const int gap = -14;
     const int base_y = bdr_s + 10;
-    const int draw_count = 28;
+    const int draw_count = 27;
     int x = center_x;
     int y = base_y + 550;
 
@@ -716,7 +716,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 500/UI_FREQ) {
+      if(now - prev_ts > 400/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
