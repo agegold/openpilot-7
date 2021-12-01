@@ -676,10 +676,10 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     blink_index = 0;
   }
   else {
-    auto car_state = (*s->sm)["carState"].getCarState();
-    bool left_on = car_state.getLeftBlinker();
-    bool right_on = car_state.getRightBlinker();
-    const float img_alpha = 0.8f;
+    //auto car_state = (*s->sm)["carState"].getCarState();
+    bool left_on = true;//car_state.getLeftBlinker();
+    bool right_on = true;//car_state.getRightBlinker();
+    const float img_alpha = 0.9f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 12;
@@ -695,7 +695,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
         float alpha = img_alpha;
         int d = std::abs(blink_index - i);
         if(d > 0)
-          alpha /= d*2;
+          alpha /= d*1.5;
         ui_draw_image(s, {x - w, y, w, h}, "turn_signal_l", alpha);
         x -= gap + w;
       }
@@ -707,7 +707,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
         float alpha = img_alpha;
         int d = std::abs(blink_index - i);
         if(d > 0)
-          alpha /= d*2;
+          alpha /= d*1.5;
         ui_draw_image(s, {x, y, w, h}, "turn_signal_r", alpha);
         x += gap + w;
       }
