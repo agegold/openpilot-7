@@ -685,9 +685,9 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = fb_w / 18;
     const int h = 140;
-    const int gap = -17;
+    const int gap = -14;
     const int base_y = bdr_s + 10;
-    const int draw_count = 28;
+    const int draw_count = 27;
     int x = center_x;
     int y = base_y + 550;
 
@@ -716,7 +716,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 500/UI_FREQ) {
+      if(now - prev_ts > 400/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
@@ -1119,6 +1119,7 @@ static void draw_safetysign(UIState *s) {
   }
 
   if (safety_speed > 19 && !s->scene.comma_stock_ui) {
+    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     if (s->scene.speedlimit_signtype) {
       ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), 16.);
       ui_draw_rect(s->vg, rect_s, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), 9, 17.);
@@ -1129,7 +1130,6 @@ static void draw_safetysign(UIState *s) {
       ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), diameter2/2);
       ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200/s->scene.sl_opacity), 20, diameter/2);
     }
-    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     if (safety_speed < 100) {
       if (s->scene.speedlimit_signtype) {
         ui_draw_text(s, rect_s.centerX(), rect_s.centerY()+35, safetySpeed, 140, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), "sans-bold");
@@ -1305,7 +1305,8 @@ static void ui_draw_blindspot_mon(UIState *s) {
   int car_valid_status = 0;
   bool car_valid_left = scene.leftblindspot;
   bool car_valid_right = scene.rightblindspot;
-  int car_valid_alpha;
+  int car_valid_alpha1;
+  int car_valid_alpha2;
   if (scene.nOpkrBlindSpotDetect) {
     if (scene.car_valid_status_changed != car_valid_status) {
       scene.blindspot_blinkingrate = 114;
@@ -1324,20 +1325,22 @@ static void ui_draw_blindspot_mon(UIState *s) {
       scene.blindspot_blinkingrate -= 6;
       if (scene.blindspot_blinkingrate < 0) scene.blindspot_blinkingrate = 120;
       if (scene.blindspot_blinkingrate >= 60) {
-        car_valid_alpha = 150;
+        car_valid_alpha1 = 250;
+        car_valid_alpha2 = 10;
       } else {
-        car_valid_alpha = 0;
+        car_valid_alpha1 = 100;
+        car_valid_alpha2 = 0;
       }
     } else {
       scene.blindspot_blinkingrate = 120;
     }
 
     if(car_valid_left) {
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(250), COLOR_RED_ALPHA(10));
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
       ui_fill_rect(s->vg, rect_l, gradient_blindspot, 0);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(10), COLOR_RED_ALPHA(250));
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(car_valid_alpha2), COLOR_RED_ALPHA(car_valid_alpha1));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot, 0);
     }
   }
