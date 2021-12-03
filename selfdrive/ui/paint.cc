@@ -683,11 +683,11 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     const float img_alpha = 1.0f;
     const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
-    const int w = fb_w / 12;
+    const int w = fb_w / 6;
     const int h = 140;
-    const int gap = -27;
+    const int gap = -40;
     const int base_y = bdr_s + 10;
-    const int draw_count = 24;
+    const int draw_count = 10;
     int x = center_x;
     int y = base_y + 550;
 
