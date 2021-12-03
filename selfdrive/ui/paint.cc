@@ -681,13 +681,12 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     bool left_on = car_state.getLeftBlinker();
     bool right_on = car_state.getRightBlinker();
     const float img_alpha = 1.0f;
-    const int fb_w = s->fb_w / 2 - 200;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
-    const int w = fb_w / 18;
+    const int w = 100;
     const int h = 140;
-    const int gap = -14;
+    const int gap = -70;
     const int base_y = bdr_s + 10;
-    const int draw_count = 27;
+    const int draw_count = 22;
     int x = center_x;
     int y = base_y + 550;
 
@@ -716,7 +715,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
 
     if(left_on || right_on) {
       double now = millis_since_boot();
-      if(now - prev_ts > 400/UI_FREQ) {
+      if(now - prev_ts > 20/UI_FREQ) {
         prev_ts = now;
         blink_index++;
       }
