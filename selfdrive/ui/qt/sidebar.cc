@@ -78,11 +78,11 @@ void Sidebar::mousePressEvent(QMouseEvent *event) {
 
 void Sidebar::mouseReleaseEvent(QMouseEvent *event) {
   const quint64 pressTime = QDateTime::currentMSecsSinceEpoch() - mLastPressTime;
-  if ( pressTime > MY_LONG_PRESS_THRESHOLD && trig_settings) {
+  // if ( pressTime > MY_LONG_PRESS_THRESHOLD && trig_settings) {
     emit openSettings();
-  } else if ( pressTime < 500 && trig_settings) {
-    ConfirmationDialog::alert("Hold 1 sec on the button to enter Setting Menu", this);
-  }
+  // } else if ( pressTime < 500 && trig_settings) {
+  //   ConfirmationDialog::alert("Hold 1 sec on the button to enter Setting Menu", this);
+  // }
 }
 
 void Sidebar::updateState(const UIState &s) {
