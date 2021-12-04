@@ -156,9 +156,9 @@ class NaviControl():
           cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
         else:
           cruise_set_speed_kph = spdTarget + self.map_spdlimit_offset
-        if cruise_set_speed_kph < v_ego_mph+1 and CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        if cruise_set_speed_kph+1 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
-        elif cruise_set_speed_kph < v_ego_kph+1 and not CS.out.gasPressed:
+        elif cruise_set_speed_kph+1 < v_ego_kph and not CS.out.gasPressed:
           self.onSpeedControl = True
         else:
           self.onSpeedControl = False
@@ -188,9 +188,9 @@ class NaviControl():
           cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
         else:
           cruise_set_speed_kph = spdTarget + self.map_spdlimit_offset
-        if cruise_set_speed_kph < v_ego_mph+1 and CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        if cruise_set_speed_kph+1 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
-        elif cruise_set_speed_kph < v_ego_kph+1 and not CS.out.gasPressed:
+        elif cruise_set_speed_kph+1 < v_ego_kph and not CS.out.gasPressed:
           self.onSpeedControl = True
         else:
           self.onSpeedControl = False
@@ -221,9 +221,9 @@ class NaviControl():
           cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
         else:
           cruise_set_speed_kph = spdTarget + self.map_spdlimit_offset
-        if cruise_set_speed_kph < v_ego_mph+1 and CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        if cruise_set_speed_kph+1 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
-        elif cruise_set_speed_kph < v_ego_kph+1 and not CS.out.gasPressed:
+        elif cruise_set_speed_kph+1 < v_ego_kph and not CS.out.gasPressed:
           self.onSpeedControl = True
         else:
           self.onSpeedControl = False
@@ -305,7 +305,7 @@ class NaviControl():
       self.osm_wait_timer = 0
 
     # self.gasPressed_old = CS.gasPressed
-    if var_speed > min(v_curv_speed, o_curv_speed):
+    if var_speed > min(v_curv_speed, o_curv_speed)+1:
       self.curvSpeedControl = True
     else:
       self.curvSpeedControl = False

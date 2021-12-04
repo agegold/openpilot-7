@@ -223,10 +223,12 @@ class Controls:
     self.osm_spdlimit_enabled = Params().get_bool("OSMSpeedLimitEnable")
     self.stock_navi_info_enabled = Params().get_bool("StockNaviSpeedEnabled")
     self.ignore_can_error_on_isg = Params().get_bool("IgnoreCANErroronISG")
+    self.ready_timer = 0
 
   def auto_enable(self, CS):
-    if CS.cruiseState.available and CS.vEgo >= self.auto_enable_speed * CV.KPH_TO_MS and CS.gearShifter == GearShifter.drive and self.sm['liveCalibration'].calStatus != Calibration.UNCALIBRATED:
-      if self.sm.all_alive_and_valid() and self.state != State.enabled and self.initialized:
+    if self.state != State.enabled:
+      if CS.cruiseState.available and CS.vEgo >= self.auto_enable_speed * CV.KPH_TO_MS and CS.gearShifter == GearShifter.drive and \
+       self.sm['liveCalibration'].calStatus != Calibration.UNCALIBRATED and self.initialized and self.ready_timer > 300:
         self.events.add( EventName.pcmEnable )
 
   def update_events(self, CS):
@@ -417,9 +419,9 @@ class Controls:
     #  and self.CP.openpilotLongitudinalControl and CS.vEgo < 0.3:
     #  self.events.add(EventName.noTarget)
 
-    print("auto_enabled={},  cruise_state={},  v_ego/enablespeed={:.1f}/{:.1f},  gear={},  cal_stat={},  can_valid={},  state={}".format(self.auto_enabled, CS.cruiseState.available, CS.vEgo, self.auto_enable_speed * CV.KPH_TO_MS, CS.gearShifter, self.sm['liveCalibration'].calStatus, self.sm.all_alive_and_valid(), self.state))
     # atom
     if self.auto_enabled:
+      self.ready_timer += 1 if self.ready_timer < 350 else 350
       self.auto_enable( CS )
 
   def data_sample(self):
@@ -476,7 +478,7 @@ class Controls:
         self.v_cruise_kph = self.v_cruise_kph_last
         if int(CS.vSetDis)-1 > self.v_cruise_kph:
           self.v_cruise_kph = int(CS.vSetDis)
-      elif CS.cruiseButtons in [Buttons.RES_ACCEL, Buttons.SET_DECEL] and self.variable_cruise and CS.cruiseState.modeSel != 0 and t_speed <= self.v_cruise_kph_last <= round(CS.vEgo*m_unit):
+      elif CS.cruiseButtons == Buttons.RES_ACCEL and self.variable_cruise and CS.cruiseState.modeSel != 0 and t_speed <= self.v_cruise_kph_last <= round(CS.vEgo*m_unit):
         self.v_cruise_kph = round(CS.vEgo*m_unit)
         if int(CS.vSetDis)-1 > self.v_cruise_kph:
           self.v_cruise_kph = int(CS.vSetDis)
@@ -810,9 +812,12 @@ class Controls:
       controlsState.limitSpeedCamera = int(round(self.sm['liveNaviData'].speedLimit))
       controlsState.limitSpeedCameraDist = float(self.sm['liveNaviData'].speedLimitDistance)
       controlsState.mapSign = int(self.sm['liveNaviData'].safetySign)
-    else:
+    elif self.stock_navi_info_enabled and int(CS.safetySign):
       controlsState.limitSpeedCamera = int(CS.safetySign)
       controlsState.limitSpeedCameraDist = float(CS.safetyDist)
+    else:
+      controlsState.limitSpeedCamera = 0
+      controlsState.limitSpeedCameraDist = 0
     controlsState.lateralControlMethod = int(self.lateral_control_method)
     controlsState.steerRatio = float(self.steerRatio_to_send)
     controlsState.dynamicTRMode = int(self.sm['longitudinalPlan'].dynamicTRMode)
