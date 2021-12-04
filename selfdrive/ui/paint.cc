@@ -587,7 +587,7 @@ static void ui_draw_vision_cruise_speed(UIState *s) {
   ui_draw_rect(s->vg, rect, COLOR_WHITE_ALPHA(100), 10, 20.);
 
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
-  if (s->scene.limitSpeedCamera > 19) {
+  if (s->scene.limitSpeedCamera > 19 && s->scene.limitSpeedCamera <= round(maxspeed)) {
     ui_draw_text(s, rect.centerX(), bdr_s+65, "LIMIT", 26 * 2.5, COLOR_WHITE_ALPHA(s->scene.cruiseAccStatus ? 200 : 100), "sans-regular");
   } else if (is_cruise_set) {
     const std::string maxspeed_str = std::to_string((int)std::nearbyint(maxspeed));
@@ -612,6 +612,7 @@ static void ui_draw_vision_speed(UIState *s) {
   const std::string speed_str = std::to_string((int)std::nearbyint(speed));
   UIScene &scene = s->scene;  
   NVGcolor val_color = COLOR_WHITE;
+  float gas_opacity = scene.a_req_value*255>255?255:scene.a_req_value*255;
 
   if (scene.brakePress && !scene.comma_stock_ui) {
   	val_color = COLOR_RED;
@@ -619,6 +620,8 @@ static void ui_draw_vision_speed(UIState *s) {
   	val_color = nvgRGBA(201, 34, 49, 100);
   } else if (scene.gasPress && !scene.comma_stock_ui) {
     val_color = nvgRGBA(0, 240, 0, 255);
+  } else if (scene.a_req_value > 0 && !scene.comma_stock_ui) {
+    val_color = nvgRGBA((255-int(gas_opacity)), (255-int((scene.a_req_value*10))), (255-int(gas_opacity)), 255);
   }
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   ui_draw_text(s, s->fb_w/2, 210, speed_str.c_str(), 96 * 2.5, val_color, "sans-bold");
