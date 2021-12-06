@@ -683,9 +683,9 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     blink_index = 0;
   }
   else {
-    //auto car_state = (*s->sm)["carState"].getCarState();
-    bool left_on = true;//car_state.getLeftBlinker();
-    bool right_on = true;//car_state.getRightBlinker();
+    auto car_state = (*s->sm)["carState"].getCarState();
+    bool left_on = car_state.getLeftBlinker();
+    bool right_on = car_state.getRightBlinker();
     const float img_alpha = 1.0f;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = 100;
