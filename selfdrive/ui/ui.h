@@ -245,7 +245,6 @@ typedef struct UIScene {
   float currentGear;
   float electGearStep;
   bool speedlimit_signtype;
-  int sl_opacity = 1;
   bool sl_decel_off;
   float a_req_value;
 
