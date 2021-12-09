@@ -613,19 +613,22 @@ static void ui_draw_vision_speed(UIState *s) {
   UIScene &scene = s->scene;  
   NVGcolor val_color = COLOR_WHITE;
   float gas_opacity = scene.a_req_value*255>255?255:scene.a_req_value*255;
+  float brake_opacity = abs(scene.a_req_value*175)>255?255:abs(scene.a_req_value*175);
 
   if (scene.brakePress && !scene.comma_stock_ui) {
   	val_color = COLOR_RED;
-  } else if (scene.brakeLights && !scene.comma_stock_ui) {
+  } else if (scene.brakeLights && speed_str == "0" && !scene.comma_stock_ui) {
   	val_color = nvgRGBA(201, 34, 49, 100);
   } else if (scene.gasPress && !scene.comma_stock_ui) {
     val_color = nvgRGBA(0, 240, 0, 255);
+  } else if (scene.a_req_value < 0 && !scene.comma_stock_ui) {
+    val_color = nvgRGBA((255-int(abs(scene.a_req_value*8))), (255-int(brake_opacity)), (255-int(brake_opacity)), 255);
   } else if (scene.a_req_value > 0 && !scene.comma_stock_ui) {
     val_color = nvgRGBA((255-int(gas_opacity)), (255-int((scene.a_req_value*10))), (255-int(gas_opacity)), 255);
   }
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   ui_draw_text(s, s->fb_w/2, 210, speed_str.c_str(), 96 * 2.5, val_color, "sans-bold");
-  ui_draw_text(s, s->fb_w/2, 290, s->scene.is_metric ? "km/h" : "mph", 36 * 2.5, COLOR_WHITE_ALPHA(200), "sans-regular");
+  ui_draw_text(s, s->fb_w/2, 290, s->scene.is_metric ? "km/h" : "mph", 36 * 2.5, scene.brakeLights?nvgRGBA(201, 34, 49, 100):COLOR_WHITE_ALPHA(200), "sans-regular");
 }
 
 static void ui_draw_vision_event(UIState *s) {
@@ -1100,6 +1103,14 @@ static void draw_safetysign(UIState *s) {
   float maxspeed = round(s->scene.controls_state.getVCruise());
   //int safety_speed = s->scene.liveNaviData.opkrspeedlimit;
   //float safety_dist = s->scene.liveNaviData.opkrspeedlimitdist;
+  int sl_opacity;
+  if (s->scene.sl_decel_off) {
+    sl_opacity = 3;
+  } else if (s->scene.controls_state.getOsmOffSpdLimit()) {
+    sl_opacity = 3;
+  } else {
+    sl_opacity = 1;
+  }
 
   snprintf(safetySpeed, sizeof(safetySpeed), "%d", safety_speed);
   if (maxspeed != 255.0) {
@@ -1123,44 +1134,44 @@ static void draw_safetysign(UIState *s) {
   if (safety_speed > 19 && !s->scene.comma_stock_ui) {
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     if (s->scene.speedlimit_signtype) {
-      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), 16.);
-      ui_draw_rect(s->vg, rect_s, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), 9, 17.);
-      ui_draw_rect(s->vg, rect_so, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), 6, 20.);
-      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-55, "SPEED", 55, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), "sans-bold");
-      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-20, "LIMIT", 55, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), "sans-bold");
+      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/sl_opacity), 16.);
+      ui_draw_rect(s->vg, rect_s, COLOR_BLACK_ALPHA(200/sl_opacity), 9, 17.);
+      ui_draw_rect(s->vg, rect_so, COLOR_WHITE_ALPHA(200/sl_opacity), 6, 20.);
+      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-55, "SPEED", 55, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
+      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-20, "LIMIT", 55, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
     } else {
-      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), diameter2/2);
-      ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200/s->scene.sl_opacity), 20, diameter/2);
+      ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/sl_opacity), diameter2/2);
+      ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200/sl_opacity), 20, diameter/2);
     }
     if (safety_speed < 100) {
       if (s->scene.speedlimit_signtype) {
-        ui_draw_text(s, rect_s.centerX(), rect_s.centerY()+35, safetySpeed, 140, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), "sans-bold");
+        ui_draw_text(s, rect_s.centerX(), rect_s.centerY()+35, safetySpeed, 140, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
       } else {
-        ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 160, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), "sans-bold");
+        ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 160, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
       }
     } else {
       if (s->scene.speedlimit_signtype) {
-        ui_draw_text(s, rect_s.centerX(), rect_s.centerY()+35, safetySpeed, 115, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), "sans-bold");
+        ui_draw_text(s, rect_s.centerX(), rect_s.centerY()+35, safetySpeed, 115, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
       } else {
-        ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 115, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), "sans-bold");
+        ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), safetySpeed, 115, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
       }
     }
     if (safety_dist != 0) {
-      ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity/s->scene.sl_opacity), 20.);
-      ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), 8, 20);
+      ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity/sl_opacity), 20.);
+      ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200/sl_opacity), 8, 20);
       nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-      ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), "sans-bold");
+      ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200/sl_opacity), "sans-bold");
     }
   } else if ((s->scene.mapSign == 195 || s->scene.mapSign == 197) && safety_speed == 0 && safety_dist != 0 && !s->scene.comma_stock_ui) {
-    ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), diameter2/2);
-    ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200/s->scene.sl_opacity), 20, diameter/2);
+    ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/sl_opacity), diameter2/2);
+    ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200/sl_opacity), 20, diameter/2);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), "VAR\nSEC", 108, COLOR_BLACK_ALPHA(200/s->scene.sl_opacity), "sans-bold");
+    ui_draw_text(s, rect_s.centerX(), rect_s.centerY(), "VAR\nSEC", 108, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
     if (safety_dist != 0) {
-      ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity/s->scene.sl_opacity), 20.);
-      ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), 8, 20);
+      ui_fill_rect(s->vg, rect_d, COLOR_RED_ALPHA(opacity/sl_opacity), 20.);
+      ui_draw_rect(s->vg, rect_d, COLOR_WHITE_ALPHA(200/sl_opacity), 8, 20);
       nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-      ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200/s->scene.sl_opacity), "sans-bold");
+      ui_draw_text(s, rect_d.centerX(), rect_d.centerY(), safetyDist, 78, COLOR_WHITE_ALPHA(200/sl_opacity), "sans-bold");
     }
   }
 }

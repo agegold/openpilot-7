@@ -106,7 +106,7 @@ struct Alert {
         // car is started, but controls is lagging or died
         return {"TAKE CONTROL IMMEDIATELY", "Controls Unresponsive",
                 "controlsUnresponsive", cereal::ControlsState::AlertSize::FULL,
-                AudibleAlert::CHIME_WARNING_REPEAT};
+                AudibleAlert::WARNING_IMMEDIATE};
       }
     }
     return {};
@@ -186,6 +186,7 @@ typedef struct UIScene {
   bool batteryCharging;
   char batteryStatus[64];
   int fanSpeed;
+  int tpmsUnit;
   float tpmsPressureFl;
   float tpmsPressureFr;
   float tpmsPressureRl;
@@ -244,7 +245,6 @@ typedef struct UIScene {
   float currentGear;
   float electGearStep;
   bool speedlimit_signtype;
-  int sl_opacity = 1;
   bool sl_decel_off;
   float a_req_value;
 
