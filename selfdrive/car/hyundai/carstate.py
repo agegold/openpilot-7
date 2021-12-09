@@ -386,7 +386,7 @@ class CarState(CarStateBase):
       ret.stockFcw = cp_scc.vl["SCC12"]["CF_VSM_Warn"] == 2
 
     if self.CP.sccBus != -1:
-          if self.CP.carFingerprint in FEATURES["use_fca"] or self.fca11_message:
+      if self.CP.carFingerprint in FEATURES["use_fca"] or self.fca11_message:
         ret.stockAeb = cp_fca.vl["FCA11"]["FCA_CmdAct"] != 0
         ret.stockFcw = cp_fca.vl["FCA11"]["CF_VSM_Warn"] == 2
       else:
