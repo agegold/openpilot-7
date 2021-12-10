@@ -186,11 +186,6 @@ typedef struct UIScene {
   bool batteryCharging;
   char batteryStatus[64];
   int fanSpeed;
-  int tpmsUnit;
-  float tpmsPressureFl;
-  float tpmsPressureFr;
-  float tpmsPressureRl;
-  float tpmsPressureRr;
   int lateralControlMethod;
   float radarDistance;
   bool standStill;
