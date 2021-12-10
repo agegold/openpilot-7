@@ -72,10 +72,10 @@ const Rect monitoring_btn = {50, 830, 140, 140};
 const Rect ml_btn = {1265, 905, 140, 140};
 const Rect stockui_btn = {15, 15, 184, 202};
 const Rect tuneui_btn = {1720, 15, 184, 202};
-const Rect livetunepanel_left_btn = {500, 480, 170, 160};
-const Rect livetunepanel_right_btn = {1250, 480, 170, 160};
-const Rect livetunepanel_left_above_btn = {500, 305, 170, 160};
-const Rect livetunepanel_right_above_btn = {1250, 305, 170, 160};
+const Rect livetunepanel_left_btn = {500, 730, 170, 160};
+const Rect livetunepanel_right_btn = {1250, 730, 170, 160};
+const Rect livetunepanel_left_above_btn = {500, 550, 170, 160};
+const Rect livetunepanel_right_above_btn = {1250, 550, 170, 160};
 const Rect speedlimit_btn = {220, 15, 190, 190};
 
 struct Alert {
