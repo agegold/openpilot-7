@@ -689,7 +689,7 @@ static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
     const float img_alpha = 1.0f;
     const int center_x = (s->fb_w - (bdr_s * 2)) / 2 + bdr_s;
     const int w = 100;
-    const int h = 70;
+    const int h = 140;
     const int gap = -70;
     const int base_y = bdr_s + 10;
     const int draw_count = 22;
@@ -1103,11 +1103,11 @@ static void draw_safetysign(UIState *s) {
   float maxspeed = round(s->scene.controls_state.getVCruise());
   //int safety_speed = s->scene.liveNaviData.opkrspeedlimit;
   //float safety_dist = s->scene.liveNaviData.opkrspeedlimitdist;
-  int sl_opacity;
+  int sl_opacity = 0;
   if (s->scene.sl_decel_off) {
     sl_opacity = 3;
-  } else if (s->scene.controls_state.getOsmOffSpdLimit()) {
-    sl_opacity = 3;
+  } else if (s->scene.osm_off_spdlimit) {
+    sl_opacity = 2;
   } else {
     sl_opacity = 1;
   }
@@ -1137,8 +1137,8 @@ static void draw_safetysign(UIState *s) {
       ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/sl_opacity), 16.);
       ui_draw_rect(s->vg, rect_s, COLOR_BLACK_ALPHA(200/sl_opacity), 9, 17.);
       ui_draw_rect(s->vg, rect_so, COLOR_WHITE_ALPHA(200/sl_opacity), 6, 20.);
-      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-45, "SPEED", 55, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
-      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-10, "LIMIT", 55, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
+      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-55, "SPEED", 55, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
+      ui_draw_text(s, rect_s.centerX(), rect_s.centerY()-20, "LIMIT", 55, COLOR_BLACK_ALPHA(200/sl_opacity), "sans-bold");
     } else {
       ui_fill_rect(s->vg, rect_si, COLOR_WHITE_ALPHA(200/sl_opacity), diameter2/2);
       ui_draw_rect(s->vg, rect_s, COLOR_RED_ALPHA(200/sl_opacity), 20, diameter/2);

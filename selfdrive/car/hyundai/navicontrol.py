@@ -149,7 +149,7 @@ class NaviControl():
       if CS.map_enabled and self.liveNaviData.safetySign == 124: #과속방지턱이 있으면 주행속도에 연동하여 제한속도 30km/h까지 가변으로 감속하기
         cruise_set_speed_kph = interp(v_ego_kph, [40, 60, 80], [30, 35, 40])
         self.onSpeedControl = True
-      elif int(self.sm['liveMapData'].speedLimit) > 19 and self.osm_speedlimit_enabled:  # osm speedlimit
+      elif int(self.sm['liveMapData'].speedLimit) > 19 and self.osm_speedlimit_enabled and not self.sm['controlsState'].osmOffSpdLimit:  # osm speedlimit
         if self.stock_navi_info_enabled and CS.safety_sign > 19:
           spdTarget = min(self.sm['liveMapData'].speedLimit, CS.safety_sign)
         else:
@@ -295,7 +295,7 @@ class NaviControl():
     else:
       var_speed = navi_speed
       ttime = 70 if CS.is_set_speed_in_mph else 50
-      self.t_interval = ttime if not (self.onSpeedControl or self.curvSpeedControl) else 10 if CS.is_set_speed_in_mph else 7
+      self.t_interval = ttime if not ((self.onSpeedControl or self.curvSpeedControl) and self.sm['controlsState'].osmOffSpdLimit) else 10 if CS.is_set_speed_in_mph else 7
 
     if CS.cruise_set_mode in [1,3,4] and self.curv_decel_option in [1,2]:
       if CS.out.vEgo * CV.MS_TO_KPH > 40 and modelSpeed < 90 and path_plan.laneChangeState == LaneChangeState.off and \

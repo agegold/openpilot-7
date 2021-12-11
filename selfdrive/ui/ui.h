@@ -72,10 +72,10 @@ const Rect monitoring_btn = {50, 830, 140, 140};
 const Rect ml_btn = {1265, 905, 140, 140};
 const Rect stockui_btn = {15, 15, 184, 202};
 const Rect tuneui_btn = {1720, 15, 184, 202};
-const Rect livetunepanel_left_btn = {500, 480, 170, 160};
-const Rect livetunepanel_right_btn = {1250, 480, 170, 160};
-const Rect livetunepanel_left_above_btn = {500, 305, 170, 160};
-const Rect livetunepanel_right_above_btn = {1250, 305, 170, 160};
+const Rect livetunepanel_left_btn = {500, 730, 170, 160};
+const Rect livetunepanel_right_btn = {1250, 730, 170, 160};
+const Rect livetunepanel_left_above_btn = {500, 550, 170, 160};
+const Rect livetunepanel_right_above_btn = {1250, 550, 170, 160};
 const Rect speedlimit_btn = {220, 15, 190, 190};
 
 struct Alert {
@@ -106,7 +106,7 @@ struct Alert {
         // car is started, but controls is lagging or died
         return {"TAKE CONTROL IMMEDIATELY", "Controls Unresponsive",
                 "controlsUnresponsive", cereal::ControlsState::AlertSize::FULL,
-                AudibleAlert::CHIME_WARNING_REPEAT};
+                AudibleAlert::WARNING_IMMEDIATE};
       }
     }
     return {};
@@ -186,11 +186,6 @@ typedef struct UIScene {
   bool batteryCharging;
   char batteryStatus[64];
   int fanSpeed;
-  int tpmsUnit;
-  float tpmsPressureFl;
-  float tpmsPressureFr;
-  float tpmsPressureRl;
-  float tpmsPressureRr;
   int lateralControlMethod;
   float radarDistance;
   bool standStill;
@@ -246,6 +241,7 @@ typedef struct UIScene {
   float electGearStep;
   bool speedlimit_signtype;
   bool sl_decel_off;
+  bool osm_off_spdlimit;
   float a_req_value;
 
   cereal::DeviceState::Reader deviceState;
