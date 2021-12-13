@@ -1182,7 +1182,7 @@ static void draw_compass(UIState *s) {
     const int radius = 185;
     const int compass_x = 1920 / 2 - 20;
     const int compass_y = 1080 - 40;
-    ui_draw_circle_image_rotation(s, compass_x, compass_y, radius + 40, "direction", nvgRGBA(0, 0, 0, 0), 0.7f, -(s->scene.bearingUblox));
+    ui_draw_circle_image_rotation(s, compass_x, compass_y, radius + 40, "direction", nvgRGBA(0, 0, 0, 0), 0.7f, s->scene.bearingUblox);
     ui_draw_circle_image_rotation(s, compass_x, compass_y, radius + 40, "compass", nvgRGBA(0, 0, 0, 0), 0.8f);
   }
 }
