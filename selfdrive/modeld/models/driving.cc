@@ -16,8 +16,8 @@ constexpr float FCW_THRESHOLD_5MS2_HIGH = 0.15;
 constexpr float FCW_THRESHOLD_5MS2_LOW = 0.05;
 constexpr float FCW_THRESHOLD_3MS2 = 0.7;
 
-float prev_brake_5ms2_probs[5] = {0,0,0,0,0};
-float prev_brake_3ms2_probs[3] = {0,0,0};
+std::array<float, 5> prev_brake_5ms2_probs = {0,0,0,0,0};
+std::array<float, 3> prev_brake_3ms2_probs = {0,0,0};
 
 // #define DUMP_YUV
 
@@ -248,7 +248,7 @@ void fill_lane_lines(cereal::ModelDataV2::Builder &framed, const std::array<floa
 }
 
 void fill_road_edges(cereal::ModelDataV2::Builder &framed, const std::array<float, TRAJECTORY_SIZE> &plan_t,
-                     const ModelDataRawRoadEdges &edges) {
+                     const ModelOutputRoadEdges &edges) {
   std::array<float, TRAJECTORY_SIZE> left_y, left_z;
   std::array<float, TRAJECTORY_SIZE> right_y, right_z;
   for (int j=0; j<TRAJECTORY_SIZE; j++) {
