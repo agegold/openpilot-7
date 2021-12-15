@@ -40,7 +40,6 @@ const double METER_TO_FOOT = 3.28084;
 namespace util {
 
 void set_thread_name(const char* name);
-
 int set_realtime_priority(int level);
 int set_core_affinity(std::vector<int> cores);
 
