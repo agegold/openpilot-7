@@ -251,7 +251,7 @@ class LongitudinalMpc():
     # 1.1 TR fails at 3+ m/s/s test
     # 1.2-1.8 TR succeeds at all tests with no FCW
 
-    TRs = [1.2, 1.8, 2.7]
+    # TRs = [1.2, 1.8, 2.7]
     x_ego_obstacle_cost_multiplier = 1 #interp(self.desired_TR, TRs, [3., 1.0, 0.1])
     j_ego_cost_multiplier = 1 #interp(self.desired_TR, TRs, [0.5, 1.0, 1.0])
     d_zone_cost_multiplier = 1 #interp(self.desired_TR, TRs, [4., 1.0, 1.0])
