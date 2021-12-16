@@ -136,7 +136,7 @@ def manager_init():
     ("OpkrRunNaviOnBoot", "0"),
     ("CruiseGap1", "10"),
     ("CruiseGap2", "12"),
-    ("CruiseGap3", "145"),
+    ("CruiseGap3", "14"),
     ("CruiseGap4", "16"),
     ("DynamicTR", "2"),
     ("OpkrBattLess", "0"),
@@ -178,6 +178,7 @@ def manager_init():
     ("CurvDecelOption", "1"),
     ("FCA11Message", "0"),
     ("StandstillResumeAlt", "0"),
+    ("MapboxEnabled", "0"),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))
