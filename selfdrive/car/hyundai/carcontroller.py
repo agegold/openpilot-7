@@ -63,6 +63,7 @@ class CarController():
     self.last_lead_distance = 0
     self.resume_wait_timer = 0
     self.last_resume_frame = 0
+    self.accel = 0
     self.lanechange_manual_timer = 0
     self.emergency_manual_timer = 0
     self.driver_steering_torque_above = False
@@ -537,6 +538,7 @@ class CarController():
     #   stopping = (actuators.longControlState == LongCtrlState.stopping)
     #   set_speed_in_units = hud_speed * (CV.MS_TO_MPH if CS.clu11["CF_Clu_SPEED_UNIT"] == 1 else CV.MS_TO_KPH)
     #   can_sends.extend(create_acc_commands(self.packer, enabled, accel, jerk, int(frame / 2), lead_visible, set_speed_in_units, stopping))
+    #   self.accel = accel
 
     if CS.CP.sccBus != 0 and self.counter_init and self.longcontrol:
       if frame % 2 == 0:
@@ -627,4 +629,8 @@ class CarController():
     elif frame % 5 == 0 and self.car_fingerprint in FEATURES["send_hda_mfa"]:
       can_sends.append(create_hda_mfc(self.packer, CS, enabled, left_lane, right_lane ))
 
-    return can_sends
+    new_actuators = actuators.copy()
+    new_actuators.steer = apply_steer / self.p.STEER_MAX
+    new_actuators.accel = self.accel
+
+    return new_actuators, can_sends

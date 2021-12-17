@@ -94,7 +94,7 @@ class LatControlINDI():
 
     return self.sat_count > self.sat_limit
 
-  def update(self, active, CS, CP, VM, params, curvature, curvature_rate):
+  def update(self, active, CS, CP, VM, params, last_actuators, curvature, curvature_rate):
     self.speed = CS.vEgo
 
     self.RC = interp(self.speed, self._RC[0], self._RC[1])
