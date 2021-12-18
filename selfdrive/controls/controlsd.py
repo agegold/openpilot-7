@@ -783,7 +783,7 @@ class Controls:
           self.hkg_stock_lkas = True
       if not self.hkg_stock_lkas:
         # send car controls over can
-        can_sends = self.CI.apply(CC)
+        self.last_actuators, can_sends = self.CI.apply(CC)
         self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
     else:
       if not self.read_only and self.initialized:
