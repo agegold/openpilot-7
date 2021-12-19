@@ -63,7 +63,6 @@ class ParamsLearner:
 
       if self.active:
         if msg.inputsOK and msg.posenetOK:
-    
           if yaw_rate_valid:
             self.kf.predict_and_observe(t,
                                         ObservationKind.ROAD_FRAME_YAW_RATE,

@@ -56,7 +56,6 @@ class VehicleModel:
       sa: Steering wheel angle [rad]
       u: Speed [m/s]
       roll: Road Roll [rad]
-      
     Returns:
       2x1 matrix with steady state solution (lateral speed, rotational speed)
     """
@@ -107,7 +106,7 @@ class VehicleModel:
 
   def roll_compensation(self, roll: float, u: float) -> float:
     """Calculates the roll-compensation to curvature
-    
+
     Args:
       roll: Road Roll [rad]
       u: Speed [m/s]
