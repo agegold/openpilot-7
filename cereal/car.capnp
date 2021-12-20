@@ -366,9 +366,9 @@ struct CarControl {
     steer @2: Float32;
     steeringAngleDeg @3: Float32;
 
+    speed @6: Float32; # m/s
     accel @4: Float32; # m/s^2
     longControlState @5: LongControlState;
-    speed @6: Float32; # m/s
     
     enum LongControlState @0xe40f3a917d908282{
       off @0;
@@ -673,5 +673,5 @@ struct CarParams {
   enableCameraDEPRECATED @4 :Bool;
   isPandaBlackDEPRECATED @39: Bool;
   hasStockCameraDEPRECATED @57 :Bool;
-  minSpeedCanDEPRECATED @51 :Float32;  
+  minSpeedCanDEPRECATED @51 :Float32;
 }

@@ -175,10 +175,11 @@ def manager_init():
     ("OpkrSpeedLimitSignType", "0"),
     ("StockLKASEnabled", "1"),
     ("SpeedLimitDecelOff", "0"),
-    ("CurvDecelOption", "1"),
+    ("CurvDecelOption", "2"),
     ("FCA11Message", "0"),
     ("StandstillResumeAlt", "0"),
     ("MapboxEnabled", "0"),
+    ("AutoRESDelay", "0"),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))
@@ -276,6 +277,7 @@ def manager_cleanup():
 
 
 def manager_thread():
+  cloudlog.bind(daemon="manager")
   cloudlog.info("manager start")
   cloudlog.info({"environ": os.environ})
 
