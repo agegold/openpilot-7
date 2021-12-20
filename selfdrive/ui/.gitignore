@@ -1,7 +1,6 @@
 moc_*
 *.moc
 
-_mui
 watch3
 installer/installers/*
 replay/replay

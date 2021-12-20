@@ -92,7 +92,7 @@ class CarKalman(KalmanFilter):
   def generate_code(generated_dir):
     dim_state = CarKalman.initial_x.shape[0]
     name = CarKalman.name
-
+    
     # vehicle models comes from The Science of Vehicle Dynamics: Handling, Braking, and Ride of Road and Race Cars
     # Model used is in 6.15 with formula from 6.198
 
@@ -169,7 +169,7 @@ class CarKalman(KalmanFilter):
     x_init[States.ANGLE_OFFSET] = angle_offset
 
     if P_initial is not None:
-      self.P_initial = P_initial
+          self.P_initial = P_initial
     # init filter
     self.filter = EKF_sym(generated_dir, self.name, self.Q, self.initial_x, self.P_initial, dim_state, dim_state_err, global_vars=self.global_vars, logger=cloudlog)
 

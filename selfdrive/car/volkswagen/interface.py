@@ -152,7 +152,7 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.84
 
     else:
-      raise ValueError(f"unsupported car {candidate}")
+      raise ValueError("unsupported car %s" % candidate)
 
     ret.rotationalInertia = scale_rot_inertia(ret.mass, ret.wheelbase)
     ret.centerToFront = ret.wheelbase * 0.45
@@ -216,11 +216,11 @@ class CarInterface(CarInterfaceBase):
     return self.CS.out
 
   def apply(self, c):
-    ret = self.CC.update(c.enabled, self.CS, self.frame, self.ext_bus, c.actuators,
-                         c.hudControl.visualAlert,
-                         c.hudControl.leftLaneVisible,
-                         c.hudControl.rightLaneVisible,
-                         c.hudControl.leftLaneDepart,
-                         c.hudControl.rightLaneDepart)
+    can_sends = self.CC.update(c.enabled, self.CS, self.frame, self.ext_bus, c.actuators,
+                   c.hudControl.visualAlert,
+                   c.hudControl.leftLaneVisible,
+                   c.hudControl.rightLaneVisible,
+                   c.hudControl.leftLaneDepart,
+                   c.hudControl.rightLaneDepart)
     self.frame += 1
-    return ret
+    return can_sends

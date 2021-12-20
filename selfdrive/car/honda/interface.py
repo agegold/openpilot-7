@@ -301,7 +301,7 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.6], [0.18]] # TODO: can probably use some tuning
 
     else:
-      raise ValueError(f"unsupported car {candidate}")
+      raise ValueError("unsupported car %s" % candidate)
 
     # These cars use alternate user brake msg (0x1BE)
     if candidate in HONDA_BOSCH_ALT_BRAKE_SIGNAL:
@@ -350,6 +350,7 @@ class CarInterface(CarInterfaceBase):
     ret = self.CS.update(self.cp, self.cp_cam, self.cp_body)
 
     ret.canValid = self.cp.can_valid and self.cp_cam.can_valid and (self.cp_body is None or self.cp_body.can_valid)
+    ret.yawRate = self.VM.yaw_rate(ret.steeringAngleDeg * CV.DEG_TO_RAD, ret.vEgo)
 
     buttonEvents = []
 
@@ -437,13 +438,13 @@ class CarInterface(CarInterfaceBase):
     else:
       hud_v_cruise = 255
 
-    ret = self.CC.update(c.enabled, c.active, self.CS, self.frame,
-                         c.actuators,
-                         c.cruiseControl.cancel,
-                         hud_v_cruise,
-                         c.hudControl.lanesVisible,
-                         hud_show_car=c.hudControl.leadVisible,
-                         hud_alert=c.hudControl.visualAlert)
+    can_sends = self.CC.update(c.enabled, c.active, self.CS, self.frame,
+                               c.actuators,
+                               c.cruiseControl.cancel,
+                               hud_v_cruise,
+                               c.hudControl.lanesVisible,
+                               hud_show_car=c.hudControl.leadVisible,
+                               hud_alert=c.hudControl.visualAlert)
 
     self.frame += 1
-    return ret
+    return can_sends

@@ -434,7 +434,6 @@ static void ui_draw_gear( UIState *s ) {
       case 2 : ui_draw_image(s, {x, y+10, w-10, h-10}, "gear_D", 1.0f); break;
       case 3 : ui_draw_image(s, {x, y+10, w-10, h-10}, "gear_N", 1.0f); break;
       case 4 : ui_draw_image(s, {x, y+10, w-10, h-10}, "gear_R", 1.0f); break;
-      case 5 : ui_draw_image(s, {x, y+10, w-10, h-10}, "gear_D", 1.0f); break;
       case 7 : ui_draw_image(s, {x, y+10, w-10, h-10}, "gear_R", 1.0f); break;
       default: ui_draw_image(s, {x, y+10, w-10, h-10}, "gear_X", 1.0f); break;
     }

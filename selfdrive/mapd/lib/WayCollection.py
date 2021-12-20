@@ -79,10 +79,7 @@ class WayCollection():
         # i.e. prefere motorways over other roads and so on. This is to prevent selecting a small paralel
         # road to a main road when the accuracy is poor.
         else:
-          try:
-            wr_accurate_distance.sort(key=lambda wr: wr.highway_rank)
-          except:
-            pass
+          wr_accurate_distance.sort(key=lambda wr: wr.highway_rank)
           current = wr_accurate_distance[0]
 
     return Route(current, self.wr_index, self.id, self.query_center)

@@ -62,7 +62,4 @@ class CarController():
 
     # TODO: HUD control
 
-    new_actuators = actuators.copy()
-    new_actuators.steeringAngleDeg = apply_angle
-
-    return actuators, can_sends
+    return can_sends

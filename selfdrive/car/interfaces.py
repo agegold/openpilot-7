@@ -1,6 +1,6 @@
 import os
 import time
-from abc import abstractmethod, ABC
+from abc import abstractmethod
 from typing import Dict, Tuple, List
 
 from cereal import car
@@ -26,7 +26,7 @@ ACCEL_MIN = -3.5
 # generic car and radar interfaces
 
 
-class CarInterfaceBase(ABC):
+class CarInterfaceBase():
   def __init__(self, CP, CarController, CarState):
     self.CP = CP
     self.VM = VehicleModel(CP)
@@ -182,7 +182,7 @@ class CarInterfaceBase(ABC):
     return events
 
 
-class RadarInterfaceBase(ABC):
+class RadarInterfaceBase():
   def __init__(self, CP):
     self.pts = {}
     self.delay = 0
@@ -196,7 +196,7 @@ class RadarInterfaceBase(ABC):
     return ret
 
 
-class CarStateBase(ABC):
+class CarStateBase:
   def __init__(self, CP):
     self.CP = CP
     self.car_fingerprint = CP.carFingerprint
