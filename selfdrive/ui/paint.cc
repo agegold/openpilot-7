@@ -1344,8 +1344,8 @@ static void ui_draw_blindspot_mon(UIState *s) {
         car_valid_alpha1 = 250;
         car_valid_alpha2 = 10;
       } else {
-        car_valid_alpha1 = 100;
-        car_valid_alpha2 = 0;
+        car_valid_alpha1 = 10;
+        car_valid_alpha2 = 250;
       }
     } else {
       scene.blindspot_blinkingrate = 120;
@@ -1356,7 +1356,7 @@ static void ui_draw_blindspot_mon(UIState *s) {
       ui_fill_rect(s->vg, rect_l, gradient_blindspot, 0);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(car_valid_alpha2), COLOR_RED_ALPHA(car_valid_alpha1));
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot, 0);
     }
   }
