@@ -1896,3 +1896,18 @@ private:
   
   void refresh();
 };
+
+class AutoRESDelay : public AbstractControl {
+  Q_OBJECT
+
+public:
+  AutoRESDelay();
+
+private:
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
+  Params params;
+  
+  void refresh();
+};
