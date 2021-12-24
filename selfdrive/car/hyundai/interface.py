@@ -73,12 +73,21 @@ class CarInterface(CarInterfaceBase):
     ret.longitudinalTuning.kfV = [1., 1., 1., 1., 1., 1.]
 
     ret.stoppingControl = False
-    ret.vEgoStopping = 1.0  # 1.0, 0.5
+    # OPKR
+    # ret.vEgoStopping = 1.0  # 1.0, 0.5
+    # ret.vEgoStarting = 0.5
+    # ret.startAccel = 0.0 # 0.0, -0.2
+    # ret.stopAccel = 0.0 # 0.0, -0.5
+    # ret.stoppingDecelRate = 0.8 # 0.8, 0.2
+    # ret.startingAccelRate = 3.2 # 3.2, 0.8
+
+    # Neokii
+    ret.startAccel = -0.5
+    ret.stopAccel = 0.0 # -2.0
+    ret.startingAccelRate = 5.0  # brake_travel/s while releasing on restart
+    ret.stoppingDecelRate = 0.8 #0.3  # brake_travel/s while trying to stop
+    ret.vEgoStopping = 0.6
     ret.vEgoStarting = 0.5
-    ret.startAccel = 0.0 # 0.0, -0.2
-    ret.stopAccel = 0.0 # 0.0, -0.5
-    ret.stoppingDecelRate = 0.8 # 0.8, 0.2
-    ret.startingAccelRate = 3.2 # 3.2, 0.8
 
     ret.vCruisekph = 0
     ret.resSpeed = 0
@@ -209,7 +218,7 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
     elif candidate in [CAR.GRANDEUR_IG_FL, CAR.GRANDEUR_IG_FL_HEV]:
-      ret.mass = 1675. + STD_CARGO_KG
+      ret.mass = 1725. + STD_CARGO_KG
       ret.wheelbase = 2.885
     elif candidate == CAR.VELOSTER:
       ret.mass = 3558. * CV.LB_TO_KG

@@ -232,6 +232,9 @@ struct CarState {
   isMph @52 :Bool;
   aReqValue @53 :Float32;
 
+  autoHold @54 : Int32;
+  currentGear @55 :Float32;  
+
   struct TPMS {
     unit @0 :Int8;
     fl @1 :Float32;
@@ -366,7 +369,7 @@ struct CarControl {
     speed @6: Float32; # m/s
     accel @4: Float32; # m/s^2
     longControlState @5: LongControlState;
-
+    
     enum LongControlState @0xe40f3a917d908282{
       off @0;
       pid @1;
