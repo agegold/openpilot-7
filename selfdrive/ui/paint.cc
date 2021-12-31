@@ -370,6 +370,7 @@ static void ui_draw_debug(UIState *s) {
       ui_print(s, ui_viz_rx, ui_viz_ry+560, "SL:%.0f", (*s->sm)["carState"].getCarState().getSafetySign());
       ui_print(s, ui_viz_rx, ui_viz_ry+600, "DS:%.0f", (*s->sm)["carState"].getCarState().getSafetyDist());
     }
+    
     if (scene.osm_enabled) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+240, "SL:%.0f", scene.liveMapData.ospeedLimit);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+280, "SLA:%.0f", scene.liveMapData.ospeedLimitAhead);
@@ -615,7 +616,8 @@ static void ui_draw_vision_speed(UIState *s) {
   const std::string speed_str = std::to_string((int)std::nearbyint(speed));
   UIScene &scene = s->scene;  
   NVGcolor val_color = COLOR_WHITE;
-  float act_accel = scene.longitudinal_control?scene.op_accel:scene.a_req_value;
+
+  float act_accel = !scene.longitudinal_control?scene.a_req_value:0;
   float gas_opacity = act_accel*255>255?255:act_accel*255;
   float brake_opacity = abs(act_accel*175)>255?255:abs(act_accel*175);
 

@@ -155,7 +155,8 @@ class CarController():
     self.curv_speed_control = False
     self.vFuture = 0
     self.cruise_init = False
-    self.stp_adj_start = False
+    self.adjacent_accel = 0
+    self.adjacent_accel_enabled = False
 
     if CP.lateralTuning.which() == 'pid':
       self.str_log2 = 'T={:0.2f}/{:0.3f}/{:0.2f}/{:0.5f}'.format(CP.lateralTuning.pid.kpV[1], CP.lateralTuning.pid.kiV[1], CP.lateralTuning.pid.kdV[0], CP.lateralTuning.pid.kf)
@@ -578,20 +579,27 @@ class CarController():
         elif self.radar_helper_option == 2:
           if 0 < CS.lead_distance <= 149:
             if self.stopping_dist_adj_enabled:
-              if CS.clu_Vanz < 3 and 3.7 < CS.lead_distance < 7.0 and aReqValue < 0 and -5 < lead_objspd and self.accel < 0:
-                accel = self.accel + (2.0 * DT_CTRL)
-                self.stp_adj_start = True
-              elif CS.lead_distance <= 3.7 and aReqValue < 0 and -5 < lead_objspd and self.accel > aReqValue and self.stp_adj_start:
+              if CS.clu_Vanz < 6 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel < 0 and not self.adjacent_accel_enabled:
+                self.adjacent_accel = self.accel
+                self.adjacent_accel_enabled = True
+              if CS.clu_Vanz < 6 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel < self.adjacent_accel:
+                accel = self.accel + (3.0 * DT_CTRL)
+              elif CS.clu_Vanz < 6 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel >= self.adjacent_accel:
+                accel = self.accel
+              elif CS.lead_distance <= 3.7 and aReqValue < 0 and -5 < lead_objspd and self.accel > aReqValue:
                 accel = self.accel - (3.0 * DT_CTRL)
+                self.adjacent_accel = 0
+                self.adjacent_accel_enabled = False
               else:
                 accel = aReqValue
-                self.stp_adj_start = False
+                self.adjacent_accel = 0
+                self.adjacent_accel_enabled = False
             else:
               accel = aReqValue
-              self.stp_adj_start = False
+              self.adjacent_accel = 0
+              self.adjacent_accel_enabled = False
           else:
             accel = aReqValue
-            self.stp_adj_start = False
         elif 0 < CS.lead_distance <= 4.0: # use radar by force to stop anyway below 4.0m if lead car is detected.
           stock_weight = interp(CS.lead_distance, [2.5, 4.0], [1., 0.])
           accel = accel * (1. - stock_weight) + aReqValue * stock_weight
