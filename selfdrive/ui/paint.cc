@@ -617,7 +617,7 @@ static void ui_draw_vision_speed(UIState *s) {
   UIScene &scene = s->scene;  
   NVGcolor val_color = COLOR_WHITE;
 
-  float act_accel = (!scene.longitudinal_control || scene.radar_long_helper == 2)?scene.a_req_value:0;
+  float act_accel = !scene.longitudinal_control?scene.a_req_value:0;
   float gas_opacity = act_accel*255>255?255:act_accel*255;
   float brake_opacity = abs(act_accel*175)>255?255:abs(act_accel*175);
 
@@ -1037,7 +1037,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
   }
 
   //cruise gap
-  if (scene.longitudinal_control && scene.radar_long_helper != 2) {
+  if (scene.longitudinal_control) {
     char val_str[16];
     char uom_str[6];
     NVGcolor val_color = COLOR_WHITE_ALPHA(200);

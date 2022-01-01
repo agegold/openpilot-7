@@ -1748,45 +1748,16 @@ private:
   void refresh();
 };
 
-class OCurvSpeed : public AbstractControl {
+class OCurvOffset : public AbstractControl {
   Q_OBJECT
 
 public:
-  OCurvSpeed();
+  OCurvOffset();
 
 private:
-  QPushButton btn1;
-  QPushButton btn2;
-  QPushButton btn3;
-  QPushButton btn4;
-  QPushButton btn5;
-  QLabel label1;
-  QLabel label2;
-  QLabel label3;
-  QLabel label4;
-  QLabel label5;
-  QLabel label1a;
-  QLabel label2a;
-  QLabel label3a;
-  QLabel label4a;
-  QLabel label5a;
-  Params params;
-
-  void refresh1();
-  void refresh2();
-  void refresh3();
-  void refresh4();
-  void refresh5();
-};
-
-class OCurvSpeedUD : public AbstractControl {
-  Q_OBJECT
-
-public:
-  OCurvSpeedUD();
-
-private:
-  QPushButton btn;
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
   Params params;
   
   void refresh();
