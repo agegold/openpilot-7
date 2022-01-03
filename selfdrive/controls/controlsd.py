@@ -166,7 +166,7 @@ class Controls:
     self.v_cruise_kph_last = 0
     self.mismatch_counter = 0
     self.cruise_mismatch_counter = 0
-    self.can_error_counter = 0
+    self.can_rcv_error_counter = 0
     self.last_blinker_frame = 0
     self.saturated_count = 0
     self.distance_traveled = 0
@@ -310,9 +310,9 @@ class Controls:
                                                  LaneChangeState.laneChangeFinishing]:
       self.events.add(EventName.laneChange)
 
-    if self.can_rcv_error or not CS.canValid and self.ignore_can_error_on_isg and CS.vEgo > 1:
+    if not CS.canValid and self.ignore_can_error_on_isg and CS.vEgo > 1:
       self.events.add(EventName.canError)
-    elif self.can_rcv_error or not CS.canValid and not self.ignore_can_error_on_isg:
+    elif not CS.canValid and not self.ignore_can_error_on_isg:
       self.events.add(EventName.canError)
 
     safety_mismatch = self.sm['pandaState'].safetyModel != self.CP.safetyModel or self.sm['pandaState'].safetyParam != self.CP.safetyParam
@@ -449,7 +449,7 @@ class Controls:
 
     # Check for CAN timeout
     if not can_strs:
-      self.can_error_counter += 1
+      self.can_rcv_error_counter += 1
       self.can_rcv_error = True
     else:
       self.can_rcv_error = False
@@ -833,7 +833,7 @@ class Controls:
     controlsState.cumLagMs = -self.rk.remaining * 1000.
     controlsState.startMonoTime = int(start_time * 1e9)
     controlsState.forceDecel = bool(force_decel)
-    controlsState.canErrorCounter = self.can_error_counter
+    controlsState.canErrorCounter = self.can_rcv_error_counter
     controlsState.alertTextMsg1 = self.log_alertTextMsg1
     controlsState.alertTextMsg2 = self.log_alertTextMsg2
     controlsState.osmOffSpdLimit = self.osm_off_spdlimit
