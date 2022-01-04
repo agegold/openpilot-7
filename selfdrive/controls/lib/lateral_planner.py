@@ -324,7 +324,7 @@ class LateralPlanner:
     lateralPlan.rProb = float(self.LP.rll_prob)
     lateralPlan.dProb = float(self.LP.d_prob)
 
-    lateralPlan..mpcSolutionValid = bool(plan_solution_valid)
+    lateralPlan.mpcSolutionValid = bool(plan_solution_valid)
 
     lateralPlan.desire = self.desire
     lateralPlan.useLaneLines = self.use_lanelines
