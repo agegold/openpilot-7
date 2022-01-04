@@ -160,9 +160,9 @@ class NaviControl():
           cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
         else:
           cruise_set_speed_kph = spdTarget + self.map_spdlimit_offset
-        if cruise_set_speed_kph+1 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        if cruise_set_speed_kph+1.5 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
-        elif cruise_set_speed_kph+1 < v_ego_kph and not CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        elif cruise_set_speed_kph+1.5 < v_ego_kph and not CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
         else:
           self.onSpeedControl = False
@@ -192,9 +192,9 @@ class NaviControl():
           cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
         else:
           cruise_set_speed_kph = spdTarget + self.map_spdlimit_offset
-        if cruise_set_speed_kph+1 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        if cruise_set_speed_kph+1.5 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
-        elif cruise_set_speed_kph+1 < v_ego_kph and not CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        elif cruise_set_speed_kph+1.5 < v_ego_kph and not CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
         else:
           self.onSpeedControl = False
@@ -225,9 +225,9 @@ class NaviControl():
           cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
         else:
           cruise_set_speed_kph = spdTarget + self.map_spdlimit_offset
-        if cruise_set_speed_kph+1 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        if cruise_set_speed_kph+1.5 < v_ego_mph and CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
-        elif cruise_set_speed_kph+1 < v_ego_kph and not CS.is_set_speed_in_mph and not CS.out.gasPressed:
+        elif cruise_set_speed_kph+1.5 < v_ego_kph and not CS.is_set_speed_in_mph and not CS.out.gasPressed:
           self.onSpeedControl = True
         else:
           self.onSpeedControl = False
