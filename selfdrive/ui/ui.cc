@@ -44,11 +44,11 @@ static int get_path_length_idx(const cereal::ModelDataV2::XYZTData::Reader &line
   return max_idx;
 }
 
-static void update_leads(UIState *s, const cereal::RadarState::Reader &radar_state, std::optional<cereal::ModelDataV2::XYZTData::Reader> line) {
+static void update_leads(UIState *s, const cereal::RadarState::Reader &radar_state, const cereal::ModelDataV2::XYZTData::Reader &line) {
   for (int i = 0; i < 2; ++i) {
     auto lead_data = (i == 0) ? radar_state.getLeadOne() : radar_state.getLeadTwo();
     if (lead_data.getStatus()) {
-      float z = line ? (*line).getZ()[get_path_length_idx(*line, lead_data.getDRel())] : 0.0;
+      float z = line.getZ()[get_path_length_idx(line, lead_data.getDRel())];
       calib_frame_to_full_frame(s, lead_data.getDRel(), -lead_data.getYRel(), z + 1.22, &s->scene.lead_vertices[i]);
     }
   }
@@ -73,11 +73,11 @@ static void update_model(UIState *s, const cereal::ModelDataV2::Reader &model) {
   auto model_position = model.getPosition();
   float max_distance = std::clamp(model_position.getX()[TRAJECTORY_SIZE - 1],
                                   MIN_DRAW_DISTANCE, MAX_DRAW_DISTANCE);
+  int max_idx = get_path_length_idx(model_position, max_distance);                                  
 
   // update lane lines
   const auto lane_lines = model.getLaneLines();
   const auto lane_line_probs = model.getLaneLineProbs();
-  int max_idx = get_path_length_idx(lane_lines[0], max_distance);
   for (int i = 0; i < std::size(scene.lane_line_vertices); i++) {
     scene.lane_line_probs[i] = lane_line_probs[i];
     update_line_data(s, lane_lines[i], 0.025 * scene.lane_line_probs[i], 0, &scene.lane_line_vertices[i], max_idx);
@@ -96,8 +96,8 @@ static void update_model(UIState *s, const cereal::ModelDataV2::Reader &model) {
   if (lead_one.getStatus()) {
     const float lead_d = lead_one.getDRel() * 2.;
     max_distance = std::clamp((float)(lead_d - fmin(lead_d * 0.35, 10.)), 0.0f, max_distance);
+    max_idx = get_path_length_idx(model_position, max_distance);     
   }
-  max_idx = get_path_length_idx(model_position, max_distance);
   update_line_data(s, model_position, 1.0, 1.22, &scene.track_vertices, max_idx);
 }
 
@@ -181,12 +181,8 @@ static void update_state(UIState *s) {
   if (sm.updated("modelV2") && s->vg) {
     update_model(s, sm["modelV2"].getModelV2());
   }
-  if (sm.updated("radarState") && s->vg) {
-    std::optional<cereal::ModelDataV2::XYZTData::Reader> line;
-    if (sm.rcv_frame("modelV2") > 0) {
-      line = sm["modelV2"].getModelV2().getPosition();
-    }
-    update_leads(s, sm["radarState"].getRadarState(), line);
+  if (sm.updated("radarState") && sm.rcv_frame("modelV2") >= s->scene.started_frame) {
+    update_leads(s, sm["radarState"].getRadarState(), sm["modelV2"].getModelV2().getPosition());
   }
   if (sm.updated("liveCalibration")) {
     scene.world_objects_visible = true;

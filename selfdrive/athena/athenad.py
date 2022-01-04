@@ -64,6 +64,26 @@ UploadItem = namedtuple('UploadItem', ['path', 'url', 'headers', 'created_at', '
 cur_upload_items = {}
 
 
+class UploadQueueCache():
+  params = Params()
+  @staticmethod
+  def initialize(upload_queue):
+    try:
+      upload_queue_json = UploadQueueCache.params.get("AthenadUploadQueue")
+      if upload_queue_json is not None:
+        for item in json.loads(upload_queue_json):
+          upload_queue.put(UploadItem(**item))
+    except Exception:
+      cloudlog.exception("athena.UploadQueueCache.initialize.exception")
+  @staticmethod
+  def cache(upload_queue):
+    try:
+      items = [i._asdict() for i in upload_queue.queue if i.id not in cancelled_uploads]
+      UploadQueueCache.params.put("AthenadUploadQueue", json.dumps(items))
+    except Exception:
+      cloudlog.exception("athena.UploadQueueCache.cache.exception")
+
+
 def handle_long_poll(ws):
   end_event = threading.Event()
 
@@ -128,6 +148,7 @@ def upload_handler(end_event):
           cur_upload_items[tid] = cur_upload_items[tid]._replace(progress=cur / sz if sz else 1)
 
         _do_upload(cur_upload_items[tid], cb)
+        UploadQueueCache.cache(upload_queue)        
       except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.exceptions.SSLError) as e:
         cloudlog.warning(f"athena.upload_handler.retry {e} {cur_upload_items[tid]}")
 
@@ -139,6 +160,8 @@ def upload_handler(end_event):
             current=False
           )
           upload_queue.put_nowait(item)
+          UploadQueueCache.cache(upload_queue)
+          
           cur_upload_items[tid] = None
 
           for _ in range(RETRY_DELAY):
@@ -243,19 +266,29 @@ def reboot():
 
 @dispatcher.add_method
 def uploadFileToUrl(fn, url, headers):
-  if len(fn) == 0 or fn[0] == '/' or '..' in fn:
-    return 500
-  path = os.path.join(ROOT, fn)
-  if not os.path.exists(path):
-    return 404
+  return uploadFilesToUrls([[fn, url, headers]])
 
-  item = UploadItem(path=path, url=url, headers=headers, created_at=int(time.time() * 1000), id=None)
-  upload_id = hashlib.sha1(str(item).encode()).hexdigest()
-  item = item._replace(id=upload_id)
 
-  upload_queue.put_nowait(item)
+@dispatcher.add_method
+def uploadFilesToUrls(files_data):
+  items = []
+  for fn, url, headers in files_data:
+    if len(fn) == 0 or fn[0] == '/' or '..' in fn:
+      return 500
+    path = os.path.join(ROOT, fn)
+    if not os.path.exists(path):
+      return 404
 
-  return {"enqueued": 1, "item": item._asdict()}
+    item = UploadItem(path=path, url=url, headers=headers, created_at=int(time.time() * 1000), id=None)
+    upload_id = hashlib.sha1(str(item).encode()).hexdigest()
+    items.append(item._replace(id=upload_id))
+
+  for item in items:
+    upload_queue.put_nowait(item)
+
+  UploadQueueCache.cache(upload_queue)    
+
+  return {"enqueued": len(items), "items": [i._asdict() for i in items]}
 
 
 @dispatcher.add_method
@@ -266,11 +299,15 @@ def listUploadQueue():
 
 @dispatcher.add_method
 def cancelUpload(upload_id):
-  upload_ids = set(item.id for item in list(upload_queue.queue))
-  if upload_id not in upload_ids:
+  if not isinstance(upload_id, list):
+    upload_id = [upload_id]
+
+  uploading_ids = {item.id for item in list(upload_queue.queue)}
+  cancelled_ids = uploading_ids.intersection(upload_id)
+  if len(cancelled_ids) == 0:
     return 404
 
-  cancelled_uploads.add(upload_id)
+  cancelled_uploads.update(cancelled_ids)
   return {"success": 1}
 
 
@@ -531,6 +568,7 @@ def backoff(retries):
 def main():
   params = Params()
   dongle_id = params.get("DongleId", encoding='utf-8')
+  UploadQueueCache.initialize(upload_queue)  
 
   ws_uri = ATHENA_HOST + "/ws/v2/" + dongle_id
   api = Api(dongle_id)
