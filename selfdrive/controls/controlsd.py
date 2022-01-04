@@ -361,8 +361,6 @@ class Controls:
       self.events.add(EventName.posenetInvalid)
     if not self.sm['liveLocationKalman'].deviceStable:
       self.events.add(EventName.deviceFalling)
-    if log.PandaState.FaultType.relayMalfunction in self.sm['pandaState'].faults:
-      self.events.add(EventName.relayMalfunction)
 
     if not REPLAY:
       # Check for mismatch between openpilot and car's PCM
