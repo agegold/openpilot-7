@@ -356,7 +356,7 @@ static void update_status(UIState *s) {
       params.putBool("OpkrMapEnable", true);
       if (s->scene.navi_select == 0) {
         system("am start com.mnsoft.mappyobn/com.mnsoft.mappy.MainActivity");
-      } else {
+      } else if (s->scene.navi_select == 1) {
         system("am start com.waze/com.waze.MainActivity");
       }
 
