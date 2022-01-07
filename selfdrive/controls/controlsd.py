@@ -475,7 +475,7 @@ class Controls:
     # if stock cruise is completely disabled, then we can use our own set speed logic
     if not self.CP.pcmCruise:
       self.v_cruise_kph = update_v_cruise(self.v_cruise_kph, CS.buttonEvents, self.enabled)
-    elif self.CP.pcmCruise and CS.cruiseState.enabled:
+    elif CS.cruiseState.enabled:
       if self.variable_cruise and CS.cruiseState.modeSel != 0 and self.CP.vCruisekph > t_speed:
         self.v_cruise_kph = self.CP.vCruisekph
         self.v_cruise_kph_last = self.v_cruise_kph
@@ -771,8 +771,9 @@ class Controls:
     clear_event = ET.WARNING if ET.WARNING not in self.current_alert_types else None
     alerts = self.events.create_alerts(self.current_alert_types, [self.CP, self.sm, self.is_metric, self.soft_disable_timer])
     self.AM.add_many(self.sm.frame, alerts)
-    self.AM.process_alerts(self.sm.frame, clear_event)
-    hudControl.visualAlert = self.AM.visual_alert
+    current_alert = self.AM.process_alerts(self.sm.frame, clear_event)
+    if current_alert:
+      hudControl.visualAlert = current_alert.visual_alert
 
     if self.stock_lkas_on_disengaged_status:
       if self.enabled:
@@ -811,13 +812,15 @@ class Controls:
     dat = messaging.new_message('controlsState')
     dat.valid = CS.canValid
     controlsState = dat.controlsState
-    controlsState.alertText1 = self.AM.alert_text_1
-    controlsState.alertText2 = self.AM.alert_text_2
-    controlsState.alertSize = self.AM.alert_size
-    controlsState.alertStatus = self.AM.alert_status
-    controlsState.alertBlinkingRate = self.AM.alert_rate
-    controlsState.alertType = self.AM.alert_type
-    controlsState.alertSound = self.AM.audible_alert
+    if current_alert:
+      controlsState.alertText1 = current_alert.alert_text_1
+      controlsState.alertText2 = current_alert.alert_text_2
+      controlsState.alertSize = current_alert.alert_size
+      controlsState.alertStatus = current_alert.alert_status
+      controlsState.alertBlinkingRate = current_alert.alert_rate
+      controlsState.alertType = current_alert.alert_type
+      controlsState.alertSound = current_alert.audible_alert
+
     controlsState.canMonoTimes = list(CS.canMonoTimes)
     controlsState.longitudinalPlanMonoTime = self.sm.logMonoTime['longitudinalPlan']
     controlsState.lateralPlanMonoTime = self.sm.logMonoTime['lateralPlan']
