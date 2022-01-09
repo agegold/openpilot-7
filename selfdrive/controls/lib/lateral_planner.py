@@ -330,8 +330,8 @@ class LateralPlanner:
     lateralPlan.useLaneLines = self.use_lanelines
     lateralPlan.laneChangeState = self.lane_change_state
     lateralPlan.laneChangeDirection = self.lane_change_direction
-    lateralPlan.modelSpeed = float(self.model_speed)
 
+    lateralPlan.modelSpeed = float(self.model_speed)
     lateralPlan.steerRateCost = float(self.steer_rate_cost)
     lateralPlan.outputScale = float(self.output_scale)
     lateralPlan.vCruiseSet = float(self.v_cruise_kph)

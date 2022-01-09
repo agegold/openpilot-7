@@ -410,7 +410,7 @@ class Controls:
         self.events.add(EventName.localizerMalfunction)
 
       # Check if all manager processes are running
-      not_running = set(p.name for p in self.sm['managerState'].processes if not p.running)
+      not_running = {p.name for p in self.sm['managerState'].processes if not p.running}
       if self.sm.rcv_frame['managerState'] and (not_running - IGNORE_PROCESSES):
         self.events.add(EventName.processNotRunning)
 
@@ -483,6 +483,7 @@ class Controls:
         self.v_cruise_kph = self.v_cruise_kph_last
         if int(CS.vSetDis)-1 > self.v_cruise_kph:
           self.v_cruise_kph = int(CS.vSetDis)
+        self.v_cruise_kph_last = self.v_cruise_kph
         if self.osm_speedlimit_enabled:
           self.osm_off_spdlimit_init = True
           self.osm_speedlimit = int(self.sm['liveMapData'].speedLimit)
@@ -741,7 +742,7 @@ class Controls:
     else:
       v_future = 100.0
     v_future_speed= float((v_future * CV.MS_TO_MPH + 10.0) if CS.isMph else (v_future * CV.MS_TO_KPH))
-    CC.hudControl.vFuture = v_future_speed
+    hudControl.vFuture = v_future_speed
 
     recent_blinker = (self.sm.frame - self.last_blinker_frame) * DT_CTRL < 5.0  # 5s blinker cooldown
     ldw_allowed = self.is_ldw_enabled and CS.vEgo > LDW_MIN_SPEED and not recent_blinker \
@@ -754,7 +755,8 @@ class Controls:
       left_lane_visible = self.sm['lateralPlan'].lProb > 0.5
       l_lane_change_prob = desire_prediction[Desire.laneChangeLeft - 1]
       r_lane_change_prob = desire_prediction[Desire.laneChangeRight - 1]
-      lane_lines = model_v2.laneLines      
+
+      lane_lines = model_v2.laneLines
       if CS.cruiseState.modeSel == 4:
         l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET_A))
         r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET_A))
@@ -874,7 +876,6 @@ class Controls:
       controlsState.lateralControlState.lqrState = lac_log
     elif lat_tuning == 'indi':
       controlsState.lateralControlState.indiState = lac_log
-      
     self.pm.send('controlsState', dat)
 
     # carState
