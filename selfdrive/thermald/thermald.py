@@ -25,6 +25,7 @@ from selfdrive.pandad import get_expected_signature
 from selfdrive.swaglog import cloudlog
 from selfdrive.thermald.power_monitoring import PowerMonitoring
 from selfdrive.version import terms_version, training_version
+from selfdrive.statsd import statlog
 
 FW_SIGNATURE = get_expected_signature()
 
@@ -342,8 +343,12 @@ def thermald_thread() -> NoReturn:
     msg.deviceState.wifiIpAddress = wifiIpAddress
     if nvme_temps is not None:
       msg.deviceState.nvmeTempC = nvme_temps
+      for i, temp in enumerate(nvme_temps):
+        statlog.gauge(f"nvme_temperature{i}", temp)
     if modem_temps is not None:
       msg.deviceState.modemTempC = modem_temps
+      for i, temp in enumerate(modem_temps):
+        statlog.gauge(f"modem_temperature{i}", temp)
 
     msg.deviceState.screenBrightnessPercent = HARDWARE.get_screen_brightness()
     msg.deviceState.batteryPercent = HARDWARE.get_battery_capacity()
@@ -549,6 +554,23 @@ def thermald_thread() -> NoReturn:
     # atom
     if usb_power and battery_charging_control:
       power_monitor.charging_ctrl(msg, ts, battery_charging_max, battery_charging_min)
+
+    # log more stats
+    statlog.gauge("free_space_percent", msg.deviceState.freeSpacePercent)
+    statlog.gauge("gpu_usage_percent", msg.deviceState.gpuUsagePercent)
+    statlog.gauge("memory_usage_percent", msg.deviceState.memoryUsagePercent)
+    for i, usage in enumerate(msg.deviceState.cpuUsagePercent):
+      statlog.gauge(f"cpu{i}_usage_percent", usage)
+    for i, temp in enumerate(msg.deviceState.cpuTempC):
+      statlog.gauge(f"cpu{i}_temperature", temp)
+    for i, temp in enumerate(msg.deviceState.gpuTempC):
+      statlog.gauge(f"gpu{i}_temperature", temp)
+    statlog.gauge("memory_temperature", msg.deviceState.memoryTempC)
+    statlog.gauge("ambient_temperature", msg.deviceState.ambientTempC)
+    for i, temp in enumerate(msg.deviceState.pmicTempC):
+      statlog.gauge(f"pmic{i}_temperature", temp)
+    statlog.gauge("fan_speed_percent_desired", msg.deviceState.fanSpeedPercentDesired)
+    statlog.gauge("screen_brightness_percent", msg.deviceState.screenBrightnessPercent)
 
     # report to server once every 10 minutes
     if (count % int(600. / DT_TRML)) == 0:
