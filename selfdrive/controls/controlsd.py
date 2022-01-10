@@ -438,12 +438,13 @@ class Controls:
 
     self.sm.update(0)
 
-    all_valid = CS.canValid and self.sm.all_alive_and_valid()
-    if not self.initialized and (all_valid or self.sm.frame * DT_CTRL > 3.5 or SIMULATION):
-      if not self.read_only:
-        self.CI.init(self.CP, self.can_sock, self.pm.sock['sendcan'])
-      self.initialized = True
-      Params().put_bool("ControlsReady", True)
+    if not self.initialized:
+      all_valid = CS.canValid and self.sm.all_alive_and_valid()
+      if all_valid or self.sm.frame * DT_CTRL > 3.5 or SIMULATION:
+        if not self.read_only:
+          self.CI.init(self.CP, self.can_sock, self.pm.sock['sendcan'])
+        self.initialized = True
+        Params().put_bool("ControlsReady", True)
 
     # Check for CAN timeout
     if not can_strs:
@@ -675,11 +676,12 @@ class Controls:
     if (lac_log.saturated and not CS.steeringPressed) or \
        (self.saturated_count > STEER_ANGLE_SATURATION_TIMEOUT):
 
-      if len(lat_plan.dPathPoints):
+      dpath_points = lat_plan.dPathPoints
+      if len(dpath_points):
         # Check if we deviated from the path
         # TODO use desired vs actual curvature
-        left_deviation = actuators.steer > 0 and lat_plan.dPathPoints[0] < -0.20
-        right_deviation = actuators.steer < 0 and lat_plan.dPathPoints[0] > 0.20
+        left_deviation = actuators.steer > 0 and dpath_points[0] < -0.20
+        right_deviation = actuators.steer < 0 and dpath_points[0] > 0.20
 
         if left_deviation or right_deviation:
           self.events.add(EventName.steerSaturated)
