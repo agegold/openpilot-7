@@ -274,7 +274,7 @@ class Controls:
     #  self.events.add(EventName.highCpuUsage)
 
     # Alert if fan isn't spinning for 5 seconds
-    if self.sm['pandaState'].pandaType in [PandaType.uno, PandaType.dos]:
+    if self.sm['pandaState'].pandaType in (PandaType.uno, PandaType.dos):
       if self.sm['pandaState'].fanSpeedRpm == 0 and self.sm['deviceState'].fanSpeedPercentDesired > 50:
         if (self.sm.frame - self.last_functional_fan_frame) * DT_CTRL > 5.0:
           self.events.add(EventName.fanMalfunction)
@@ -306,8 +306,8 @@ class Controls:
             self.events.add(EventName.preLaneChangeRight)
           else:
             self.events.add(EventName.laneChange)
-    elif self.sm['lateralPlan'].laneChangeState in [LaneChangeState.laneChangeStarting,
-                                                 LaneChangeState.laneChangeFinishing]:
+    elif self.sm['lateralPlan'].laneChangeState in (LaneChangeState.laneChangeStarting,
+                                                 LaneChangeState.laneChangeFinishing):
       self.events.add(EventName.laneChange)
 
     if not CS.canValid and self.ignore_can_error_on_isg and CS.vEgo > 1:
@@ -385,7 +385,7 @@ class Controls:
         except UnicodeDecodeError:
           pass
 
-      for err in ["ERROR_CRC", "ERROR_ECC", "ERROR_STREAM_UNDERFLOW", "APPLY FAILED"]:
+      for err in ("ERROR_CRC", "ERROR_ECC", "ERROR_STREAM_UNDERFLOW", "APPLY FAILED"):
         for m in messages:
           if err not in m:
             continue
