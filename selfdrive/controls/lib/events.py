@@ -64,10 +64,7 @@ class Events:
     self.events = self.static_events.copy()
 
   def any(self, event_type: str) -> bool:
-    for e in self.events:
-      if event_type in EVENTS.get(e, {}).keys():
-        return True
-    return False
+    return any(event_type in EVENTS.get(e, {}) for e in self.events)
 
   def create_alerts(self, event_types: List[str], callback_args=None):
     if callback_args is None:
