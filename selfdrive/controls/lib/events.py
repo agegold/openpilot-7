@@ -237,7 +237,7 @@ def calibration_incomplete_alert(CP: car.CarParams, sm: messaging.SubMaster, met
 
 
 def no_gps_alert(CP: car.CarParams, sm: messaging.SubMaster, metric: bool, soft_disable_time: int) -> Alert:
-  gps_integrated = sm['pandaState'].pandaType in [log.PandaState.PandaType.uno, log.PandaState.PandaType.dos]
+  gps_integrated = sm['pandaState'].pandaType in (log.PandaState.PandaType.uno, log.PandaState.PandaType.dos)
   return Alert(
     "Poor GPS reception",
     "If sky is visible, contact support" if gps_integrated else "Check GPS antenna placement",
@@ -269,7 +269,7 @@ def can_error_alert(CP: car.CarParams, sm: messaging.SubMaster, metric: bool, so
       "CAN Error: %s is missing\n Decimal Value : %d" % (add, add_int),
       "",
       AlertStatus.normal, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .2)
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .2, creation_delay=1.)
   elif os.path.isfile('/data/log/can_timeout.txt'):
     f = open('/data/log/can_timeout.txt', 'r')
     add = f.readline()
@@ -279,13 +279,13 @@ def can_error_alert(CP: car.CarParams, sm: messaging.SubMaster, metric: bool, so
       "CAN Error: %s is timeout\n Decimal Value : %d" % (add, add_int),
       "",
       AlertStatus.normal, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .2)
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .2, creation_delay=1.)
   else:
     return Alert(
       "CAN Error: Check Harness Connections",
       "",
       AlertStatus.normal, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .2)
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .2, creation_delay=1.)
 
 EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   # ********** events with no alerts **********
