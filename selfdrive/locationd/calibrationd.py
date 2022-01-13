@@ -80,11 +80,11 @@ class Calibrator():
 
   def reset(self, rpy_init=RPY_INIT, valid_blocks=0, smooth_from=None):
     if not np.isfinite(rpy_init).all():
-        self.rpy = copy.copy(RPY_INIT)
+      self.rpy = copy.copy(RPY_INIT)
     else:
       self.rpy = rpy_init
     if not np.isfinite(valid_blocks) or valid_blocks < 0:
-        self.valid_blocks = 0
+      self.valid_blocks = 0
     else:
       self.valid_blocks = valid_blocks
     self.rpys = np.tile(self.rpy, (INPUTS_WANTED, 1))
