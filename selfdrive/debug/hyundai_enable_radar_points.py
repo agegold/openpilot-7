@@ -52,7 +52,12 @@ SUPPORTED_FW_VERSIONS = {
   b'IK__ SCC F-CUP      1.00 1.02 96400-G9100\x18\x07\x06\x17\x12    ': ConfigValues(
     default_config=b"\x00\x00\x00\x01\x00\x00",
     tracks_enabled=b"\x00\x00\x00\x01\x00\x01"),
+  # 2016 K5 HYBRID(JF)
+  b'JFhe SCC FNCUP      1.00 1.00 96400-A8000         F907 5.420 2G': ConfigValues(
+    default_config=b"\x00\x00\x00\x01\x00",
+    tracks_enabled=b"\x00\x00\x00\x01\x01"),
 }
+
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='configure radar to output points (or reset to default)')
