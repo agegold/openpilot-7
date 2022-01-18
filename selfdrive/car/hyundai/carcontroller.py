@@ -600,7 +600,7 @@ class CarController():
       if self.radarDisableOverlapTimer > 200:
         self.radarDisableOverlapTimer = 200
       if self.lead_visible:
-        self.objdiststat = 1 if lead_dist < 25 else 2 if lead_dist < 40 else 3 if lead_dist < 60 else 4 if lead_dist < 80 else 5
+        self.objdiststat = 1 if self.dRel < 25 else 2 if self.dRel < 40 else 3 if self.dRel < 60 else 4 if self.dRel < 80 else 5
       else:
         self.objdiststat = 0
 
@@ -723,7 +723,7 @@ class CarController():
         can_sends.append(create_scc13(self.packer, CS.scc13))
       if frame % 50 == 0:
         can_sends.append(create_scc42a(self.packer))
-    elif CS.CP.sccBus != 0 and self.longcontrol:
+    elif (CS.CP.sccBus != 0 or self.radarDisableActivated) and self.longcontrol:
       if self.radar_disabled_conf:
         self.fca11alivecnt = CS.fca11init["CR_FCA_Alive"]
         self.fca11supcnt = CS.fca11init["Supplemental_Counter"]
