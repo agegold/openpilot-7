@@ -127,4 +127,6 @@ class Planner:
     longitudinalPlan.dynamicTRMode = int(self.mpc.dynamic_TR_mode)
     longitudinalPlan.dynamicTRValue = float(self.mpc.desired_TR)
 
+    longitudinalPlan.solverExecutionTime = self.mpc.solve_time
+
     pm.send('longitudinalPlan', plan_send)
