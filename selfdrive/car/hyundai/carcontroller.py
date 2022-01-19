@@ -647,12 +647,12 @@ class CarController():
         elif self.radar_helper_option == 2:
           if 0 < CS.lead_distance <= 149:
             if self.stopping_dist_adj_enabled:
-              if CS.clu_Vanz < 6 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel < 0 and not self.adjacent_accel_enabled:
-                self.adjacent_accel = self.accel*0.6
+              if CS.clu_Vanz < 8 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel < 0 and not self.adjacent_accel_enabled:
+                self.adjacent_accel = min(-0.2, self.accel*0.6)
                 self.adjacent_accel_enabled = True
-              if CS.clu_Vanz < 6 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel < self.adjacent_accel:
+              if CS.clu_Vanz < 8 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel < self.adjacent_accel:
                 accel = self.accel + (3.0 * DT_CTRL)
-              elif CS.clu_Vanz < 6 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel >= self.adjacent_accel:
+              elif CS.clu_Vanz < 8 and 3.7 < CS.lead_distance < 8.0 and aReqValue < 0 and -5 < lead_objspd and self.accel >= self.adjacent_accel:
                 accel = self.accel
               elif CS.lead_distance <= 3.7 and aReqValue < 0 and -5 < lead_objspd and self.accel > aReqValue:
                 accel = self.accel - (3.5 * DT_CTRL)
@@ -673,7 +673,7 @@ class CarController():
               elif aReqValue < 0 and accel > 0 and accel - aReqValue > 0.3:
                 self.change_accel_fast = True
               elif CS.lead_distance >= 8.0 and aReqValue < 0 and lead_objspd < 0: # adjusting deceleration
-                accel = aReqValue * interp(abs(lead_objspd), [0, 10, 20, 30, 40], [1.0, 0.9, 0.9, 1.6, 1.0]) * interp(CS.lead_distance, [0, 10, 20, 30, 40], [1.0, 1.2, 1.2, 1.0, 1.0])
+                accel = aReqValue * interp(abs(lead_objspd), [0, 10, 20, 30, 40], [0.9, 1.0, 1.2, 1.6, 1.0])
                 self.keep_decel_on = False
                 self.change_accel_fast = False
               else:
@@ -691,7 +691,7 @@ class CarController():
           elif 0.5 < self.dRel < 5.0 and self.vRel < 0:
             accel = self.accel - (3.0 * DT_CTRL)
           elif 0.5 < self.dRel < 5.0:
-            accel = faccel
+            accel = min(-0.5, faccel)
           elif 0.5 < self.dRel:
             pass
           else:
