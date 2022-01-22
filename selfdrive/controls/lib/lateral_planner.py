@@ -76,7 +76,7 @@ class LateralPlanner:
     self.y_pts = np.zeros(TRAJECTORY_SIZE)
 
     self.lat_mpc = LateralMpc()
-    self.reset_mpc(np.zeros(6))
+    self.reset_mpc(np.zeros(4))
 
     self.lane_change_adjust = [float(Decimal(Params().get("LCTimingFactor30", encoding="utf8")) * Decimal('0.01')), float(Decimal(Params().get("LCTimingFactor60", encoding="utf8")) * Decimal('0.01')),
      float(Decimal(Params().get("LCTimingFactor80", encoding="utf8")) * Decimal('0.01')), float(Decimal(Params().get("LCTimingFactor110", encoding="utf8")) * Decimal('0.01'))]
@@ -112,7 +112,7 @@ class LateralPlanner:
       curve_speed = 255
     return min(255, curve_speed * CV.MS_TO_KPH)
 
-  def reset_mpc(self, x0=np.zeros(6)):
+  def reset_mpc(self, x0=np.zeros(4)):
     self.x0 = x0
     self.lat_mpc.reset(x0=self.x0)
     self.desired_curvature = 0.0
@@ -282,10 +282,10 @@ class LateralPlanner:
 
     assert len(y_pts) == LAT_MPC_N + 1
     assert len(heading_pts) == LAT_MPC_N + 1
-    self.x0[4] = v_ego
+    # self.x0[4] = v_ego
+    p = np.array([v_ego, CAR_ROTATION_RADIUS])
     self.lat_mpc.run(self.x0,
-                     v_ego,
-                     CAR_ROTATION_RADIUS,
+                     p,
                      y_pts,
                      heading_pts)
     # init state for next
@@ -322,6 +322,7 @@ class LateralPlanner:
     lateralPlan.dProb = float(self.LP.d_prob)
 
     lateralPlan.mpcSolutionValid = bool(plan_solution_valid)
+    lateralPlan.solverExecutionTime = self.lat_mpc.solve_time
 
     lateralPlan.desire = self.desire
     lateralPlan.useLaneLines = self.use_lanelines
