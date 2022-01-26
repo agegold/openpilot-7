@@ -320,10 +320,15 @@ static void update_status(UIState *s) {
       s->status = STATUS_ALERT;
     } else if (s->scene.brakePress) {
       s->status = STATUS_BRAKE;
-    } else if (s->scene.cruiseAccStatus) {
-      s->status = STATUS_CRUISE; 
-    } else {
-      s->status = controls_state.getEnabled() ? STATUS_ENGAGED : STATUS_DISENGAGED;
+    } else if (controls_state.getEnabled()) {
+      if (s->scene.cruiseAccStatus) {
+        s->status = STATUS_CRUISE; 
+      } else {
+        s->status = STATUS_ENGAGED;
+      }
+    } 
+    else {
+      s->status = STATUS_DISENGAGED;
     }
   }
 
