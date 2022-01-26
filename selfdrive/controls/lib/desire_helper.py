@@ -46,17 +46,17 @@ class DesireHelper:
     self.prev_one_blinker = False
     self.desire = log.LateralPlan.Desire.none
 
-  def update(self, sm, CP, carstate, active, lane_change_prob):
+  def update(self, carstate, active, lane_change_prob):
     v_ego = carstate.vEgo
-    one_blinker = sm['carState'].leftBlinker != sm['carState'].rightBlinker
+    one_blinker = carstate.leftBlinker != carstate.rightBlinker
     below_lane_change_speed = v_ego < LANE_CHANGE_SPEED_MIN
 
-    if sm['carState'].leftBlinker:
+    if carstate.leftBlinker:
       self.lane_change_direction = LaneChangeDirection.left
-    elif sm['carState'].rightBlinker:
+    elif carstate.rightBlinker:
       self.lane_change_direction = LaneChangeDirection.right
 
-    if (not active) or (self.lane_change_timer > LANE_CHANGE_TIME_MAX) or (abs(self.output_scale) >= (CP.steerMaxV[0]-0.15) and self.lane_change_timer > 1):
+    if (not active) or (self.lane_change_timer > LANE_CHANGE_TIME_MAX) or (self.lane_change_timer > 1):
       self.lane_change_state = LaneChangeState.off
       self.lane_change_direction = LaneChangeDirection.none
     else:
