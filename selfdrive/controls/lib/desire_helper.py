@@ -3,6 +3,7 @@ from common.numpy_fast import interp
 from common.realtime import DT_MDL
 from selfdrive.config import Conversions as CV
 from common.params import Params
+from decimal import Decimal
 
 LaneChangeState = log.LateralPlan.LaneChangeState
 LaneChangeDirection = log.LateralPlan.LaneChangeDirection
