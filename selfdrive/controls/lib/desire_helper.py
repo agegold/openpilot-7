@@ -42,6 +42,10 @@ class DesireHelper:
     self.lane_change_direction = LaneChangeDirection.none
     self.lane_change_timer = 0.0
     self.lane_change_ll_prob = 1.0
+    self.lane_change_adjust = [float(Decimal(Params().get("LCTimingFactor30", encoding="utf8")) * Decimal('0.01')), float(Decimal(Params().get("LCTimingFactor60", encoding="utf8")) * Decimal('0.01')),
+     float(Decimal(Params().get("LCTimingFactor80", encoding="utf8")) * Decimal('0.01')), float(Decimal(Params().get("LCTimingFactor110", encoding="utf8")) * Decimal('0.01'))]
+    self.lane_change_adjust_vel = [30*CV.KPH_TO_MS, 60*CV.KPH_TO_MS, 80*CV.KPH_TO_MS, 110*CV.KPH_TO_MS]
+    self.lane_change_adjust_new = 2
     self.lane_change_adjust_enable = Params().get_bool("LCTimingFactorEnable")
     self.keep_pulse_timer = 0.0
     self.prev_one_blinker = False
