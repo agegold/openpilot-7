@@ -57,7 +57,7 @@ class CarInterface(CarInterfaceBase):
 
     ret.steerActuatorDelay = 0.25  # Default delay
     ret.steerRateCost = 0.35
-    ret.steerLimitTimer = 0.8
+    ret.steerLimitTimer = 1.0
     tire_stiffness_factor = 1.
 
     ret.longitudinalTuning.kpBP = [0., 4., 9., 17., 23., 31.]
