@@ -317,7 +317,7 @@ static void update_status(UIState *s) {
     if (alert_status == cereal::ControlsState::AlertStatus::USER_PROMPT) {
       s->status = STATUS_WARNING;
     } else if (alert_status == cereal::ControlsState::AlertStatus::CRITICAL) {
-      status = STATUS_ALERT;
+      s->status = STATUS_ALERT;
     } else if (s->scene.brakePress) {
       s->status = STATUS_BRAKE;      
     } else if (s->scene.cruiseAccStatus) {
