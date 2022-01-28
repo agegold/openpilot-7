@@ -1,7 +1,10 @@
 #include "selfdrive/ui/ui.h"
 
+#include <unistd.h>
+
 #include <cassert>
 #include <cmath>
+#include <cstdio>
 
 #include "selfdrive/common/util.h"
 #include "selfdrive/common/watchdog.h"
@@ -35,7 +38,7 @@ static bool calib_frame_to_full_frame(const UIState *s, float in_x, float in_y, 
 static int get_path_length_idx(const cereal::ModelDataV2::XYZTData::Reader &line, const float path_height) {
   const auto line_x = line.getX();
   int max_idx = 0;
-  for (int i = 1; i < TRAJECTORY_SIZE && line_x[i] <= path_height; ++i) {
+  for (int i = 0; i < TRAJECTORY_SIZE && line_x[i] < path_height; ++i) {
     max_idx = i;
   }
   return max_idx;
@@ -54,7 +57,7 @@ static void update_leads(UIState *s, const cereal::RadarState::Reader &radar_sta
 static void update_line_data(const UIState *s, const cereal::ModelDataV2::XYZTData::Reader &line,
                              float y_off, float z_off, line_vertices_data *pvd, int max_idx) {
   const auto line_x = line.getX(), line_y = line.getY(), line_z = line.getZ();
-  QPointF *v = &pvd->v[0];
+  vertex_data *v = &pvd->v[0];
   for (int i = 0; i <= max_idx; i++) {
     v += calib_frame_to_full_frame(s, line_x[i], line_y[i] - y_off, line_z[i] + z_off, v);
   }
@@ -105,6 +108,7 @@ static void update_sockets(UIState *s) {
 static void update_state(UIState *s) {
   SubMaster &sm = *(s->sm);
   UIScene &scene = s->scene;
+  s->running_time = 1e-9 * (nanos_since_boot() - sm["deviceState"].getDeviceState().getStartedMonoTime());
 
   // update engageability and DM icons at 2Hz
   if (sm.frame % (UI_FREQ / 2) == 0) {
@@ -280,22 +284,16 @@ static void update_state(UIState *s) {
       }
     }
   }
-  if (!Hardware::TICI() && sm.updated("roadCameraState")) {
+  if (sm.updated("roadCameraState")) {
     auto camera_state = sm["roadCameraState"].getRoadCameraState();
 
     float max_lines = Hardware::EON() ? 5408 : 1904;
     float max_gain = Hardware::EON() ? 1.0: 10.0;
     float max_ev = max_lines * max_gain;
 
-    float ev = camera_state.getGain() * float(camera_state.getIntegLines());
-
-    scene.light_sensor = std::clamp<float>(1.0 - (ev / max_ev), 0.0, 1.0);
-  } else if (Hardware::TICI() && sm.updated("wideRoadCameraState")) {
-    auto camera_state = sm["wideRoadCameraState"].getWideRoadCameraState();
-
-    float max_lines = 1904;
-    float max_gain = 10.0;
-    float max_ev = max_lines * max_gain / 6;
+    if (Hardware::TICI()) {
+      max_ev /= 6;
+    }
 
     float ev = camera_state.getGain() * float(camera_state.getIntegLines());
 
@@ -312,12 +310,12 @@ void ui_update_params(UIState *s) {
   s->scene.is_metric = Params().getBool("IsMetric");
 }
 
-void UIState::updateStatus() {
-  if (scene.started && sm->updated("controlsState")) {
-    auto controls_state = (*sm)["controlsState"].getControlsState();
+static void update_status(UIState *s) {
+  if (s->scene.started && s->sm->updated("controlsState")) {
+    auto controls_state = (*s->sm)["controlsState"].getControlsState();
     auto alert_status = controls_state.getAlertStatus();
     if (alert_status == cereal::ControlsState::AlertStatus::USER_PROMPT) {
-      status = STATUS_WARNING;
+      s->status = STATUS_WARNING;
     } else if (alert_status == cereal::ControlsState::AlertStatus::CRITICAL) {
       status = STATUS_ALERT;
     } else if (s->scene.brakePress) {
@@ -330,156 +328,157 @@ void UIState::updateStatus() {
   }
 
   // Handle onroad/offroad transition
-  if (scene.started != started_prev) {
-    if (scene.started) {
-      status = STATUS_DISENGAGED;
-      scene.started_frame = sm->frame;
-      scene.end_to_end = Params().getBool("EndToEndToggle");
-      wide_camera = Hardware::TICI() ? Params().getBool("EnableWideCamera") : false;
+  static bool started_prev = false;
+  if (s->scene.started != started_prev) {
+    if (s->scene.started) {
+      s->status = STATUS_DISENGAGED;
+      s->scene.started_frame = s->sm->frame;
+      s->wide_camera = Hardware::TICI() ? Params().getBool("EnableWideCamera") : false;
     }
-    started_prev = scene.started;
-    emit offroadTransition(!scene.started);
-  } else if (sm->frame == 1) {
-    emit offroadTransition(!scene.started);
+    // Invisible until we receive a calibration message.
+    s->scene.world_objects_visible = false;
   }
+  started_prev = s->scene.started;
 
-  if (sm->frame % (5*UI_FREQ) == 0) {
-  	is_OpenpilotViewEnabled = Params().getBool("IsOpenpilotViewEnabled");
+  if (s->sm->frame % (5*UI_FREQ) == 0) {
+  	s->is_OpenpilotViewEnabled = Params().getBool("IsOpenpilotViewEnabled");
   }
 
   Params params;
 
   //opkr navi on boot
-  if (!scene.navi_on_boot && (s->sm->frame - scene.started_frame > 5*UI_FREQ)) {
+  if (!s->scene.navi_on_boot && (s->sm->frame - s->scene.started_frame > 5*UI_FREQ)) {
     if (params.getBool("OpkrRunNaviOnBoot") && params.getBool("ControlsReady") && (params.get("CarParams").size() > 0)) {
-      scene.navi_on_boot = true;
-      scene.map_is_running = true;
-      scene.map_on_top = true;
-      scene.map_on_overlay = false;
+      s->scene.navi_on_boot = true;
+      s->scene.map_is_running = true;
+      s->scene.map_on_top = true;
+      s->scene.map_on_overlay = false;
       params.putBool("OpkrMapEnable", true);
-      if (scene.navi_select == 0) {
+      if (s->scene.navi_select == 0) {
         system("am start com.mnsoft.mappyobn/com.mnsoft.mappy.MainActivity");
-      } else if (scene.navi_select == 1) {
+      } else if (s->scene.navi_select == 1) {
         system("am start com.waze/com.waze.MainActivity");
       }
 
-    } else if (s->sm->frame - scene.started_frame > 20*UI_FREQ) {
-      scene.navi_on_boot = true;
+    } else if (s->sm->frame - s->scene.started_frame > 20*UI_FREQ) {
+      s->scene.navi_on_boot = true;
     }
   }
-  if (!scene.move_to_background && (s->sm->frame - scene.started_frame > 10*UI_FREQ)) {
+  if (!s->scene.move_to_background && (s->sm->frame - s->scene.started_frame > 10*UI_FREQ)) {
     if (params.getBool("OpkrRunNaviOnBoot") && params.getBool("OpkrMapEnable") && params.getBool("ControlsReady") && (params.get("CarParams").size() > 0)) {
-      scene.move_to_background = true;
-      scene.map_on_top = false;
-      scene.map_on_overlay = true;
+      s->scene.move_to_background = true;
+      s->scene.map_on_top = false;
+      s->scene.map_on_overlay = true;
       system("am start --activity-task-on-home com.opkr.maphack/com.opkr.maphack.MainActivity");
-    } else if (s->sm->frame - scene.started_frame > 20*UI_FREQ) {
-      scene.move_to_background = true;
+    } else if (s->sm->frame - s->scene.started_frame > 20*UI_FREQ) {
+      s->scene.move_to_background = true;
     }
   }
-  if (!scene.auto_gitpull && (s->sm->frame - scene.started_frame > 15*UI_FREQ)) {
+  if (!s->scene.auto_gitpull && (s->sm->frame - s->scene.started_frame > 15*UI_FREQ)) {
     if (params.getBool("GitPullOnBoot")) {
-      scene.auto_gitpull = true;
+      s->scene.auto_gitpull = true;
       system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");
-    } else if (s->sm->frame - scene.started_frame > 20*UI_FREQ) {
-      scene.auto_gitpull = true;
+    } else if (s->sm->frame - s->scene.started_frame > 20*UI_FREQ) {
+      s->scene.auto_gitpull = true;
     }
   }
 
-  if (!scene.read_params_once) {
+  if (!s->scene.read_params_once) {
     // user param value init
-    scene.end_to_end = params.getBool("EndToEndToggle");
-    scene.driving_record = params.getBool("OpkrDrivingRecord");
-    scene.nDebugUi1 = params.getBool("DebugUi1");
-    scene.nDebugUi2 = params.getBool("DebugUi2");
-    scene.forceGearD = params.getBool("JustDoGearD");
-    scene.nOpkrBlindSpotDetect = params.getBool("OpkrBlindSpotDetect");
-    scene.laneless_mode = std::stoi(params.get("LanelessMode"));
-    scene.recording_count = std::stoi(params.get("RecordingCount"));
-    scene.recording_quality = std::stoi(params.get("RecordingQuality"));
-    scene.speed_lim_off = std::stoi(params.get("OpkrSpeedLimitOffset"));
-    scene.monitoring_mode = params.getBool("OpkrMonitoringMode");
-    scene.brightness = std::stoi(params.get("OpkrUIBrightness"));
-    scene.nVolumeBoost = std::stoi(params.get("OpkrUIVolumeBoost"));
-    scene.autoScreenOff = std::stoi(params.get("OpkrAutoScreenOff"));
-    scene.brightness_off = std::stoi(params.get("OpkrUIBrightnessOff"));
-    scene.cameraOffset = std::stoi(params.get("CameraOffsetAdj"));
-    scene.pathOffset = std::stoi(params.get("PathOffsetAdj"));
-    scene.osteerRateCost = std::stoi(params.get("SteerRateCostAdj"));
-    scene.pidKp = std::stoi(params.get("PidKp"));
-    scene.pidKi = std::stoi(params.get("PidKi"));
-    scene.pidKd = std::stoi(params.get("PidKd"));
-    scene.pidKf = std::stoi(params.get("PidKf"));
-    scene.indiInnerLoopGain = std::stoi(params.get("InnerLoopGain"));
-    scene.indiOuterLoopGain = std::stoi(params.get("OuterLoopGain"));
-    scene.indiTimeConstant = std::stoi(params.get("TimeConstant"));
-    scene.indiActuatorEffectiveness = std::stoi(params.get("ActuatorEffectiveness"));
-    scene.lqrScale = std::stoi(params.get("Scale"));
-    scene.lqrKi = std::stoi(params.get("LqrKi"));
-    scene.lqrDcGain = std::stoi(params.get("DcGain"));
-    scene.navi_select = std::stoi(params.get("OPKRNaviSelect"));
-    scene.radar_long_helper = std::stoi(params.get("RadarLongHelper"));
-    scene.live_tune_panel_enable = params.getBool("OpkrLiveTunePanelEnable");
-    scene.kr_date_show = params.getBool("KRDateShow");
-    scene.kr_time_show = params.getBool("KRTimeShow");
-    scene.steer_wind_down = params.getBool("SteerWindDown");
-    scene.show_error = params.getBool("ShowError");
-    scene.limitSCOffsetOption = params.getBool("OpkrSpeedLimitOffsetOption");
-    scene.speedlimit_signtype = params.getBool("OpkrSpeedLimitSignType");
-    scene.sl_decel_off = params.getBool("SpeedLimitDecelOff");
-    scene.osm_enabled = params.getBool("OSMSpeedLimitEnable") || std::stoi(params.get("CurvDecelOption")) == 1 || std::stoi(params.get("CurvDecelOption")) == 3;
+    s->scene.end_to_end = params.getBool("EndToEndToggle");
+    s->scene.driving_record = params.getBool("OpkrDrivingRecord");
+    s->scene.nDebugUi1 = params.getBool("DebugUi1");
+    s->scene.nDebugUi2 = params.getBool("DebugUi2");
+    s->scene.forceGearD = params.getBool("JustDoGearD");
+    s->scene.nOpkrBlindSpotDetect = params.getBool("OpkrBlindSpotDetect");
+    s->scene.laneless_mode = std::stoi(params.get("LanelessMode"));
+    s->scene.recording_count = std::stoi(params.get("RecordingCount"));
+    s->scene.recording_quality = std::stoi(params.get("RecordingQuality"));
+    s->scene.speed_lim_off = std::stoi(params.get("OpkrSpeedLimitOffset"));
+    s->scene.monitoring_mode = params.getBool("OpkrMonitoringMode");
+    s->scene.brightness = std::stoi(params.get("OpkrUIBrightness"));
+    s->scene.nVolumeBoost = std::stoi(params.get("OpkrUIVolumeBoost"));
+    s->scene.autoScreenOff = std::stoi(params.get("OpkrAutoScreenOff"));
+    s->scene.brightness_off = std::stoi(params.get("OpkrUIBrightnessOff"));
+    s->scene.cameraOffset = std::stoi(params.get("CameraOffsetAdj"));
+    s->scene.pathOffset = std::stoi(params.get("PathOffsetAdj"));
+    s->scene.osteerRateCost = std::stoi(params.get("SteerRateCostAdj"));
+    s->scene.pidKp = std::stoi(params.get("PidKp"));
+    s->scene.pidKi = std::stoi(params.get("PidKi"));
+    s->scene.pidKd = std::stoi(params.get("PidKd"));
+    s->scene.pidKf = std::stoi(params.get("PidKf"));
+    s->scene.indiInnerLoopGain = std::stoi(params.get("InnerLoopGain"));
+    s->scene.indiOuterLoopGain = std::stoi(params.get("OuterLoopGain"));
+    s->scene.indiTimeConstant = std::stoi(params.get("TimeConstant"));
+    s->scene.indiActuatorEffectiveness = std::stoi(params.get("ActuatorEffectiveness"));
+    s->scene.lqrScale = std::stoi(params.get("Scale"));
+    s->scene.lqrKi = std::stoi(params.get("LqrKi"));
+    s->scene.lqrDcGain = std::stoi(params.get("DcGain"));
+    s->scene.navi_select = std::stoi(params.get("OPKRNaviSelect"));
+    s->scene.radar_long_helper = std::stoi(params.get("RadarLongHelper"));
+    s->scene.live_tune_panel_enable = params.getBool("OpkrLiveTunePanelEnable");
+    s->scene.kr_date_show = params.getBool("KRDateShow");
+    s->scene.kr_time_show = params.getBool("KRTimeShow");
+    s->scene.steer_wind_down = params.getBool("SteerWindDown");
+    s->scene.show_error = params.getBool("ShowError");
+    s->scene.limitSCOffsetOption = params.getBool("OpkrSpeedLimitOffsetOption");
+    s->scene.speedlimit_signtype = params.getBool("OpkrSpeedLimitSignType");
+    s->scene.sl_decel_off = params.getBool("SpeedLimitDecelOff");
+    s->scene.osm_enabled = params.getBool("OSMSpeedLimitEnable") || std::stoi(params.get("CurvDecelOption")) == 1 || std::stoi(params.get("CurvDecelOption")) == 3;
 
-    if (scene.autoScreenOff > 0) {
-      scene.nTime = scene.autoScreenOff * 60 * UI_FREQ;
-    } else if (scene.autoScreenOff == 0) {
-      scene.nTime = 30 * UI_FREQ;
-    } else if (scene.autoScreenOff == -1) {
-      scene.nTime = 15 * UI_FREQ;
+    if (s->scene.autoScreenOff > 0) {
+      s->scene.nTime = s->scene.autoScreenOff * 60 * UI_FREQ;
+    } else if (s->scene.autoScreenOff == 0) {
+      s->scene.nTime = 30 * UI_FREQ;
+    } else if (s->scene.autoScreenOff == -1) {
+      s->scene.nTime = 15 * UI_FREQ;
     } else {
-      scene.nTime = -1;
+      s->scene.nTime = -1;
     }
-    scene.comma_stock_ui = params.getBool("CommaStockUI");
-    scene.opkr_livetune_ui = params.getBool("OpkrLiveTunePanelEnable");
-    scene.batt_less = params.getBool("OpkrBattLess");
-    scene.read_params_once = true;
+    s->scene.comma_stock_ui = params.getBool("CommaStockUI");
+    s->scene.opkr_livetune_ui = params.getBool("OpkrLiveTunePanelEnable");
+    s->scene.batt_less = params.getBool("OpkrBattLess");
+    s->scene.read_params_once = true;
   }
 }
 
-UIState::UIState(QObject *parent) : QObject(parent) {
-  sm = std::make_unique<SubMaster, const std::initializer_list<const char *>>({
+
+QUIState::QUIState(QObject *parent) : QObject(parent) {
+  ui_state.sm = std::make_unique<SubMaster, const std::initializer_list<const char *>>({
     "modelV2", "controlsState", "liveCalibration", "radarState", "deviceState", "roadCameraState",
     "pandaState", "carParams", "driverMonitoringState", "sensorEvents", "carState", "liveLocationKalman",
-    "wideRoadCameraState", "ubloxGnss", "gpsLocationExternal", "liveParameters", "lateralPlan", "liveNaviData", "liveMapData",
+    "ubloxGnss", "gpsLocationExternal", "liveParameters", "lateralPlan", "liveNaviData", "liveMapData",
   });
 
   Params params;
-  wide_camera = Hardware::TICI() ? params.getBool("EnableWideCamera") : false;
-  has_prime = params.getBool("HasPrime");
-  sidebar_view = false;
-  is_OpenpilotViewEnabled = params.getBool("IsOpenpilotViewEnabled");
+  ui_state.wide_camera = Hardware::TICI() ? params.getBool("EnableWideCamera") : false;
+  ui_state.has_prime = params.getBool("HasPrime");
+  ui_state.sidebar_view = false;
+  ui_state.is_OpenpilotViewEnabled = params.getBool("IsOpenpilotViewEnabled");
 
   // update timer
   timer = new QTimer(this);
-  QObject::connect(timer, &QTimer::timeout, this, &UIState::update);
+  QObject::connect(timer, &QTimer::timeout, this, &QUIState::update);
   timer->start(1000 / UI_FREQ);
 }
 
-void UIState::update() {
-  update_sockets(this);
-  update_state(this);
-  updateStatus();
+void QUIState::update() {
+  update_sockets(&ui_state);
+  update_state(&ui_state);
+  update_status(&ui_state);
 
-  if (sm->frame % UI_FREQ == 0) {
+  if (ui_state.scene.started != started_prev || ui_state.sm->frame == 1) {
+    started_prev = ui_state.scene.started;
+    emit offroadTransition(!ui_state.scene.started);
+  }
+
+  if (ui_state.sm->frame % UI_FREQ == 0) {
     watchdog_kick();
   }
-  emit uiUpdate(*this);
+  emit uiUpdate(ui_state);
 }
 
 Device::Device(QObject *parent) : brightness_filter(BACKLIGHT_OFFROAD, BACKLIGHT_TS, BACKLIGHT_DT), QObject(parent) {
-  setAwake(true);
-  resetInteractiveTimout();
-
-  QObject::connect(uiState(), &UIState::uiUpdate, this, &Device::update);
 }
 
 void Device::update(const UIState &s) {
@@ -487,20 +486,20 @@ void Device::update(const UIState &s) {
   updateWakefulness(s);
 
   // TODO: remove from UIState and use signals
-  uiState()->awake = awake;
+  QUIState::ui_state.awake = awake;
 }
 
-void Device::setAwake(bool on) {
+void Device::setAwake(bool on, bool reset) {
   if (on != awake) {
     awake = on;
     Hardware::set_display_power(awake);
     LOGD("setting display power %d", awake);
     emit displayPowerChanged(awake);
   }
-}
 
-void Device::resetInteractiveTimout() {
-  interactive_timeout = (ignition_on ? 10 : 30) * UI_FREQ;
+  if (reset) {
+    awake_timeout = 30 * UI_FREQ;
+  }
 }
 
 void Device::updateBrightness(const UIState &s) {
@@ -518,6 +517,17 @@ void Device::updateBrightness(const UIState &s) {
 
     // Scale back to 10% to 100%
     clipped_brightness = std::clamp(100.0f * clipped_brightness, 10.0f, 100.0f);
+
+    // Limit brightness if running for too long
+    if (Hardware::TICI()) {
+      const float MAX_BRIGHTNESS_HOURS = 4;
+      const float HOURLY_BRIGHTNESS_DECREASE = 5;
+      float ui_running_hours = s.running_time / (60*60);
+      float anti_burnin_max_percent = std::clamp(100.0f - HOURLY_BRIGHTNESS_DECREASE * (ui_running_hours - MAX_BRIGHTNESS_HOURS),
+                                                 30.0f, 100.0f);
+      clipped_brightness = std::min(clipped_brightness, anti_burnin_max_percent);
+    }
+  }
 
   if (s.scene.autoScreenOff != -2 && s.scene.touched2) {
     sleep_time = s.scene.nTime;
@@ -539,40 +549,23 @@ void Device::updateBrightness(const UIState &s) {
   }
 
   if (brightness != last_brightness) {
-    if (!brightness_future.isRunning()) {
-      brightness_future = QtConcurrent::run(Hardware::set_brightness, brightness);
-      last_brightness = brightness;
-    }
+    std::thread{Hardware::set_brightness, brightness}.detach();
   }
-}
-
-bool Device::motionTriggered(const UIState &s) {
-  static float accel_prev = 0;
-  static float gyro_prev = 0;
-
-  bool accel_trigger = abs(s.scene.accel_sensor - accel_prev) > 0.2;
-  bool gyro_trigger = abs(s.scene.gyro_sensor - gyro_prev) > 0.15;
-
-  gyro_prev = s.scene.gyro_sensor;
-  accel_prev = (accel_prev * (accel_samples - 1) + s.scene.accel_sensor) / accel_samples;
-
-  return (!awake && accel_trigger && gyro_trigger);
+  last_brightness = brightness;
 }
 
 void Device::updateWakefulness(const UIState &s) {
-  bool ignition_just_turned_off = !s.scene.ignition && ignition_on;
-  ignition_on = s.scene.ignition;
+  awake_timeout = std::max(awake_timeout - 1, 0);
 
-  if (ignition_just_turned_off || motionTriggered(s)) {
-    resetInteractiveTimout();
-  } else if (interactive_timeout > 0 && --interactive_timeout == 0) {
-    emit interactiveTimout();
+  bool should_wake = s.scene.started || s.scene.ignition;
+  if (!should_wake) {
+    // tap detection while display is off
+    bool accel_trigger = abs(s.scene.accel_sensor - accel_prev) > 0.2;
+    bool gyro_trigger = abs(s.scene.gyro_sensor - gyro_prev) > 0.15;
+    should_wake = accel_trigger && gyro_trigger;
+    gyro_prev = s.scene.gyro_sensor;
+    accel_prev = (accel_prev * (accel_samples - 1) + s.scene.accel_sensor) / accel_samples;
   }
 
-  setAwake(s.scene.ignition || interactive_timeout > 0);
-}
-
-UIState *uiState() {
-  static UIState ui_state;
-  return &ui_state;
+  setAwake(awake_timeout, should_wake);
 }

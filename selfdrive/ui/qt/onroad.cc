@@ -1,7 +1,5 @@
 #include "selfdrive/ui/qt/onroad.h"
 
-#include <cmath>
-
 #include <QDebug>
 #include <QFileInfo>
 #include <QDateTime>
@@ -13,7 +11,6 @@
 #include "selfdrive/ui/qt/widgets/input.h"
 #ifdef ENABLE_MAPS
 #include "selfdrive/ui/qt/maps/map.h"
-#include "selfdrive/ui/qt/maps/map_helpers.h"
 #endif
 
 OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
@@ -41,8 +38,8 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   alerts->raise();
 
   setAttribute(Qt::WA_OpaquePaintEvent);
-  QObject::connect(uiState(), &UIState::uiUpdate, this, &OnroadWindow::updateState);
-  QObject::connect(uiState(), &UIState::offroadTransition, this, &OnroadWindow::offroadTransition);
+  QObject::connect(this, &OnroadWindow::updateStateSignal, this, &OnroadWindow::updateState);
+  QObject::connect(this, &OnroadWindow::offroadTransitionSignal, this, &OnroadWindow::offroadTransition);
 }
 
 void OnroadWindow::updateState(const UIState &s) {
@@ -51,10 +48,8 @@ void OnroadWindow::updateState(const UIState &s) {
   if (s.sm->updated("controlsState") || !alert.equal({})) {
     if (alert.type == "controlsUnresponsive") {
       bgColor = bg_colors[STATUS_ALERT];
-    } else if (alert.type == "controlsUnresponsivePermanent") {
-      bgColor = bg_colors[STATUS_DISENGAGED];
     }
-    if (!uiState()->is_OpenpilotViewEnabled) {
+    if (!QUIState::ui_state.is_OpenpilotViewEnabled) {
       // opkr
       if (QFileInfo::exists("/data/log/error.txt") && s.scene.show_error && !s.scene.tmux_error_check) {
         QFileInfo fileInfo;
@@ -63,7 +58,7 @@ void OnroadWindow::updateState(const UIState &s) {
         QString modified_time = modifiedtime.toString("yyyy-MM-dd hh:mm:ss ");
         const std::string txt = util::read_file("/data/log/error.txt");
         if (RichTextDialog::alert(modified_time + QString::fromStdString(txt), this)) {
-          uiState()->scene.tmux_error_check = true;
+          QUIState::ui_state.scene.tmux_error_check = true;
         }
       }
 	  alerts->updateAlert(alert, bgColor);
@@ -82,15 +77,15 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
   if ((map_overlay_btn.ptInRect(e->x(), e->y()) || map_btn.ptInRect(e->x(), e->y()) || map_return_btn.ptInRect(e->x(), e->y()) || 
     rec_btn.ptInRect(e->x(), e->y()) || laneless_btn.ptInRect(e->x(), e->y()) || monitoring_btn.ptInRect(e->x(), e->y()) || speedlimit_btn.ptInRect(e->x(), e->y()) ||
-    stockui_btn.ptInRect(e->x(), e->y()) || tuneui_btn.ptInRect(e->x(), e->y()) || mapbox_btn.ptInRect(e->x(), e->y()) || uiState()->scene.map_on_top || 
-    uiState()->scene.live_tune_panel_enable)) {return;}
+    stockui_btn.ptInRect(e->x(), e->y()) || tuneui_btn.ptInRect(e->x(), e->y()) || mapbox_btn.ptInRect(e->x(), e->y()) || QUIState::ui_state.scene.map_on_top || 
+    QUIState::ui_state.scene.live_tune_panel_enable)) {return;}
   if (map != nullptr) {
     bool sidebarVisible = geometry().x() > 0;
     map->setVisible(!sidebarVisible && !map->isVisible());
     if (map->isVisible()) {
-      uiState()->scene.mapbox_running = true;
+      QUIState::ui_state.scene.mapbox_running = true;
     } else {
-      uiState()->scene.mapbox_running = false;
+      QUIState::ui_state.scene.mapbox_running = false;
     }
   }
 }
@@ -114,8 +109,7 @@ void OnroadWindow::offroadTransition(bool offroad) {
 
       MapWindow * m = new MapWindow(settings);
       m->setFixedWidth(topWidget(this)->width() / 2);
-      m->offroadTransition(offroad);
-      QObject::connect(uiState(), &UIState::offroadTransition, m, &MapWindow::offroadTransition);
+      QObject::connect(this, &OnroadWindow::offroadTransitionSignal, m, &MapWindow::offroadTransition);
       split->addWidget(m, 0, Qt::AlignRight);
       map = m;
     }

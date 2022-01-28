@@ -133,9 +133,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("OpkrBlindSpotDetect", status);
       if (state) {
-        uiState()->scene.nOpkrBlindSpotDetect = true;
+        QUIState::ui_state.scene.nOpkrBlindSpotDetect = true;
       } else {
-        uiState()->scene.nOpkrBlindSpotDetect = false;
+        QUIState::ui_state.scene.nOpkrBlindSpotDetect = false;
       }
     });
   }
@@ -234,9 +234,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("OpkrDrivingRecord", status);
       if (state) {
-        uiState()->scene.driving_record = true;
+        QUIState::ui_state.scene.driving_record = true;
       } else {
-        uiState()->scene.driving_record = false;
+        QUIState::ui_state.scene.driving_record = false;
       }
     });
   }
@@ -287,9 +287,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("DebugUi1", status);
       if (state) {
-        uiState()->scene.nDebugUi1 = true;
+        QUIState::ui_state.scene.nDebugUi1 = true;
       } else {
-        uiState()->scene.nDebugUi1 = false;
+        QUIState::ui_state.scene.nDebugUi1 = false;
       }
     });
   }
@@ -304,9 +304,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("DebugUi2", status);
       if (state) {
-        uiState()->scene.nDebugUi2 = true;
+        QUIState::ui_state.scene.nDebugUi2 = true;
       } else {
-        uiState()->scene.nDebugUi2 = false;
+        QUIState::ui_state.scene.nDebugUi2 = false;
       }
     });
   }
@@ -417,11 +417,11 @@ public:
       bool status = state ? true : false;
       Params().putBool("OpkrLiveTunePanelEnable", status);
       if (state) {
-        uiState()->scene.live_tune_panel_enable = true;
-        uiState()->scene.opkr_livetune_ui = true;
+        QUIState::ui_state.scene.live_tune_panel_enable = true;
+        QUIState::ui_state.scene.opkr_livetune_ui = true;
       } else {
-        uiState()->scene.live_tune_panel_enable = false;
-        uiState()->scene.opkr_livetune_ui = false;
+        QUIState::ui_state.scene.live_tune_panel_enable = false;
+        QUIState::ui_state.scene.opkr_livetune_ui = false;
       }
     });
   }
@@ -436,9 +436,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("KRDateShow", status);
       if (state) {
-        uiState()->scene.kr_date_show = true;
+        QUIState::ui_state.scene.kr_date_show = true;
       } else {
-        uiState()->scene.kr_date_show = false;
+        QUIState::ui_state.scene.kr_date_show = false;
       }
     });
   }
@@ -453,9 +453,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("KRTimeShow", status);
       if (state) {
-        uiState()->scene.kr_time_show = true;
+        QUIState::ui_state.scene.kr_time_show = true;
       } else {
-        uiState()->scene.kr_time_show = false;
+        QUIState::ui_state.scene.kr_time_show = false;
       }
     });
   }
@@ -494,9 +494,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("ShowError", status);
       if (state) {
-        uiState()->scene.show_error = true;
+        QUIState::ui_state.scene.show_error = true;
       } else {
-        uiState()->scene.show_error = false;
+        QUIState::ui_state.scene.show_error = false;
       }
     });
   }
