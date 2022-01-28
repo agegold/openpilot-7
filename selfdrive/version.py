@@ -68,6 +68,9 @@ def get_version() -> str:
     version = _versionf.read().split('"')[1]
   return version
 
+@cache
+def get_short_version() -> str:
+  return get_version().split('-')[0]
 
 @cache
 def get_short_version() -> str:
@@ -80,6 +83,8 @@ def is_prebuilt() -> bool:
 
 @cache
 def is_comma_remote() -> bool:
+  # note to fork maintainers, this is used for release metrics. please do not
+  # touch this to get rid of the orange startup alert. there's better ways to do that
   origin = get_origin()
   if origin is None:
     return False
@@ -110,10 +115,6 @@ def is_dirty() -> bool:
         pass
 
       dirty = (subprocess.call(["git", "diff-index", "--quiet", branch, "--"]) != 0)
-
-    dirty = dirty or (not is_comma_remote())
-    dirty = dirty or ('master' in branch)
-
   except subprocess.CalledProcessError:
     cloudlog.exception("git subprocess failed while checking dirty")
     dirty = True

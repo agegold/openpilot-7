@@ -5,8 +5,6 @@ from cereal import log
 from common.filter_simple import FirstOrderFilter
 from common.numpy_fast import clip, interp
 from common.realtime import DT_CTRL
-from selfdrive.car import apply_toyota_steer_torque_limits
-from selfdrive.car.toyota.values import CarControllerParams
 from selfdrive.controls.lib.drive_helpers import get_steer_max
 from selfdrive.controls.lib.latcontrol import LatControl, MIN_STEER_SPEED
 from common.params import Params
@@ -39,8 +37,6 @@ class LatControlINDI(LatControl):
     self.A_K = A - np.dot(K, C)
     self.x = np.array([[0.], [0.], [0.]])
 
-    self.enforce_rate_limit = CP.carName == "toyota"
-
     self.mpc_frame = 0
     self.params = Params()
 
@@ -65,7 +61,6 @@ class LatControlINDI(LatControl):
   def reset(self):
     super().reset()
     self.steer_filter.x = 0.
-    self.output_steer = 0.
     self.speed = 0.
 
   def live_tune(self, CP):
@@ -115,12 +110,12 @@ class LatControlINDI(LatControl):
 
     if CS.vEgo < MIN_STEER_SPEED or not active:
       indi_log.active = False
-      self.output_steer = 0.0
       self.steer_filter.x = 0.0
+      output_steer = 0
     else:
       # Expected actuator value
       self.steer_filter.update_alpha(self.RC)
-      self.steer_filter.update(self.output_steer)
+      self.steer_filter.update(last_actuators.steer)
 
       # Compute acceleration error
       rate_sp = self.outer_loop_gain * (steers_des - self.x[0]) + rate_des
@@ -132,21 +127,13 @@ class LatControlINDI(LatControl):
       delta_u = g_inv * accel_error
 
       # If steering pressed, only allow wind down
-      if CS.steeringPressed and (delta_u * self.output_steer > 0):
+      if CS.steeringPressed and (delta_u * last_actuators.steer > 0):
         delta_u = 0
 
-      # Enforce rate limit
-      if self.enforce_rate_limit:
-        steer_max = float(CarControllerParams.STEER_MAX)
-        new_output_steer_cmd = steer_max * (self.steer_filter.x + delta_u)
-        prev_output_steer_cmd = steer_max * self.output_steer
-        new_output_steer_cmd = apply_toyota_steer_torque_limits(new_output_steer_cmd, prev_output_steer_cmd, prev_output_steer_cmd, CarControllerParams)
-        self.output_steer = new_output_steer_cmd / steer_max
-      else:
-        self.output_steer = self.steer_filter.x + delta_u
+      output_steer = self.steer_filter.x + delta_u
 
       steers_max = get_steer_max(CP, CS.vEgo)
-      self.output_steer = clip(self.output_steer, -steers_max, steers_max)
+      output_steer = clip(output_steer, -steers_max, steers_max)
 
       indi_log.active = True
       indi_log.rateSetPoint = float(rate_sp)
@@ -154,7 +141,7 @@ class LatControlINDI(LatControl):
       indi_log.accelError = float(accel_error)
       indi_log.delayedOutput = float(self.steer_filter.x)
       indi_log.delta = float(delta_u)
-      indi_log.output = float(self.output_steer)
-      indi_log.saturated = self._check_saturation(steers_max - abs(self.output_steer) < 1e-3, CS)
+      indi_log.output = float(output_steer)
+      indi_log.saturated = self._check_saturation(steers_max - abs(output_steer) < 1e-3, CS)
 
-    return float(self.output_steer), float(steers_des), indi_log
+    return float(output_steer), float(steers_des), indi_log

@@ -83,7 +83,6 @@ def gen_lat_mpc_solver():
 
   ocp.parameter_values = np.zeros((P_DIM, ))
 
-
   ocp.cost.yref = np.zeros((3, ))
   ocp.cost.yref_e = np.zeros((2, ))
   # TODO hacky weights to keep behavior the same
