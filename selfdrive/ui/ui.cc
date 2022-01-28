@@ -3,11 +3,6 @@
 #include <cassert>
 #include <cmath>
 
-#include <QtConcurrent>
-
-#include "common/transformations/orientation.hpp"
-#include "selfdrive/common/params.h"
-#include "selfdrive/common/swaglog.h"
 #include "selfdrive/common/util.h"
 #include "selfdrive/common/watchdog.h"
 #include "selfdrive/hardware/hw.h"
@@ -15,6 +10,7 @@
 #define BACKLIGHT_DT 0.05
 #define BACKLIGHT_TS 10.00
 #define BACKLIGHT_OFFROAD 50
+
 
 // Projects a point in car to space to the corresponding point in full frame
 // image space.
@@ -39,7 +35,7 @@ static bool calib_frame_to_full_frame(const UIState *s, float in_x, float in_y, 
 static int get_path_length_idx(const cereal::ModelDataV2::XYZTData::Reader &line, const float path_height) {
   const auto line_x = line.getX();
   int max_idx = 0;
-  for (int i = 0; i < TRAJECTORY_SIZE && line_x[i] < path_height; ++i) {
+  for (int i = 1; i < TRAJECTORY_SIZE && line_x[i] <= path_height; ++i) {
     max_idx = i;
   }
   return max_idx;
@@ -58,7 +54,7 @@ static void update_leads(UIState *s, const cereal::RadarState::Reader &radar_sta
 static void update_line_data(const UIState *s, const cereal::ModelDataV2::XYZTData::Reader &line,
                              float y_off, float z_off, line_vertices_data *pvd, int max_idx) {
   const auto line_x = line.getX(), line_y = line.getY(), line_z = line.getZ();
-  vertex_data *v = &pvd->v[0];
+  QPointF *v = &pvd->v[0];
   for (int i = 0; i <= max_idx; i++) {
     v += calib_frame_to_full_frame(s, line_x[i], line_y[i] - y_off, line_z[i] + z_off, v);
   }
@@ -185,6 +181,7 @@ static void update_state(UIState *s) {
     update_leads(s, sm["radarState"].getRadarState(), sm["modelV2"].getModelV2().getPosition());
   }
   if (sm.updated("liveCalibration")) {
+    scene.world_objects_visible = true;
     auto rpy_list = sm["liveCalibration"].getLiveCalibration().getRpyCalib();
     Eigen::Vector3d rpy;
     rpy << rpy_list[0], rpy_list[1], rpy_list[2];
@@ -208,14 +205,6 @@ static void update_state(UIState *s) {
     scene.ambientTemp = scene.deviceState.getAmbientTempC();
     scene.fanSpeed = scene.deviceState.getFanSpeedPercentDesired();
     scene.batPercent = scene.deviceState.getBatteryPercent();
-  }
-  if (s->worldObjectsVisible()) {
-    if (sm.updated("modelV2")) {
-      update_model(s, sm["modelV2"].getModelV2());
-    }
-    if (sm.updated("radarState") && sm.rcv_frame("modelV2") >= s->scene.started_frame) {
-      update_leads(s, sm["radarState"].getRadarState(), sm["modelV2"].getModelV2().getPosition());
-    }
   }
   if (sm.updated("pandaState")) {
     auto pandaState = sm["pandaState"].getPandaState();

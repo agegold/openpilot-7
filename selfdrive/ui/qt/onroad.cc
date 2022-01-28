@@ -1,5 +1,7 @@
 #include "selfdrive/ui/qt/onroad.h"
 
+#include <cmath>
+
 #include <QDebug>
 #include <QFileInfo>
 #include <QDateTime>
@@ -11,6 +13,7 @@
 #include "selfdrive/ui/qt/widgets/input.h"
 #ifdef ENABLE_MAPS
 #include "selfdrive/ui/qt/maps/map.h"
+#include "selfdrive/ui/qt/maps/map_helpers.h"
 #endif
 
 OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
@@ -48,6 +51,8 @@ void OnroadWindow::updateState(const UIState &s) {
   if (s.sm->updated("controlsState") || !alert.equal({})) {
     if (alert.type == "controlsUnresponsive") {
       bgColor = bg_colors[STATUS_ALERT];
+    } else if (alert.type == "controlsUnresponsivePermanent") {
+      bgColor = bg_colors[STATUS_DISENGAGED];
     }
     if (!uiState()->is_OpenpilotViewEnabled) {
       // opkr
@@ -198,14 +203,14 @@ void NvgWindow::initializeGL() {
   qInfo() << "OpenGL renderer:" << QString((const char*)glGetString(GL_RENDERER));
   qInfo() << "OpenGL language version:" << QString((const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-  ui_nvg_init(&uiState());
+  ui_nvg_init(&QUIState::ui_state);
   prev_draw_t = millis_since_boot();
   setBackgroundColor(bg_colors[STATUS_DISENGAGED]);
 }
 
 void NvgWindow::paintGL() {
   CameraViewWidget::paintGL();
-  ui_draw(&uiState(), width(), height());
+  ui_draw(&QUIState::ui_state, width(), height());
 
   double cur_draw_t = millis_since_boot();
   double dt = cur_draw_t - prev_draw_t;
@@ -218,7 +223,6 @@ void NvgWindow::paintGL() {
 
 void NvgWindow::showEvent(QShowEvent *event) {
   CameraViewWidget::showEvent(event);
-
-  ui_update_params(uiState());
+  ui_update_params(&QUIState::ui_state);
   prev_draw_t = millis_since_boot();
 }
