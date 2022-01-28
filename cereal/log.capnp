@@ -841,8 +841,6 @@ struct LongitudinalPlan @0xe00b5b3eba12876c {
   dynamicTRMode @36 :UInt8;
   dynamicTRValue @37 :Float32;
 
-  solverExecutionTime @37 :Float32;
-
   enum LongitudinalPlanSource {
     cruise @0;
     lead0 @1;
@@ -914,8 +912,6 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   vCurvature @35 :Float32;
   lanelessMode @36 :Bool;
   modelSpeed @37 :Float32;
-
-  solverExecutionTime @37 :Float32;
 
   enum Desire {
     none @0;
