@@ -58,7 +58,18 @@ class DesireHelper:
     self.lane_change_adjust_new = 2
     self.lane_change_adjust_enable = Params().get_bool("LCTimingFactorEnable")
 
-  def update(self, CP, carstate, active, lane_change_prob):
+    self.output_scale = 0.0
+
+  def update(self, CP, carstate, controlstate, lane_change_prob):
+    try:
+      if CP.lateralTuning.which() == 'pid':
+        self.output_scale = controlstate.lateralControlState.pidState.output
+      elif CP.lateralTuning.which() == 'indi':
+        self.output_scale = controlstate.lateralControlState.indiState.output
+      elif CP.lateralTuning.which() == 'lqr':
+        self.output_scale = controlstate.lateralControlState.lqrState.output
+    except:
+      pass
     v_ego = carstate.vEgo
     one_blinker = carstate.leftBlinker != carstate.rightBlinker
 
@@ -69,7 +80,7 @@ class DesireHelper:
     elif carstate.rightBlinker:
       self.lane_change_direction = LaneChangeDirection.right
 
-    if (not active) or (self.lane_change_timer > LANE_CHANGE_TIME_MAX) or (self.lane_change_timer > 1):
+    if (not controlstate.active) or (self.lane_change_timer > LANE_CHANGE_TIME_MAX) or (abs(self.output_scale) >= (CP.steerMaxV[0]-0.15) and self.lane_change_timer > 1):
       self.lane_change_state = LaneChangeState.off
       self.lane_change_direction = LaneChangeDirection.none
     else:
