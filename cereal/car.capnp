@@ -458,7 +458,6 @@ struct CarParams {
   safetyModel @9 :SafetyModel;
   safetyModelPassive @42 :SafetyModel = silent;
   safetyParam @10 :Int16;
-  unsafeMode @78 :Int16;  
 
   steerMaxBP @11 :List(Float32);
   steerMaxV @12 :List(Float32);
