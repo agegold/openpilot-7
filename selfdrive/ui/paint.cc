@@ -495,13 +495,12 @@ static void ui_draw_vision_autohold(UIState *s) {
   const int center_x = radius + bdr_s + (radius*2 + 30) * 2;
   const int center_y = 1080 - 85 - 30;
 
-  float brake_img_alpha = autohold > 0 ? 1.0f : 0.15f;
-  float brake_bg_alpha = autohold > 0 ? 0.3f : 0.1f;
-  NVGcolor brake_bg = nvgRGBA(0, 0, 0, (255 * brake_bg_alpha));
+  float autohold_img_alpha = autohold > 0 ? 1.0f : 0.15f;
+  float autohold_bg_alpha = autohold > 0 ? 0.3f : 0.1f;
+  NVGcolor autohold_bg = nvgRGBA(0, 0, 0, (255 * autohold_bg_alpha));
 
   ui_draw_circle_image_rotation(s, center_x, center_y, radius,
-        autohold > 1 ? "autohold_warning" : "autohold_active",
-        brake_bg, brake_img_alpha);
+        autohold > 1 ? "autohold_warning" : "autohold_active", autohold_bg, autohold_img_alpha);
 }
 
 static void ui_draw_vision_maxspeed_org(UIState *s) {
