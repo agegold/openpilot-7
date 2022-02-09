@@ -507,12 +507,12 @@ def thermald_thread() -> NoReturn:
 #
 #    # Check if we need to shut down
 
-   if c2withCommaPower:
-    if power_monitor.should_shutdown(pandaState, off_ts, started_seen):
-      cloudlog.info(f"shutting device down, offroad since {off_ts}")
-      # TODO: add function for blocking cloudlog instead of sleep
-      time.sleep(10)
-      HARDWARE.shutdown()
+    if c2withCommaPower:
+      if power_monitor.should_shutdown(pandaState, off_ts, started_seen):
+        cloudlog.info(f"shutting device down, offroad since {off_ts}")
+        # TODO: add function for blocking cloudlog instead of sleep
+        time.sleep(10)
+        HARDWARE.shutdown()
 
     msg.deviceState.chargingError = current_filter.x > 0. and msg.deviceState.batteryPercent < 90  # if current is positive, then battery is being discharged
     msg.deviceState.started = started_ts is not None
