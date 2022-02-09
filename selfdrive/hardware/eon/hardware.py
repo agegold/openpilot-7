@@ -317,12 +317,11 @@ class Android(HardwareBase):
             network_strength = NetworkStrength.moderate
           else:
             network_strength = NetworkStrength.poor
-        if "supported 0" in line:
-          try:
-            connect_name = subprocess.check_output(["getprop", "gsm.operator.alpha"], encoding='utf8')
-          except:
-            pass
-          print("connect_name={}".format(connect_name))
+        try:
+          connect_name = subprocess.check_output(["getprop", "gsm.operator.alpha"], encoding='utf8')
+        except:
+          pass
+        print("connect_name={}".format(connect_name))
       return network_strength, connect_name
     else:
       # check cell strength
