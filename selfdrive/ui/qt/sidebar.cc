@@ -129,7 +129,7 @@ void Sidebar::updateState(const UIState &s) {
     std::string m_connectname = s.scene.deviceState.getConnectName();
     iPAddress = QString::fromUtf8(m_strip.c_str());
     connectName = QString::fromUtf8(m_connectname.c_str());
-  } else if (network_type[deviceState.getNetworkType()] == "LTE"){
+  } else {
     std::string m_connectname = s.scene.deviceState.getConnectName();
     connectName = QString::fromUtf8(m_connectname.c_str());
   }

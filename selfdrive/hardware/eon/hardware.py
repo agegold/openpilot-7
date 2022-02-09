@@ -131,6 +131,10 @@ class Android(HardwareBase):
     # TODO: build using methods from this class
     sim_state = getprop("gsm.sim.state").split(",")
     network_type = getprop("gsm.network.type").split(',')
+    try:
+      network_type = network_type[0]
+    except:
+      pass
     mcc_mnc = getprop("gsm.sim.operator.numeric") or None
 
     sim_id = parse_service_call_string(service_call(['iphonesubinfo', '11']))
@@ -294,6 +298,10 @@ class Android(HardwareBase):
       return max(lvl_cdmadbm, lvl_cdmaecio)
 
     connect_name = "---"
+    try:
+      connect_name = subprocess.check_output(["getprop", "gsm.operator.alpha"], encoding='utf8')
+    except:
+      pass
     if network_type == NetworkType.none:
       return network_strength, connect_name
     if network_type == NetworkType.wifi:
@@ -317,11 +325,6 @@ class Android(HardwareBase):
             network_strength = NetworkStrength.moderate
           else:
             network_strength = NetworkStrength.poor
-        try:
-          connect_name = subprocess.check_output(["getprop", "gsm.operator.alpha"], encoding='utf8')
-        except:
-          pass
-        print("connect_name={}".format(connect_name))
       return network_strength, connect_name
     else:
       # check cell strength
