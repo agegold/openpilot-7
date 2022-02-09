@@ -354,6 +354,7 @@ class Android(HardwareBase):
             connect_name = subprocess.check_output(["getprop", "gsm.operator.alpha"], encoding='utf8')
           except:
             pass
+          print("connect_name={}".format(connect_name))
       return network_strength, connect_name
 
   def get_battery_capacity(self):
