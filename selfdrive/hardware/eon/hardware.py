@@ -293,12 +293,12 @@ class Android(HardwareBase):
         lvl_cdmaecio = NetworkStrength.poor
       return max(lvl_cdmadbm, lvl_cdmaecio)
 
+    connect_name = "---"
     if network_type == NetworkType.none:
-      return network_strength
+      return network_strength, connect_name
     if network_type == NetworkType.wifi:
       out = subprocess.check_output('dumpsys connectivity', shell=True).decode('utf-8')
       network_strength = NetworkStrength.unknown
-      wifi_ssid = "---"
       for line in out.split('\n'):
         signal_str = "SignalStrength: "
         ssid_str = "extra: "
@@ -308,7 +308,7 @@ class Android(HardwareBase):
           lvl = int(line[lvl_idx_start : lvl_idx_end])
           ssid_idx_start = line.find(ssid_str) + len(ssid_str) + 1
           ssid_idx_end = line.find('"', ssid_idx_start)
-          wifi_ssid = line[ssid_idx_start : ssid_idx_end]
+          connect_name = line[ssid_idx_start : ssid_idx_end]
           if lvl >= -50:
             network_strength = NetworkStrength.great
           elif lvl >= -60:
@@ -317,7 +317,7 @@ class Android(HardwareBase):
             network_strength = NetworkStrength.moderate
           else:
             network_strength = NetworkStrength.poor
-      return network_strength, wifi_ssid
+      return network_strength, connect_name
     else:
       # check cell strength
       out = subprocess.check_output('dumpsys telephony.registry', shell=True).decode('utf-8')
@@ -349,8 +349,12 @@ class Android(HardwareBase):
             else:
               ns = min(lvl_cdma, lvl_edmo)
           network_strength = max(network_strength, ns)
-
-      return network_strength
+        if "supported 0" in line:
+          try:
+            connect_name = subprocess.check_output(["getprop", "gsm.operator.alpha"], encoding='utf8')
+          except:
+            pass
+      return network_strength, connect_name
 
   def get_battery_capacity(self):
     return self.read_param_file("/sys/class/power_supply/battery/capacity", int, 100)
