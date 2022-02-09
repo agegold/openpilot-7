@@ -131,6 +131,10 @@ class Android(HardwareBase):
     # TODO: build using methods from this class
     sim_state = getprop("gsm.sim.state").split(",")
     network_type = getprop("gsm.network.type").split(',')
+    try:
+      network_type = network_type[0]
+    except:
+      pass
     mcc_mnc = getprop("gsm.sim.operator.numeric") or None
 
     sim_id = parse_service_call_string(service_call(['iphonesubinfo', '11']))
@@ -293,12 +297,16 @@ class Android(HardwareBase):
         lvl_cdmaecio = NetworkStrength.poor
       return max(lvl_cdmadbm, lvl_cdmaecio)
 
+    connect_name = "---"
+    try:
+      connect_name = subprocess.check_output(["getprop", "gsm.operator.alpha"], encoding='utf8')
+    except:
+      pass
     if network_type == NetworkType.none:
-      return network_strength
+      return network_strength, connect_name
     if network_type == NetworkType.wifi:
       out = subprocess.check_output('dumpsys connectivity', shell=True).decode('utf-8')
       network_strength = NetworkStrength.unknown
-      wifi_ssid = "---"
       for line in out.split('\n'):
         signal_str = "SignalStrength: "
         ssid_str = "extra: "
@@ -308,7 +316,7 @@ class Android(HardwareBase):
           lvl = int(line[lvl_idx_start : lvl_idx_end])
           ssid_idx_start = line.find(ssid_str) + len(ssid_str) + 1
           ssid_idx_end = line.find('"', ssid_idx_start)
-          wifi_ssid = line[ssid_idx_start : ssid_idx_end]
+          connect_name = line[ssid_idx_start : ssid_idx_end]
           if lvl >= -50:
             network_strength = NetworkStrength.great
           elif lvl >= -60:
@@ -317,7 +325,7 @@ class Android(HardwareBase):
             network_strength = NetworkStrength.moderate
           else:
             network_strength = NetworkStrength.poor
-      return network_strength, wifi_ssid
+      return network_strength, connect_name
     else:
       # check cell strength
       out = subprocess.check_output('dumpsys telephony.registry', shell=True).decode('utf-8')
@@ -349,8 +357,7 @@ class Android(HardwareBase):
             else:
               ns = min(lvl_cdma, lvl_edmo)
           network_strength = max(network_strength, ns)
-
-      return network_strength
+      return network_strength, connect_name
 
   def get_battery_capacity(self):
     return self.read_param_file("/sys/class/power_supply/battery/capacity", int, 100)
