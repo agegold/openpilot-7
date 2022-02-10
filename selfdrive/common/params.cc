@@ -345,6 +345,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"UseRadarTrack", PERSISTENT},
     {"RadarDisable", PERSISTENT},
     {"DesiredCurvatureLimit", PERSISTENT},
+    {"C2WithCommaPower", PERSISTENT},
 };
 
 } // namespace
