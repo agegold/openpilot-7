@@ -122,15 +122,18 @@ void Sidebar::updateState(const UIState &s) {
   setProperty("pandaStatus", QVariant::fromValue(pandaStatus));
 
   // opkr
-  QString iPAddress = "N/A";
+  QString iPAddress = "--";
   QString connectName = "---";
+  QString rSRP = "--";
   if (network_type[deviceState.getNetworkType()] == "WiFi") {
     std::string m_strip = s.scene.deviceState.getWifiIpAddress();
     std::string m_connectname = s.scene.deviceState.getConnectName();
     iPAddress = QString::fromUtf8(m_strip.c_str());
     connectName = QString::fromUtf8(m_connectname.c_str());
   } else {
+    std::string m_rsrp = s.scene.deviceState.getRSRP();
     std::string m_connectname = s.scene.deviceState.getConnectName();
+    rSRP = QString::fromUtf8(m_rsrp.c_str()) + " dBm";
     connectName = QString::fromUtf8(m_connectname.c_str());
   }
   QString bATStatus = "DisCharging";
@@ -142,6 +145,7 @@ void Sidebar::updateState(const UIState &s) {
   setProperty("bATStatus", bATStatus);
   setProperty("bATPercent", (int)deviceState.getBatteryPercent());
   setProperty("bATLess", (bool)s.scene.batt_less);
+  setProperty("rSRP", rSRP);
 }
 
 void Sidebar::paintEvent(QPaintEvent *event) {
@@ -167,10 +171,11 @@ void Sidebar::paintEvent(QPaintEvent *event) {
 
   configFont(p, "Open Sans", 35, "Regular");
   p.setPen(QColor(0xff, 0xff, 0xff));
-  const QRect r = QRect(50, 239, 100, 50);
   if (!bat_Less) {
+    QRect r = QRect(50, 239, 100, 50);
     p.drawText(r, Qt::AlignHCenter, net_type);
   } else {
+    QRect r = QRect(50, 239, 200, 50);
     p.drawText(r, Qt::AlignCenter, net_type);
   }
 
@@ -183,7 +188,11 @@ void Sidebar::paintEvent(QPaintEvent *event) {
   const QRect r2 = QRect(35, 295, 230, 50);
   configFont(p, "Open Sans", 28, "Bold");
   p.setPen(Qt::yellow);
-  p.drawText(r2, Qt::AlignHCenter, wifi_IPAddress);
+  if (wifi_IPAddress != "--") {
+    p.drawText(r2, Qt::AlignHCenter, wifi_IPAddress);
+  } else if (rsrp != "-- dBm") {
+    p.drawText(r2, Qt::AlignHCenter, rsrp);
+  }
 
   // opkr - ssid or carrier name
   const QRect r3 = QRect(35, 335, 230, 45);
@@ -194,8 +203,8 @@ void Sidebar::paintEvent(QPaintEvent *event) {
 
   // atom - battery
   if (!bat_Less) {
-    QRect  rect(160, 247, 76, 36);
-    QRect  bq(rect.left() + 6, rect.top() + 5, int((rect.width() - 19) * bat_Percent * 0.01), rect.height() - 11 );
+    QRect rect(160, 247, 76, 36);
+    QRect bq(rect.left() + 6, rect.top() + 5, int((rect.width() - 19) * bat_Percent * 0.01), rect.height() - 11 );
     QBrush bgBrush("#149948");
     p.fillRect(bq, bgBrush);
     p.drawImage(rect, battery_imgs[bat_Status == "Charging" ? 1 : 0]);

@@ -169,7 +169,10 @@ class Android(HardwareBase):
 
   def get_network_type(self):
     wifi_check = parse_service_call_string(service_call(["connectivity", "2"]))
-    if wifi_check is None:
+    lte_check = subprocess.check_output(["getprop", "gsm.network.type"], encoding='utf8')
+    if 'LTE' in lte_check and 'WIFI' not in wifi_check:
+      return NetworkType.cell4G
+    elif wifi_check is None:
       return NetworkType.none
     elif 'WIFI' in wifi_check:
       return NetworkType.wifi
@@ -204,7 +207,7 @@ class Android(HardwareBase):
     network_strength = NetworkStrength.unknown
 
     # from SignalStrength.java
-    def get_lte_level(rsrp, rssnr):
+    def get_lte_level(rsrp):
       INT_MAX = 2147483647
       if rsrp == INT_MAX:
         lvl_rsrp = NetworkStrength.unknown
@@ -216,17 +219,7 @@ class Android(HardwareBase):
         lvl_rsrp = NetworkStrength.moderate
       else:
         lvl_rsrp = NetworkStrength.poor
-      if rssnr == INT_MAX:
-        lvl_rssnr = NetworkStrength.unknown
-      elif rssnr >= 45:
-        lvl_rssnr = NetworkStrength.great
-      elif rssnr >= 10:
-        lvl_rssnr = NetworkStrength.good
-      elif rssnr >= -30:
-        lvl_rssnr = NetworkStrength.moderate
-      else:
-        lvl_rssnr = NetworkStrength.poor
-      return max(lvl_rsrp, lvl_rssnr)
+      return lvl_rsrp
 
     def get_tdscdma_level(tdscmadbm):
       lvl = NetworkStrength.unknown
@@ -298,12 +291,13 @@ class Android(HardwareBase):
       return max(lvl_cdmadbm, lvl_cdmaecio)
 
     connect_name = "---"
+    rsrp_dBm = "--"
     try:
       connect_name = subprocess.check_output(["getprop", "gsm.operator.alpha"], encoding='utf8')
     except:
       pass
     if network_type == NetworkType.none:
-      return network_strength, connect_name
+      return network_strength, connect_name, rsrp_dBm
     if network_type == NetworkType.wifi:
       out = subprocess.check_output('dumpsys connectivity', shell=True).decode('utf-8')
       network_strength = NetworkStrength.unknown
@@ -325,18 +319,20 @@ class Android(HardwareBase):
             network_strength = NetworkStrength.moderate
           else:
             network_strength = NetworkStrength.poor
-      return network_strength, connect_name
+      return network_strength, connect_name, rsrp_dBm
     else:
       # check cell strength
       out = subprocess.check_output('dumpsys telephony.registry', shell=True).decode('utf-8')
+      simcard_0 = 0
       for line in out.split('\n'):
-        if "mSignalStrength" in line:
+        if "SignalStrength: 99" in line:
+          simcard_0 = 1
           arr = line.split(' ')
           ns = 0
-          if ("gsm" in arr[14]):
-            rsrp = int(arr[9])
-            rssnr = int(arr[11])
-            ns = get_lte_level(rsrp, rssnr)
+          if ("gsm" in arr[14]) or ("gsm" in arr[16]):
+            rsrp = int(arr[9]) if int(arr[9]) != -1 else int(arr[11])
+            rsrp_dBm = str(rsrp)
+            ns = get_lte_level(rsrp)
             if ns == NetworkStrength.unknown:
               tdscmadbm = int(arr[13])
               ns = get_tdscdma_level(tdscmadbm)
@@ -357,7 +353,34 @@ class Android(HardwareBase):
             else:
               ns = min(lvl_cdma, lvl_edmo)
           network_strength = max(network_strength, ns)
-      return network_strength, connect_name
+        elif "mSignalStrength" in line and simcard_0 == 0:
+          arr = line.split(' ')
+          ns = 0
+          if ("gsm" in arr[14]) or ("gsm" in arr[16]):
+            rsrp = int(arr[9]) if int(arr[9]) != -1 else int(arr[11])
+            rsrp_dBm = str(rsrp)
+            ns = get_lte_level(rsrp)
+            if ns == NetworkStrength.unknown:
+              tdscmadbm = int(arr[13])
+              ns = get_tdscdma_level(tdscmadbm)
+              if ns == NetworkStrength.unknown:
+                asu = int(arr[1])
+                ns = get_gsm_level(asu)
+          else:
+            cdmadbm = int(arr[3])
+            cdmaecio = int(arr[4])
+            evdodbm = int(arr[5])
+            evdosnr = int(arr[7])
+            lvl_cdma = get_cdma_level(cdmadbm, cdmaecio)
+            lvl_edmo = get_evdo_level(evdodbm, evdosnr)
+            if lvl_edmo == NetworkStrength.unknown:
+              ns = lvl_cdma
+            elif lvl_cdma == NetworkStrength.unknown:
+              ns = lvl_edmo
+            else:
+              ns = min(lvl_cdma, lvl_edmo)
+          network_strength = max(network_strength, ns)
+      return network_strength, connect_name, rsrp_dBm
 
   def get_battery_capacity(self):
     return self.read_param_file("/sys/class/power_supply/battery/capacity", int, 100)
