@@ -60,14 +60,14 @@ class CarInterface(CarInterfaceBase):
     tire_stiffness_factor = 1.
 
     ret.longitudinalTuning.kpBP = [0., 4., 9., 17., 23., 31.]
-    ret.longitudinalTuning.kpV = [1.2, 1.1, 1.0, 0.9, 0.75, 0.65]
+    ret.longitudinalTuning.kpV = [1.3, 1.2, 1.1, 0.9, 0.75, 0.65]
     ret.longitudinalTuning.kiBP = [0., 4., 9., 17., 23., 31.]
-    ret.longitudinalTuning.kiV = [0.27, 0.24, 0.23, 0.2, 0.17, 0.15]
+    ret.longitudinalTuning.kiV = [0.28, 0.25, 0.24, 0.2, 0.17, 0.15]
 
     ret.longitudinalTuning.deadzoneBP = [0., 4.]
     ret.longitudinalTuning.deadzoneV = [0., 0.1]
     ret.longitudinalTuning.kdBP = [0., 4., 9., 17., 23., 31.]
-    ret.longitudinalTuning.kdV = [0.9, 1.0, 0.85, 0.7, 0.5, 0.4]
+    ret.longitudinalTuning.kdV = [1.0, 1.1, 0.9, 0.7, 0.5, 0.4]
     ret.longitudinalTuning.kfBP = [0., 4., 9., 17., 23., 31.]
     ret.longitudinalTuning.kfV = [1., 1., 1., 1., 1., 1.]
 
@@ -84,6 +84,7 @@ class CarInterface(CarInterfaceBase):
     ret.resSpeed = 0
     ret.vFuture = 0
     ret.aqValue = 0
+    ret.aqValueRaw = 0
 
     params = Params()
     PidKp = float(Decimal(params.get("PidKp", encoding="utf8")) * Decimal('0.01'))
@@ -381,6 +382,7 @@ class CarInterface(CarInterfaceBase):
     else:
       self.CP.vFuture = 0
     self.CP.aqValue = self.CC.aq_value
+    self.CP.aqValueRaw = self.CC.aq_value_raw
 
     if self.CC.mode_change_timer and self.CS.out.cruiseState.modeSel == 0:
       events.add(EventName.modeChangeOpenpilot)
