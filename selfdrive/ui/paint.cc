@@ -1394,7 +1394,7 @@ static void ui_draw_vision_header(UIState *s) {
 static void ui_draw_blindspot_mon(UIState *s) {
   NVGpaint gradient_blindspot;  
   UIScene &scene = s->scene;
-  const int width = 200;
+  const int width = 450;
   const int height = s->fb_h;
 
   const int left_x = 0;
