@@ -1405,7 +1405,7 @@ static void ui_draw_blindspot_mon(UIState *s) {
   // const Rect rect_l = {left_x, left_y, width, height};
   // const Rect rect_r = {right_x, right_y, width, height};
   const Rect rect_l = {left_x + width, left_y, left_x, left_y + height};
-  const Rect rect_r = {right_x + width, right_y, right_x, right_y + height};
+  const Rect rect_r = {right_x, right_y + height, right_x + width, right_y};
 
   int car_valid_status = 0;
   bool car_valid_left = scene.leftblindspot;
@@ -1433,8 +1433,8 @@ static void ui_draw_blindspot_mon(UIState *s) {
         car_valid_alpha1 = 250;
         car_valid_alpha2 = 10;
       } else {
-        car_valid_alpha1 = 10;
-        car_valid_alpha2 = 250;
+        car_valid_alpha1 = 50;
+        car_valid_alpha2 = 0;
       }
     } else {
       scene.blindspot_blinkingrate = 120;
@@ -1442,7 +1442,7 @@ static void ui_draw_blindspot_mon(UIState *s) {
 
     if(car_valid_left) {
       // gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y, width, left_y + height, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y, left_x + width, left_y + height, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
       ui_fill_rect(s->vg, rect_l, gradient_blindspot, 0);
     }
     if(car_valid_right) {
