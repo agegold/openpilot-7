@@ -1406,11 +1406,11 @@ static void ui_draw_blindspot_mon(UIState *s) {
   const Rect rect_r = {right_x, right_y, width, height};
 
   int car_valid_status = 0;
-  bool car_valid_left = true; //scene.leftblindspot;
-  bool car_valid_right = true; //scene.rightblindspot;
+  bool car_valid_left = scene.leftblindspot;
+  bool car_valid_right = scene.rightblindspot;
   int car_valid_alpha1 = 0;
   int car_valid_alpha2 = 0;
-  if (true){//scene.nOpkrBlindSpotDetect) {
+  if (scene.nOpkrBlindSpotDetect) {
     if (scene.car_valid_status_changed != car_valid_status) {
       scene.blindspot_blinkingrate = 114;
       scene.car_valid_status_changed = car_valid_status;
@@ -1428,11 +1428,11 @@ static void ui_draw_blindspot_mon(UIState *s) {
       scene.blindspot_blinkingrate -= 6;
       if (scene.blindspot_blinkingrate < 0) scene.blindspot_blinkingrate = 120;
       if (scene.blindspot_blinkingrate >= 60) {
-        car_valid_alpha1 = 200;
-        car_valid_alpha2 = 30;
+        car_valid_alpha1 = 230;
+        car_valid_alpha2 = 0;
       } else {
         car_valid_alpha1 = 50;
-        car_valid_alpha2 = 10;
+        car_valid_alpha2 = 0;
       }
     } else {
       scene.blindspot_blinkingrate = 120;
