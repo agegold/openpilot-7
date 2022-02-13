@@ -1407,7 +1407,7 @@ static void ui_draw_blindspot_mon(UIState *s) {
   // const Rect rect_l = {left_x + width, left_y, left_x, left_y + height};
   // const Rect rect_r = {right_x, right_y + height, right_x + width, right_y};
 
-  // int car_valid_status = 0;
+  int car_valid_status = 0;
   bool car_valid_left = true; //scene.leftblindspot;
   bool car_valid_right = true; //scene.rightblindspot;
   int car_valid_alpha1 = 0;
