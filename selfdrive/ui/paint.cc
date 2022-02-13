@@ -1408,25 +1408,25 @@ static void ui_draw_blindspot_mon(UIState *s) {
   // const Rect rect_r = {right_x, right_y + height, right_x + width, right_y};
 
   // int car_valid_status = 0;
-  bool car_valid_left = scene.leftblindspot;
-  bool car_valid_right = scene.rightblindspot;
+  bool car_valid_left = true; //scene.leftblindspot;
+  bool car_valid_right = true; //scene.rightblindspot;
   int car_valid_alpha1 = 0;
   int car_valid_alpha2 = 0;
   if (true){//scene.nOpkrBlindSpotDetect) {
-    // if (scene.car_valid_status_changed != car_valid_status) {
-    //   scene.blindspot_blinkingrate = 114;
-    //   scene.car_valid_status_changed = car_valid_status;
-    // }
-    // if (car_valid_left || car_valid_right) {
-    //   if (!car_valid_left && car_valid_right) {
-    //     car_valid_status = 1;
-    //   } else if (car_valid_left && !car_valid_right) {
-    //     car_valid_status = 2;
-    //   } else if (car_valid_left && car_valid_right) {
-    //     car_valid_status = 3;
-    //   } else {
-    //     car_valid_status = 0;
-    //   }
+    if (scene.car_valid_status_changed != car_valid_status) {
+      scene.blindspot_blinkingrate = 114;
+      scene.car_valid_status_changed = car_valid_status;
+    }
+    if (car_valid_left || car_valid_right) {
+      if (!car_valid_left && car_valid_right) {
+        car_valid_status = 1;
+      } else if (car_valid_left && !car_valid_right) {
+        car_valid_status = 2;
+      } else if (car_valid_left && car_valid_right) {
+        car_valid_status = 3;
+      } else {
+        car_valid_status = 0;
+      }
       scene.blindspot_blinkingrate -= 6;
       if (scene.blindspot_blinkingrate < 0) scene.blindspot_blinkingrate = 120;
       if (scene.blindspot_blinkingrate >= 60) {
