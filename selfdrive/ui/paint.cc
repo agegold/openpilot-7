@@ -1394,7 +1394,7 @@ static void ui_draw_vision_header(UIState *s) {
 static void ui_draw_blindspot_mon(UIState *s) {
   NVGpaint gradient_blindspot;  
   UIScene &scene = s->scene;
-  const int width = 500;
+  const int width = 600;
   const int height = s->fb_h;
 
   const int left_x = 0;
@@ -1439,11 +1439,11 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, height / 2, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
       ui_fill_rect(s->vg, rect_l, gradient_blindspot, 0);
     }
     if(car_valid_right) {
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x + width, height, right_x , 0, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x + width, height, right_x , height / 2, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot, 0);
     }
   }
