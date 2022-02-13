@@ -1402,31 +1402,31 @@ static void ui_draw_blindspot_mon(UIState *s) {
   const int right_x = s->fb_w - width;
   const int right_y = 0;
 
-  // const Rect rect_l = {left_x, left_y, width, height};
-  // const Rect rect_r = {right_x, right_y, width, height};
-  const Rect rect_l = {left_x + width, left_y, left_x, left_y + height};
-  const Rect rect_r = {right_x, right_y + height, right_x + width, right_y};
+  const Rect rect_l = {left_x, left_y, width, height};
+  const Rect rect_r = {right_x, right_y, width, height};
+  // const Rect rect_l = {left_x + width, left_y, left_x, left_y + height};
+  // const Rect rect_r = {right_x, right_y + height, right_x + width, right_y};
 
-  int car_valid_status = 0;
+  // int car_valid_status = 0;
   bool car_valid_left = scene.leftblindspot;
   bool car_valid_right = scene.rightblindspot;
   int car_valid_alpha1 = 0;
   int car_valid_alpha2 = 0;
-  if (scene.nOpkrBlindSpotDetect) {
-    if (scene.car_valid_status_changed != car_valid_status) {
-      scene.blindspot_blinkingrate = 114;
-      scene.car_valid_status_changed = car_valid_status;
-    }
-    if (car_valid_left || car_valid_right) {
-      if (!car_valid_left && car_valid_right) {
-        car_valid_status = 1;
-      } else if (car_valid_left && !car_valid_right) {
-        car_valid_status = 2;
-      } else if (car_valid_left && car_valid_right) {
-        car_valid_status = 3;
-      } else {
-        car_valid_status = 0;
-      }
+  if (true){//scene.nOpkrBlindSpotDetect) {
+    // if (scene.car_valid_status_changed != car_valid_status) {
+    //   scene.blindspot_blinkingrate = 114;
+    //   scene.car_valid_status_changed = car_valid_status;
+    // }
+    // if (car_valid_left || car_valid_right) {
+    //   if (!car_valid_left && car_valid_right) {
+    //     car_valid_status = 1;
+    //   } else if (car_valid_left && !car_valid_right) {
+    //     car_valid_status = 2;
+    //   } else if (car_valid_left && car_valid_right) {
+    //     car_valid_status = 3;
+    //   } else {
+    //     car_valid_status = 0;
+    //   }
       scene.blindspot_blinkingrate -= 6;
       if (scene.blindspot_blinkingrate < 0) scene.blindspot_blinkingrate = 120;
       if (scene.blindspot_blinkingrate >= 60) {
@@ -1441,13 +1441,13 @@ static void ui_draw_blindspot_mon(UIState *s) {
     }
 
     if(car_valid_left) {
-      // gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
-      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y, left_x + width, left_y + height, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
+      gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y + height, width, 0, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
+      // gradient_blindspot = nvgLinearGradient(s->vg, left_x, left_y, left_x + width, left_y + height, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
       ui_fill_rect(s->vg, rect_l, gradient_blindspot, 0);
     }
     if(car_valid_right) {
-      // gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
-      gradient_blindspot = nvgLinearGradient(s->vg, right_x + width, right_y + height, right_x, right_y, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
+      gradient_blindspot = nvgLinearGradient(s->vg, right_x , 0, right_x + width, height, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
+      // gradient_blindspot = nvgLinearGradient(s->vg, right_x + width, right_y + height, right_x, right_y, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot, 0);
     }
   }
