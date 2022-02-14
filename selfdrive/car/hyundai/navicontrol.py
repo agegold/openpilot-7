@@ -173,6 +173,8 @@ class NaviControl():
             spdTarget = self.map_speed
           elif self.map_speed_dist < min_control_dist:
             spdTarget = self.map_speed
+        elif spdTarget == cruiseState_speed and self.sm['liveMapData'].speedLimit <= 19:
+          return cruise_set_speed_kph
         if self.map_spdlimit_offset_option == 0:
           cruise_set_speed_kph = spdTarget + round(spdTarget*0.01*self.map_spdlimit_offset)
         elif self.map_spdlimit_offset_option == 1:
