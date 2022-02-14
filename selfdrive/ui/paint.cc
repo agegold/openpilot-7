@@ -501,12 +501,12 @@ static void ui_draw_vision_autohold(UIState *s) {
 }
 
 static void ui_draw_vision_brake(UIState *s) {
-  const UIScene &scene = s->scene;  
+  const UIScene *scene = &s->scene;
   const int radius = 85;
   const int center_x = radius + bdr_s + (radius*2 + 30) * 3;
   const int center_y = 1080 - 85 - 30;
 
-  bool brake_valid = car_state.getBrakeLights();
+  bool brake_valid = scene->car_state.getBrakeLights();
   float brake_img_alpha = brake_valid ? 1.0f : 0.15f;
   float brake_bg_alpha = brake_valid ? 0.3f : 0.1f;
   NVGcolor brake_bg = nvgRGBA(0, 0, 0, (255 * brake_bg_alpha));
