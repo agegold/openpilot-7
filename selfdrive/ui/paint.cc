@@ -475,10 +475,10 @@ static void ui_draw_compass(UIState *s) {
   if (s->scene.gpsAccuracyUblox != 0.00) {
     //Hoya Center Compass
     const int radius = 100;
-    const int center_x = radius + radius*2;
+    const int center_x = radius + radius*2 - 30;
     const int center_y = 1080 - 85 - 30;
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "direction", nvgRGBA(0, 0, 0, 0), 0.7f, s->scene.bearingUblox);
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "compass", nvgRGBA(0, 0, 0, 0), 0.8f);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "compass", nvgRGBA(0, 0, 0, 0), 0.9f);
   }
 }
 
@@ -522,9 +522,9 @@ static void ui_draw_center_wheel(UIState *s) {
   if (s->scene.controls_state.getEnabled() || s->scene.comma_stock_ui) {
     float angleSteers = s->scene.car_state.getSteeringAngleDeg();
     if (s->scene.controlAllowed) {
-      ui_draw_circle_image_rotation(s, wheel_x, wheel_y, wheel_size, "center_wheel", nvg_color, 1.0f, angleSteers);
+      ui_draw_circle_image_rotation(s, wheel_x, wheel_y, wheel_size, "center_wheel", nvg_color, 0.9f, angleSteers);
     } else {
-      ui_draw_circle_image_rotation(s, wheel_x, wheel_y, wheel_size, "center_wheel", nvgRGBA(0x17, 0x33, 0x49, 0xc8), 1.0f, angleSteers);
+      ui_draw_circle_image_rotation(s, wheel_x, wheel_y, wheel_size, "center_wheel", nvgRGBA(0x17, 0x33, 0x49, 0xc8), 0.9f, angleSteers);
     }
   }
 }
@@ -532,7 +532,7 @@ static void ui_draw_center_wheel(UIState *s) {
 static void ui_draw_vision_accel(UIState *s) {
   const UIScene &scene = s->scene;  
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 20) * 5.8;
+  const int center_x = radius + bdr_s + (radius*2 + 20) * 6.0;
   const int center_y = 1080 - 85 - 30;
 
   bool accel_valid = scene.gasPress;
