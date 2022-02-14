@@ -532,7 +532,7 @@ static void ui_draw_center_wheel(UIState *s) {
 static void ui_draw_vision_accel(UIState *s) {
   const UIScene &scene = s->scene;  
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 20) * 6.0;
+  const int center_x = radius + bdr_s + (radius*2 + 10) * 7;
   const int center_y = 1080 - 85 - 30;
 
   bool accel_valid = scene.gasPress;
