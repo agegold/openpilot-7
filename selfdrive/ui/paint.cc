@@ -474,8 +474,8 @@ static void ui_draw_vision_scc_gap(UIState *s) {
 static void ui_draw_compass(UIState *s) {
   if (s->scene.gpsAccuracyUblox != 0.00) {
     //Hoya Center Compass
-    const int radius = 100;
-    const int center_x = radius + radius*2 - 30;
+    const int radius = 110;
+    const int center_x = radius + radius*2 - 20;
     const int center_y = 1080 - 85 - 30;
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "direction", nvgRGBA(0, 0, 0, 0), 0.7f, s->scene.bearingUblox);
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "compass", nvgRGBA(0, 0, 0, 0), 0.9f);
@@ -568,13 +568,7 @@ static void ui_draw_vision_maxspeed_org(UIState *s) {
   ui_fill_rect(s->vg, rect, color, 30.);
   ui_draw_rect(s->vg, rect, COLOR_WHITE_ALPHA(100), 10, 20.);
 
-  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
-  if (cruise_speed >= 20 && s->scene.controls_state.getEnabled()) {
-    const std::string cruise_speed_str = std::to_string((int)std::nearbyint(cruise_speed));
-    ui_draw_text(s, rect.centerX(), bdr_s+65, cruise_speed_str.c_str(), 26 * 3.3, COLOR_WHITE_ALPHA(is_cruise_set ? 200 : 100), "sans-bold");
-  } else {
-  	ui_draw_text(s, rect.centerX(), bdr_s+65, "-", 26 * 3.3, COLOR_WHITE_ALPHA(is_cruise_set ? 200 : 100), "sans-semibold");
-  }
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE)⁶
   if (is_cruise_set) {
     const std::string maxspeed_str = std::to_string((int)std::nearbyint(maxspeed));
     ui_draw_text(s, rect.centerX(), bdr_s+165, maxspeed_str.c_str(), 48 * 2.7, COLOR_WHITE, "sans-bold");
