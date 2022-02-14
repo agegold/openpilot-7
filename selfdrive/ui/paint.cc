@@ -532,11 +532,11 @@ static void ui_draw_center_wheel(UIState *s) {
 static void ui_draw_vision_accel(UIState *s) {
   const UIScene &scene = s->scene;  
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 10) * 7;
+  const int center_x = radius + bdr_s + (radius*2 + 10) * 7 + 50;
   const int center_y = 1080 - 85 - 30;
 
   bool accel_valid = scene.gasPress;
-  float accel_img_alpha = accel_valid ? 1.0f : 0.15f;
+  float accel_img_alpha = accel_valid ? 0.9f : 0.15f;
   float accel_bg_alpha = accel_valid ? 0.3f : 0.1f;
   NVGcolor accel_bg = nvgRGBA(0, 0, 0, (255 * accel_bg_alpha));
   ui_draw_circle_image_rotation(s, center_x, center_y, radius, "accel", accel_bg, accel_img_alpha);
