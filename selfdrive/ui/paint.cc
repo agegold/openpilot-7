@@ -473,7 +473,7 @@ static void ui_draw_vision_scc_gap(UIState *s) {
 
 static void ui_draw_compass(UIState *s) {
   const int radius = 185;
-  const int center_x = 1920 / 4 - 150;
+  const int center_x = 1920 / 4 - 140;
   const int center_y = 1080 - 40;
   ui_draw_circle_image_rotation(s, center_x, center_y, radius, "direction", nvgRGBA(0, 0, 0, 0), 0.7f);
 
