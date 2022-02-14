@@ -474,8 +474,8 @@ static void ui_draw_vision_scc_gap(UIState *s) {
 static void ui_draw_compass(UIState *s) {
   if (s->scene.gpsAccuracyUblox != 0.00) {
     //Hoya Center Compass
-    const int radius = 100;
-    const int center_x = radius + radius*2 - 30;
+    const int radius = 110;
+    const int center_x = radius + radius*2 - 35;
     const int center_y = 1080 - 85 - 30;
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "direction", nvgRGBA(0, 0, 0, 0), 0.7f, s->scene.bearingUblox);
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "compass", nvgRGBA(0, 0, 0, 0), 0.9f);
