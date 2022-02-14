@@ -514,7 +514,7 @@ static void ui_draw_vision_brake(UIState *s) {
 }
 
 static void ui_draw_center_wheel(UIState *s) {
-  const int wheel_size = 185;
+  const int wheel_size = 200;
   const int wheel_x = 1920 / 2 - 20;
   const int wheel_y = 1080 - 40;
   const QColor &color = bg_colors[s->status];
