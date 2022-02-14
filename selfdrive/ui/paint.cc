@@ -475,7 +475,7 @@ static void ui_draw_compass(UIState *s) {
   if (s->scene.gpsAccuracyUblox != 0.00) {
     //Hoya Center Compass
     const int radius = 100;
-    const int center_x = radius + bdr_s + radius*2 + 30;
+    const int center_x = radius + radius*2;
     const int center_y = 1080 - 85 - 30;
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "direction", nvgRGBA(0, 0, 0, 0), 0.7f, s->scene.bearingUblox);
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "compass", nvgRGBA(0, 0, 0, 0), 0.8f);
@@ -489,7 +489,7 @@ static void ui_draw_vision_autohold(UIState *s) {
     return;
 
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 20) * 2;
+  const int center_x = radius + bdr_s + (radius*2 + 10) * 2;
   const int center_y = 1080 - 85 - 30;
 
   float autohold_img_alpha = autohold > 0 ? 1.0f : 0.15f;
@@ -503,7 +503,7 @@ static void ui_draw_vision_autohold(UIState *s) {
 static void ui_draw_vision_brake(UIState *s) {
   const UIScene *scene = &s->scene;
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 20) * 3;
+  const int center_x = radius + bdr_s + (radius*2 + 10) * 3;
   const int center_y = 1080 - 85 - 30;
 
   bool brake_valid = scene->car_state.getBrakeLights();
@@ -532,7 +532,7 @@ static void ui_draw_center_wheel(UIState *s) {
 static void ui_draw_vision_accel(UIState *s) {
   const UIScene &scene = s->scene;  
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 20) * 5.6;
+  const int center_x = radius + bdr_s + (radius*2 + 20) * 5.8;
   const int center_y = 1080 - 85 - 30;
 
   bool accel_valid = scene.gasPress;
