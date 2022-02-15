@@ -506,12 +506,12 @@ static void ui_draw_vision_brake(UIState *s) {
   const int center_y = 1080 - 85 - 30;
 
   bool brake_valid = s->scene.brakePress;
-  bool cruise_valid = s->scene.car_state.getCruiseState();
+  bool cruise_valid = s->scene.cruiseAccStatus;
   float brake_img_alpha = brake_valid ? 0.9f : 0.15f;
   float brake_bg_alpha = brake_valid ? 0.3f : 0.1f;
   NVGcolor brake_bg = nvgRGBA(0, 0, 0, (255 * brake_bg_alpha));
   if (cruise_valid && !brake_valid) {
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", 0.3f, 0.9f);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 200), 0.9f);
   } else {
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", brake_bg, brake_img_alpha);
   }
@@ -542,12 +542,12 @@ static void ui_draw_vision_accel(UIState *s) {
   const int center_y = 1080 - 85 - 30;
 
   bool accel_valid = s->scene.gasPress;
-  bool cruise_valid = s->scene.car_state.getCruiseState();
+  bool cruise_valid = s->scene.cruiseAccStatus;
   float accel_img_alpha = accel_valid ? 0.9f : 0.15f;
   float accel_bg_alpha = accel_valid ? 0.3f : 0.1f;
   NVGcolor accel_bg = nvgRGBA(0, 0, 0, (255 * accel_bg_alpha));
   if (cruise_valid && !accel_valid) {
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", 0.3f, 0.9f);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 200), 0.9f);
   } else {  
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "accel", accel_bg, accel_img_alpha);
   }
