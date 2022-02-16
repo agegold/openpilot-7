@@ -118,6 +118,7 @@ typedef enum UIStatus {
   STATUS_ENGAGED,
   STATUS_WARNING,
   STATUS_ALERT,
+  STATUS_MANUAL,
   STATUS_BRAKE,
   STATUS_CRUISE,  
 } UIStatus;
@@ -127,6 +128,7 @@ const QColor bg_colors [] = {
   [STATUS_ENGAGED] = QColor(0x17, 0x86, 0x44, 0x96),
   [STATUS_WARNING] = QColor(0xDA, 0x6F, 0x25, 0x96),
   [STATUS_ALERT] = QColor(0xC9, 0x22, 0x31, 0x96),
+  [STATUS_MANUAL] = QColor(0x77, 0x77, 0x77, 0x77),
   [STATUS_BRAKE] = QColor(0xA4, 0x32, 0x00, 0x96),
   [STATUS_CRUISE] = QColor(0x00, 0x64, 0xC8, 0x96),
 };
