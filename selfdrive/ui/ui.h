@@ -152,6 +152,7 @@ typedef struct UIScene {
   float alert_blinking_rate;
   cereal::PandaState::PandaType pandaType;
 
+  bool steeringPress;
   bool brakePress;
   bool gasPress;
   bool brakeHold;
