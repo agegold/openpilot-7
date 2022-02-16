@@ -111,18 +111,22 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
     }
     fillAlpha = (int)(fmin(fillAlpha, 255));
   }
-
+  char radarDist[32];
+  float radar_dist = s->scene.radarDistance;
+  // const std::string radarDist_str = std::to_string((int)std::nearbyint(radar_dist));
+  // ui_draw_text(s, rect.centerX(), bdr_s+165, radarDist_str.c_str(), 48 * 2.5, COLOR_WHITE, "sans-bold");
   float sz = std::clamp((25 * 30) / (d_rel / 3 + 30), 15.0f, 30.0f) * 2.35;
   x = std::clamp(x, 0.f, s->fb_w - sz / 2);
   y = std::fmin(s->fb_h - sz * .6, y);
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-
+  snprintf(radarDist, sizeof(sradarDist), "%.0fm", radar_dist);
   if (s->scene.radarDistance < 149) {
     draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
-    ui_draw_text(s, x, y + sz/1.5f, "R", 60, COLOR_WHITE, "sans-bold"); //neokii
+    // ui_draw_text(s, x, y + sz/1.5f, "R", 60, COLOR_WHITE, "sans-bold");
+    ui_draw_text(s, x, y + sz/1.5f, radarDist, 60, COLOR_WHITE, "sans-bold");
   } else {
     draw_chevron(s, x, y, sz, nvgRGBA(165, 255, 135, fillAlpha), COLOR_GREEN);
-    ui_draw_text(s, x, y + sz/1.5f, "C", 60, COLOR_BLACK, "sans-bold"); //hoya
+    ui_draw_text(s, x, y + sz/1.5f, "C", 60, COLOR_BLACK, "sans-bold");
   }
 }
 
