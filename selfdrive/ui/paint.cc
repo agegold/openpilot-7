@@ -119,7 +119,7 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
   x = std::clamp(x, 0.f, s->fb_w - sz / 2);
   y = std::fmin(s->fb_h - sz * .6, y);
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-  snprintf(radarDist, sizeof(sradarDist), "%.0fm", radar_dist);
+  snprintf(radarDist, sizeof(radarDist), "%.0fm", radar_dist);
   if (s->scene.radarDistance < 149) {
     draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
     // ui_draw_text(s, x, y + sz/1.5f, "R", 60, COLOR_WHITE, "sans-bold");
