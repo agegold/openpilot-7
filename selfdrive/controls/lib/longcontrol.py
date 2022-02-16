@@ -54,7 +54,7 @@ class LongControl():
                                  (CP.longitudinalTuning.kiBP, CP.longitudinalTuning.kiV),
                                  (CP.longitudinalTuning.kdBP, CP.longitudinalTuning.kdV),
                                  (CP.longitudinalTuning.kfBP, CP.longitudinalTuning.kfV),
-                                  k_f = CP.longitudinalTuning.kf, rate=1 / DT_CTRL)
+                                 rate=1 / DT_CTRL)
     self.v_pid = 0.0
     self.last_output_accel = 0.0
     self.long_stat = ""
