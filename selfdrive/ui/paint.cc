@@ -486,40 +486,36 @@ static void ui_draw_compass(UIState *s) {
   }
 }
 
-// static void ui_draw_vision_autohold(UIState *s) {
-//   const UIScene *scene = &s->scene;
-//   int autohold = scene->car_state.getBrakeHold();
-//   if(autohold < 0)
-//     return;
-
-//   const int radius = 85;
-//   const int center_x = radius + bdr_s + (radius*2 + 10) * 2 + 20;
-//   const int center_y = 1080 - 85 - 30;
-
-//   float autohold_img_alpha = autohold > 0 ? 1.0f : 0.15f;
-//   float autohold_bg_alpha = autohold > 0 ? 0.3f : 0.1f;
-//   NVGcolor autohold_bg = nvgRGBA(0, 0, 0, (255 * autohold_bg_alpha));
-
-//   ui_draw_circle_image_rotation(s, center_x, center_y, radius,
-//         autohold > 1 ? "autohold_warning" : "autohold_active", autohold_bg, autohold_img_alpha);
-// }
-
-static void ui_draw_vision_brake(UIState *s) {
+static void ui_draw_vision_autohold(UIState *s) {
+  const UIScene *scene = &s->scene;
+  int autohold = scene->car_state.getBrakeHold();
+  if(autohold < 0)
+    return;
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 10) * 3 + 20;
+  const int center_x = radius + bdr_s + (radius*2 + 10) * 2 + 20;
   const int center_y = 1080 - 85 - 30;
-
-  bool brake_valid = s->scene.brakePress;
-  bool cruise_valid = s->scene.cruiseAccStatus;
-  float brake_img_alpha = brake_valid ? 0.9f : 0.15f;
-  float brake_bg_alpha = brake_valid ? 0.3f : 0.1f;
-  NVGcolor brake_bg = nvgRGBA(0, 0, 0, (255 * brake_bg_alpha));
-  if (cruise_valid && !brake_valid) {
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 80), 1.0f);
-  } else {
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", brake_bg, brake_img_alpha);
-  }
+  float autohold_img_alpha = autohold > 0 ? 1.0f : 0.15f;
+  float autohold_bg_alpha = autohold > 0 ? 0.3f : 0.1f;
+  NVGcolor autohold_bg = nvgRGBA(0, 0, 0, (255 * autohold_bg_alpha));
+  ui_draw_circle_image_rotation(s, center_x, center_y, radius,
+        autohold > 1 ? "autohold_warning" : "autohold_active", autohold_bg, autohold_img_alpha);
 }
+
+// static void ui_draw_vision_brake(UIState *s) {
+//   const int radius = 85;
+//   const int center_x = radius + bdr_s + (radius*2 + 10) * 3 + 20;
+//   const int center_y = 1080 - 85 - 30;
+//   bool brake_valid = s->scene.brakePress;
+//   bool cruise_valid = s->scene.cruiseAccStatus;
+//   float brake_img_alpha = brake_valid ? 0.9f : 0.15f;
+//   float brake_bg_alpha = brake_valid ? 0.3f : 0.1f;
+//   NVGcolor brake_bg = nvgRGBA(0, 0, 0, (255 * brake_bg_alpha));
+//   if (cruise_valid && !brake_valid) {
+//     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 80), 1.0f);
+//   } else {
+//     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", brake_bg, brake_img_alpha);
+//   }
+// }
 
 static void ui_draw_center_wheel(UIState *s) {
   const int wheel_size = 200;
@@ -539,20 +535,27 @@ static void ui_draw_center_wheel(UIState *s) {
   }
 }
 
-static void ui_draw_vision_accel(UIState *s) {
+static void ui_draw_vision_accel_brake(UIState *s) {
   const int radius = 85;
   const int center_x = radius + bdr_s + (radius*2 + 10) * 6 + 50 - 10;
   const int center_y = 1080 - 85 - 30;
-
   bool accel_valid = s->scene.gasPress;
+  bool brake_valid = s->scene.brakePress;
   bool cruise_valid = s->scene.cruiseAccStatus;
+  float brake_img_alpha = brake_valid ? 0.9f : 0.15f;
+  float brake_bg_alpha = brake_valid ? 0.3f : 0.1f;
+  NVGcolor brake_bg = nvgRGBA(0, 0, 0, (255 * brake_bg_alpha));
   float accel_img_alpha = accel_valid ? 0.9f : 0.15f;
   float accel_bg_alpha = accel_valid ? 0.3f : 0.1f;
   NVGcolor accel_bg = nvgRGBA(0, 0, 0, (255 * accel_bg_alpha));
-  if (cruise_valid && !accel_valid) {
+  if (cruise_valid && !accel_valid && !brake_valid) {
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 80), 1.0f);
-  } else {  
+  } else if (accel_valid) {  
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "accel", accel_bg, accel_img_alpha);
+  } else if (brake_valid) {
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", brake_bg, brake_img_alpha);
+  } else {
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 80), 0.1f);
   }
 }
 
@@ -1457,10 +1460,10 @@ static void ui_draw_vision_footer(UIState *s) {
     ui_draw_gear(s);
     if (!s->scene.mapbox_running) {    
       ui_draw_compass(s);
-      // ui_draw_vision_autohold(s);
-      ui_draw_vision_brake(s);
+      ui_draw_vision_autohold(s);
+      // ui_draw_vision_brake(s);
       ui_draw_center_wheel(s);
-      ui_draw_vision_accel(s);
+      ui_draw_vision_accel_brake(s);
     }
   }
 }
