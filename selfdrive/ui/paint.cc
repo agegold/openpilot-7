@@ -492,7 +492,7 @@ static void ui_draw_vision_autohold(UIState *s) {
   if(autohold < 0)
     return;
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 10) * 2 + 20;
+  const int center_x = radius + bdr_s + (radius*2 + 10) * 3 + 10;
   const int center_y = 1080 - 85 - 30;
   float autohold_img_alpha = autohold > 0 ? 1.0f : 0.15f;
   float autohold_bg_alpha = autohold > 0 ? 0.3f : 0.1f;
@@ -537,7 +537,7 @@ static void ui_draw_center_wheel(UIState *s) {
 
 static void ui_draw_vision_accel_brake(UIState *s) {
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 10) * 6 + 50 - 10;
+  const int center_x = radius + bdr_s + (radius*2 + 10) * 6 + 50;
   const int center_y = 1080 - 85 - 30;
   bool accel_valid = s->scene.gasPress;
   bool brake_valid = s->scene.brakePress;
@@ -555,7 +555,7 @@ static void ui_draw_vision_accel_brake(UIState *s) {
   } else if (brake_valid) {
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", brake_bg, brake_img_alpha);
   } else {
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 80), 0.1f);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 30), 0.3f);
   }
 }
 
