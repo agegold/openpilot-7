@@ -52,6 +52,7 @@ class LanePlanner:
 
     self.lp_timer = 0
     self.lp_timer2 = 0
+    self.str_log = ''
 
   def parse_model(self, md, sm, v_ego):
     curvature = sm['controlsState'].curvature
@@ -153,4 +154,5 @@ class LanePlanner:
       path_xyz[:,1] = self.d_prob * lane_path_y_interp + (1.0 - self.d_prob) * path_xyz[:,1]
     else:
       cloudlog.warning("Lateral mpc - NaNs in laneline times, ignoring")
+      
     return path_xyz
