@@ -53,7 +53,7 @@ __kernel void debayer10(__global uchar const * const in,
   int ox = get_global_id(1) * 2;
   {
 #endif
-    const int ix = (ox/2) * 5;s
+    const int ix = (ox/2) * 5;
 
     // TODO: why doesn't this work for the frontview
     /*const uchar8 v1 = vload8(0, &in[iy * FRAME_STRIDE + ix]);
