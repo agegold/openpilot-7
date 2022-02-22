@@ -154,6 +154,7 @@ void SNPEModel::addExtra(float *image_buf, int buf_size) {
 std::unique_ptr<zdl::DlSystem::IUserBuffer> SNPEModel::addExtra(float *state, int state_size, int idx) {
   // get input and output names
   const auto real_idx = idx + (use_extra ? 1 : 0);
+  const auto &strListi_opt = snpe->getInputTensorNames();
   if (!strListi_opt) throw std::runtime_error("Error obtaining Input tensor names");
   const auto &strListi = *strListi_opt;
   const char *input_tensor_name = strListi.at(real_idx);
@@ -238,4 +239,3 @@ void SNPEModel::execute() {
   }
 #endif
 }
-
