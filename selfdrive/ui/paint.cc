@@ -559,7 +559,7 @@ static void ui_draw_vision_accel_brake(UIState *s) {
   } else if (brake_valid) {
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", brake_bg, brake_img_alpha);
   } else {
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 30), 0.3f);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc_off", nvgRGBA(0, 0, 0, 50), 0.5f);
   }
 }
 
@@ -1746,6 +1746,7 @@ void ui_nvg_init(UIState *s) {
     {"brake", "../assets/addon/img/img_brake_disc.png"},
     {"accel", "../assets/addon/img/img_accel.png"},
     {"scc", "../assets/addon/img/img_scc.png"},
+    {"scc_off", "../assets/addon/img/img_scc_off.png"},
     {"autohold_warning", "../assets/addon/img/img_autohold_warning.png"},
     {"autohold_active", "../assets/addon/img/img_autohold_active.png"}, 
     {"lead_car_dist_0", "../assets/addon/img/car_dist_0.png"},
