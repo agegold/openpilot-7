@@ -234,7 +234,6 @@ struct CarState {
   aReqValue @53 :Float32;
   engineRpm @54 :Float32;
 
-  autoHold @54 : Int32;
   currentGear @55 :Float32;  
 
   struct TPMS {
