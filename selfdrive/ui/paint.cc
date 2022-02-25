@@ -560,7 +560,7 @@ static void ui_draw_vision_accel_brake(UIState *s) {
   } else if (brake_valid) {
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", brake_bg, brake_img_alpha);
   } else {
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc_off", nvgRGBA(200, 200, 200, 80), 1.0f);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc_off", nvgRGBA(150, 150, 150, 50), 1.0f);
   }
 }
 
