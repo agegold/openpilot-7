@@ -297,6 +297,7 @@ static void ui_draw_tpms(UIState *s)
     nvgFillColor(s->vg, get_tpms_color(rr));
     nvgText(s->vg, x + w + txt_x_gap, y + h - 15, get_tpms_text(rr).c_str(), NULL);
 }
+
 static void ui_draw_standstill(UIState *s) {
   const UIScene &scene = s->scene;
 
@@ -1382,7 +1383,18 @@ static void ui_draw_vision_header(UIState *s) {
   if (!s->scene.comma_stock_ui) {
     ui_draw_turn_signal(s);    
     bb_ui_draw_UI(s);
+
+    ui_draw_vision_scc_gap(s);
+    ui_draw_gear(s);
     ui_draw_tpms(s);
+    if (!s->scene.mapbox_running) {    
+      ui_draw_compass(s);
+      ui_draw_vision_autohold(s);
+      // ui_draw_vision_brake(s);
+      ui_draw_center_wheel(s);
+      ui_draw_vision_accel_brake(s);
+    }
+
     if (s->scene.controls_state.getEnabled()) {
       ui_draw_standstill(s);
       draw_safetysign(s);
@@ -1451,23 +1463,6 @@ static void ui_draw_blindspot_mon(UIState *s) {
     if(car_valid_right) {
       gradient_blindspot = nvgLinearGradient(s->vg, right_x + width, height, right_x , height / 2, COLOR_RED_ALPHA(car_valid_alpha1), COLOR_RED_ALPHA(car_valid_alpha2));
       ui_fill_rect(s->vg, rect_r, gradient_blindspot, 0);
-    }
-  }
-}
-
-static void ui_draw_vision_footer(UIState *s) {
-  if (s->scene.comma_stock_ui){
-    ui_draw_vision_face(s);
-   }
-  if (!s->scene.comma_stock_ui){    
-    ui_draw_vision_scc_gap(s);
-    ui_draw_gear(s);
-    if (!s->scene.mapbox_running) {    
-      ui_draw_compass(s);
-      ui_draw_vision_autohold(s);
-      // ui_draw_vision_brake(s);
-      ui_draw_center_wheel(s);
-      ui_draw_vision_accel_brake(s);
     }
   }
 }
@@ -1656,7 +1651,7 @@ static void ui_draw_vision(UIState *s) {
   // Set Speed, Current Speed, Status/Events
   ui_draw_vision_header(s);
   if ((*s->sm)["controlsState"].getControlsState().getAlertSize() == cereal::ControlsState::AlertSize::NONE) {
-    ui_draw_vision_footer(s);
+    ui_draw_vision_face(s);
     if (!scene->comma_stock_ui) {
       ui_draw_blindspot_mon(s);
     }
