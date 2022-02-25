@@ -1380,20 +1380,18 @@ static void ui_draw_vision_header(UIState *s) {
   }
   ui_draw_vision_speed(s);
   ui_draw_vision_event(s);
-  if (!s->scene.comma_stock_ui) {
+  if (!s->scene.comma_stock_ui && !s->scene.mapbox_running) {
     ui_draw_turn_signal(s);    
     bb_ui_draw_UI(s);
 
     ui_draw_vision_scc_gap(s);
     ui_draw_gear(s);
+    ui_draw_compass(s);
+    ui_draw_vision_autohold(s);
+    // ui_draw_vision_brake(s);
+    ui_draw_center_wheel(s);
+    ui_draw_vision_accel_brake(s);
     ui_draw_tpms(s);
-    if (!s->scene.mapbox_running) {    
-      ui_draw_compass(s);
-      ui_draw_vision_autohold(s);
-      // ui_draw_vision_brake(s);
-      ui_draw_center_wheel(s);
-      ui_draw_vision_accel_brake(s);
-    }
 
     if (s->scene.controls_state.getEnabled()) {
       ui_draw_standstill(s);
