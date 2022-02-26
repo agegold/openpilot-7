@@ -506,7 +506,9 @@ void pigeon_thread() {
 
   while (!do_exit && panda->connected) {
     bool need_reset = false;
-    bool ignition_local = ignition;
+    // bool ignition_local = ignition;
+    health_t pandaState = panda->get_state();
+    bool ignition_local = ((pandaState.ignition_line != 0) || (pandaState.ignition_can != 0));
     std::string recv = pigeon->receive();
 
     // Parse message header
@@ -551,7 +553,7 @@ void pigeon_thread() {
       for (const auto& [msg_cls, dt] : cls_max_dt) {
         last_recv_time[msg_cls] = t;
       }
-    } else if (!ignition_local && ignition_last && c2withCommaPowert) {
+    } else if (!ignition_local && ignition_last) {
       // power off on falling edge of ignition
       LOGD("powering off pigeon\n");
       pigeon->stop();
