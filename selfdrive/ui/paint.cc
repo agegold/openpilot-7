@@ -49,7 +49,9 @@ static void draw_chevron(UIState *s, float x, float y, float sz, NVGcolor fillCo
   float g_yo = sz/10;
   nvgBeginPath(s->vg);
   nvgMoveTo(s->vg, x+(sz*1.35)+g_xo, y+sz+g_yo);
-  nvgLineTo(s->vg, x, y-g_xo);
+  // nvgLineTo(s->vg, x, y-g_xo);
+  nvgLineTo(s->vg, x+((sz*1.35)+g_xo)/2, y-g_xo); //
+  nvgLineTo(s->vg, x-((sz*1.35)+g_xo)/2, y-g_xo); //
   nvgLineTo(s->vg, x-(sz*1.35)-g_xo, y+sz+g_yo);
   nvgClosePath(s->vg);
   nvgFillColor(s->vg, glowColor);
@@ -58,7 +60,9 @@ static void draw_chevron(UIState *s, float x, float y, float sz, NVGcolor fillCo
   // chevron
   nvgBeginPath(s->vg);
   nvgMoveTo(s->vg, x+(sz*1.25), y+sz);
-  nvgLineTo(s->vg, x, y);
+  // nvgLineTo(s->vg, x, y);
+  nvgLineTo(s->vg, x+((sz*1.25))/2, y);  //
+  nvgLineTo(s->vg, x-((sz*1.25))/2, y);  //
   nvgLineTo(s->vg, x-(sz*1.25), y+sz);
   nvgClosePath(s->vg);
   nvgFillColor(s->vg, fillColor);
@@ -121,11 +125,11 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   snprintf(radarDist, sizeof(radarDist), "%.0fm", radar_dist);
   if (s->scene.radarDistance < 149) {
-    draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
+    draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), nvgRGBA(201, 34, 49, fillAlpha));
     // ui_draw_text(s, x, y + sz/1.5f, "R", 60, COLOR_WHITE, "sans-bold");
-    ui_draw_text(s, x, y + sz/1.5f, radarDist, 120, COLOR_WHITE, "sans-bold");
+    ui_draw_text(s, x, y + sz/1.5f, radarDist, 80, COLOR_WHITE, "sans-bold");
   } else {
-    draw_chevron(s, x, y, sz, nvgRGBA(165, 255, 135, fillAlpha), COLOR_GREEN);
+    draw_chevron(s, x, y, sz, nvgRGBA(165, 255, 135, fillAlpha), nvgRGBA(165, 255, 135, fillAlpha));
     ui_draw_text(s, x, y + sz/1.5f, "CAM", 80, COLOR_BLACK, "sans-bold");
   }
 }
