@@ -115,7 +115,7 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
   float radar_dist = s->scene.radarDistance;
   // const std::string radarDist_str = std::to_string((int)std::nearbyint(radar_dist));
   // ui_draw_text(s, rect.centerX(), bdr_s+165, radarDist_str.c_str(), 48 * 2.5, COLOR_WHITE, "sans-bold");
-  float sz = std::clamp((25 * 60) / (d_rel / 3 + 30), 15.0f, 30.0f) * 2.35;
+  float sz = std::clamp((25 * 80) / (d_rel / 3 + 30), 15.0f, 30.0f) * 2.35;
   x = std::clamp(x, 0.f, s->fb_w - sz / 2);
   y = std::fmin(s->fb_h - sz * .6, y);
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
@@ -126,7 +126,7 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
     ui_draw_text(s, x, y + sz/1.5f, radarDist, 120, COLOR_WHITE, "sans-bold");
   } else {
     draw_chevron(s, x, y, sz, nvgRGBA(165, 255, 135, fillAlpha), COLOR_GREEN);
-    ui_draw_text(s, x, y + sz/1.5f, "C", 60, COLOR_BLACK, "sans-bold");
+    ui_draw_text(s, x, y + sz/1.5f, "CAM", 100, COLOR_BLACK, "sans-bold");
   }
 }
 
