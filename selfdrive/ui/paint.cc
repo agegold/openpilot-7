@@ -1786,9 +1786,9 @@ void ui_nvg_init(UIState *s) {
     {"gear_D", "../assets/addon/img/gearD.png"},
     {"gear_X", "../assets/addon/img/gearX.png"},
     {"gear_BG", "../assets/addon/img/gearBG.png"},    
-    {"turn_signal_l", "../assets/images/turn_signal_l.png"},
-    {"turn_signal_r", "../assets/images/turn_signal_r.png"},    
-    {"tire_pressure", "../assets/images/img_tire_pressure.png"},
+    {"turn_signal_l", "../assets/addon/img/turn_signal_l.png"},
+    {"turn_signal_r", "../assets/addon/img/turn_signal_r.png"},    
+    {"tire_pressure", "../assets/addon/img/img_tire_pressure.png"},
     
   };
   for (auto [name, file] : images) {
