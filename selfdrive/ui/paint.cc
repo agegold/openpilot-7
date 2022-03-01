@@ -494,9 +494,12 @@ static void ui_draw_vision_face(UIState *s) {
   const int center_x = radius + bdr_s;
   const int center_y = 1080 - 85 - 30;
   if (!s->scene.comma_stock_ui) {
-    ui_draw_circle_image(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
+    // ui_draw_circle_image(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
+    ui_draw_circle_image_rotation(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", nvgRGBA(0, 0, 0, 80), 1.0f);
+
   } else {
-    ui_draw_circle_image(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
+    // ui_draw_circle_image(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", nvgRGBA(0, 0, 0, 80), 1.0f);
   }
 }
 
@@ -556,18 +559,18 @@ static void ui_draw_vision_accel_brake(UIState *s) {
   bool accel_valid = s->scene.gasPress;
   bool brake_valid = s->scene.brakePress;
   bool cruise_valid = s->scene.cruiseAccStatus;
-  float brake_img_alpha = brake_valid ? 0.9f : 0.15f;
-  float brake_bg_alpha = brake_valid ? 0.3f : 0.1f;
-  NVGcolor brake_bg = nvgRGBA(0, 0, 0, (255 * brake_bg_alpha));
-  float accel_img_alpha = accel_valid ? 0.9f : 0.15f;
-  float accel_bg_alpha = accel_valid ? 0.3f : 0.1f;
-  NVGcolor accel_bg = nvgRGBA(0, 0, 0, (255 * accel_bg_alpha));
+  // float brake_img_alpha = brake_valid ? 0.9f : 0.15f;
+  // float brake_bg_alpha = brake_valid ? 0.3f : 0.1f;
+  // NVGcolor brake_bg = nvgRGBA(0, 0, 0, (255 * brake_bg_alpha));
+  // float accel_img_alpha = accel_valid ? 0.9f : 0.15f;
+  // float accel_bg_alpha = accel_valid ? 0.3f : 0.1f;
+  // NVGcolor accel_bg = nvgRGBA(0, 0, 0, (255 * accel_bg_alpha));
   if (cruise_valid && !accel_valid && !brake_valid) {
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc", nvgRGBA(0, 0, 0, 80), 1.0f);
   } else if (accel_valid) {  
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "accel", accel_bg, accel_img_alpha);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "accel", nvgRGBA(0, 0, 0, 80), 1.0f); //accel_bg, accel_img_alpha);
   } else if (brake_valid) {
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", brake_bg, brake_img_alpha);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, "brake", nvgRGBA(0, 0, 0, 80), 1.0f); //brake_bg, brake_img_alpha);
   } else {
     ui_draw_circle_image_rotation(s, center_x, center_y, radius, "scc_off", nvgRGBA(50, 50, 50, 50), 1.0f);
   }
