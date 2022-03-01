@@ -125,7 +125,7 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   snprintf(radarDist, sizeof(radarDist), "%.0fm", radar_dist);
   if (s->scene.radarDistance < 149) {
-    draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
+    draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), COLOR_GREY);
     // ui_draw_text(s, x, y + sz/1.5f, "R", 60, COLOR_WHITE, "sans-bold");
     ui_draw_text(s, x, y + sz/1.5f, radarDist, 80, COLOR_WHITE, "sans-bold");
   } else {
@@ -490,8 +490,11 @@ static void ui_draw_compass(UIState *s) {
 
 static void ui_draw_vision_face(UIState *s) {
   const int radius = 85;
-  const int center_x = radius + bdr_s + (radius*2 + 10) * 3 + 10;
+  const int center_x = radius + bdr_s;
   const int center_y = 1080 - 85 - 30;
+  if (!s->scene.comma_stock_ui) {
+    center_x = center_x + (radius*2 + 10) * 3 + 10; 
+  }
   ui_draw_circle_image(s, center_x, center_y, radius, "driver_face", s->scene.dm_active);
 }
 
