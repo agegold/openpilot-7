@@ -493,9 +493,10 @@ static void ui_draw_vision_face(UIState *s) {
   const int center_x = radius + bdr_s;
   const int center_y = 1080 - 85 - 30;
   if (!s->scene.comma_stock_ui) {
-    center_x = center_x + (radius*2 + 10) * 3 + 10; 
+    ui_draw_circle_image(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
+  } else {
+    ui_draw_circle_image(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
   }
-  ui_draw_circle_image(s, center_x, center_y, radius, "driver_face", s->scene.dm_active);
 }
 
 static void ui_draw_vision_autohold(UIState *s) {
@@ -1755,6 +1756,7 @@ void ui_nvg_init(UIState *s) {
     {"wheel", "../assets/img_chffr_wheel.png"},
     {"center_wheel", "../assets/img_center_wheel.png"},
     {"driver_face", "../assets/img_driver_face.png"},
+    {"driver_face_not", "../assets/img_driver_face_not.png"},
     {"speed_S30", "../assets/addon/img/img_S30_speedahead.png"},
     {"speed_bump", "../assets/addon/img/img_speed_bump.png"},   
     {"bus_only", "../assets/addon/img/img_bus_only.png"},
