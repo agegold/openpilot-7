@@ -71,9 +71,9 @@ static void draw_chevron(UIState *s, float x, float y, float sz, NVGcolor fillCo
 
 //atom(conan)'s steering wheel
 static void ui_draw_circle_image_rotation(const UIState *s, int center_x, int center_y, int radius, const char *image, NVGcolor color, float img_alpha, float angleSteers = 0) {
-  // const int img_size = radius * 1.5;
+  const int img_size = radius * 1.5;
   float img_rotation =  angleSteers/180*3.141592;
-  int ct_pos = -radius; // * 0.75;
+  int ct_pos = -radius * 0.75;
 
   nvgBeginPath(s->vg);
   nvgCircle(s->vg, center_x, center_y + (bdr_s+7), radius);
@@ -85,7 +85,7 @@ static void ui_draw_circle_image_rotation(const UIState *s, int center_x, int ce
   nvgTranslate(s->vg, center_x, (center_y + (bdr_s*1.5)));
   nvgRotate(s->vg, -img_rotation);  
 
-  ui_draw_image(s, {ct_pos, ct_pos, radius, radius}, image, img_alpha);
+  ui_draw_image(s, {ct_pos, ct_pos, img_size, img_size}, image, img_alpha);
   nvgRestore(s->vg); 
 }
 
@@ -490,7 +490,7 @@ static void ui_draw_compass(UIState *s) {
 }
 
 static void ui_draw_vision_face(UIState *s) {
-  const int radius = 100;
+  const int radius = 85;
   const int center_x = radius + bdr_s;
   const int center_y = 1080 - 85 - 30;
   if (!s->scene.comma_stock_ui) {
@@ -506,7 +506,7 @@ static void ui_draw_vision_autohold(UIState *s) {
   int autohold = scene->car_state.getBrakeHold();
   if(autohold < 0)
     return;
-  const int radius = 100;
+  const int radius = 85;
   const int center_x = radius + bdr_s + (radius*2 + 10) * 3 + 10;
   const int center_y = 1080 - 85 - 30;
   float autohold_img_alpha = autohold > 0 ? 1.0f : 0.0f;
@@ -535,7 +535,7 @@ static void ui_draw_center_wheel(UIState *s) {
 }
 
 static void ui_draw_vision_accel_brake(UIState *s) {
-  const int radius = 100;
+  const int radius = 85;
   const int center_x = radius + bdr_s + (radius*2 + 10) * 6 + 50;
   const int center_y = 1080 - 85 - 30;
   bool accel_valid = s->scene.gasPress;
