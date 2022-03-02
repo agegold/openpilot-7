@@ -490,14 +490,15 @@ static void ui_draw_compass(UIState *s) {
 }
 
 static void ui_draw_vision_face(UIState *s) {
-  const int radius = 85;
+  const int radius = 100;
   const int center_x = radius + bdr_s;
   const int center_y = 1080 - 85 - 30;
   if (!s->scene.comma_stock_ui) {
-    ui_draw_circle_image(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
-
+    // ui_draw_circle_image(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
+    ui_draw_circle_image_rotation(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", nvgRGBA(0, 0, 0, 0), 1.0f);
   } else {
-    ui_draw_circle_image(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
+    // ui_draw_circle_image(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", nvgRGBA(0, 0, 0, 0), 1.0f);
   }
 }
 
