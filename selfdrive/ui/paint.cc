@@ -38,7 +38,7 @@ static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 
 static void ui_draw_text(const UIState *s, float x, float y, const char *string, float size, NVGcolor color, const char *font_name) {
   nvgFontFace(s->vg, font_name);
-  nvgFontSize(s->vg, size);
+  nvgFontSize(s->vg, size);. 
   nvgFillColor(s->vg, color);
   nvgText(s->vg, x, y, string, NULL);
 }
@@ -490,15 +490,15 @@ static void ui_draw_compass(UIState *s) {
 }
 
 static void ui_draw_vision_face(UIState *s) {
-  const int radius = 100;
+  const int radius = 85;
   const int center_x = radius + bdr_s;
   const int center_y = 1080 - 85 - 30;
   if (!s->scene.comma_stock_ui) {
     // ui_draw_circle_image(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
-    ui_draw_circle_image_rotation(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", nvgRGBA(0, 0, 0, 0), 1.0f);
+    ui_draw_circle_image_rotation(s, center_x + (radius*2 + 10) * 3 + 10, center_y, radius + 15, s->scene.dm_active ? "driver_face" : "driver_face_not", nvgRGBA(0, 0, 0, 0), 1.0f);
   } else {
     // ui_draw_circle_image(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", true);
-    ui_draw_circle_image_rotation(s, center_x, center_y, radius, s->scene.dm_active ? "driver_face" : "driver_face_not", nvgRGBA(0, 0, 0, 0), 1.0f);
+    ui_draw_circle_image_rotation(s, center_x, center_y, radius + 15, s->scene.dm_active ? "driver_face" : "driver_face_not", nvgRGBA(0, 0, 0, 0), 1.0f);
   }
 }
 
