@@ -71,21 +71,21 @@ static void draw_chevron(UIState *s, float x, float y, float sz, NVGcolor fillCo
 
 //atom(conan)'s steering wheel
 static void ui_draw_circle_image_rotation(const UIState *s, int center_x, int center_y, int radius, const char *image, NVGcolor color, float img_alpha, float angleSteers = 0) {
-  const int img_size = radius * 1.5;
+  // const int img_size = radius * 1.5;
   float img_rotation =  angleSteers/180*3.141592;
-  // int ct_pos = -radius * 0.75;
+  int ct_pos = -radius; // * 0.75;
 
   nvgBeginPath(s->vg);
   nvgCircle(s->vg, center_x, center_y + (bdr_s+7), radius);
   nvgFillColor(s->vg, color);
   nvgFill(s->vg);
+  //ui_draw_image(s, {center_x - (img_size / 2), center_y - (img_size / 2), img_size, img_size}, image, img_alpha);
 
   nvgSave( s->vg );
   nvgTranslate(s->vg, center_x, (center_y + (bdr_s*1.5)));
   nvgRotate(s->vg, -img_rotation);  
 
-  // ui_draw_image(s, {ct_pos, ct_pos, img_size, img_size}, image, img_alpha);
-  ui_draw_image(s, {center_x - int(img_size / 2), center_y - int(img_size / 2), img_size, img_size}, image, img_alpha);
+  ui_draw_image(s, {ct_pos, ct_pos, radius, radius}, image, img_alpha);
   nvgRestore(s->vg); 
 }
 
