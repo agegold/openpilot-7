@@ -126,9 +126,11 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
   snprintf(radarDist, sizeof(radarDist), "%.0fm", radar_dist);
   if (s->scene.radarDistance < 149) {
     if (d_rel < leadBuff) {
-      draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), COLOR_GREY);
+      draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), nvgRGBA(201, 34, 49, fillAlpha));
+    } else if (d_rel < 80) {
+      draw_chevron(s, x, y, sz, nvgRGBA(240, 160, 0, 200), nvgRGBA(240, 160, 0, 200));
     } else {
-      draw_chevron(s, x, y, sz, nvgRGBA(240, 160, 0, 200), COLOR_GREY);
+      draw_chevron(s, x, y, sz, nvgRGBA(0, 160, 0, 200), nvgRGBA(0, 160, 0, 200));
     }
     // ui_draw_text(s, x, y + sz/1.5f, "R", 60, COLOR_WHITE, "sans-bold");
     ui_draw_text(s, x, y + sz/1.5f, radarDist, 80, COLOR_WHITE, "sans-bold");
