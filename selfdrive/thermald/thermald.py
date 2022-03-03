@@ -12,7 +12,8 @@ import psutil
 import cereal.messaging as messaging
 from cereal import log
 from common.filter_simple import FirstOrderFilter
-from common.params import Params, ParamKeyType
+from common.numpy_fast import interp
+from common.params import Params
 from common.realtime import DT_TRML, sec_since_boot
 from common.dict_helpers import strip_deprecated_keys
 from selfdrive.controls.lib.alertmanager import set_offroad_alert
