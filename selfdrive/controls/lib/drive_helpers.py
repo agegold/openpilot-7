@@ -39,8 +39,8 @@ CRUISE_INTERVAL_SIGN = {
 
 
 class MPC_COST_LAT:
-  PATH = 1.5 #1.0
-  HEADING = 1.5 #1.0
+  PATH = 1.0 #1.0
+  HEADING = 1.0 #1.0
   STEER_RATE = 1.0
 
 
@@ -116,7 +116,7 @@ def get_lag_adjusted_curvature(CP, v_ego, psis, curvatures, curvature_rates):
   desired_curvature = current_curvature + 2 * curvature_diff_from_psi
 
   # max_curvature_rate = interp(v_ego, MAX_CURVATURE_RATE_SPEEDS, MAX_CURVATURE_RATES)
-  max_curvature_rate = interp(round(abs(current_curvature), 4), [0.01, 0.001], MAX_CURVATURE_RATES) # 현재 곡률에 따른 최대 변동 곡률 가변 적용
+  max_curvature_rate = interp(round(abs(current_curvature), 4), [0.03, 0.001], MAX_CURVATURE_RATES) # 현재 곡률에 따른 최대 변동 곡률 가변 적용
   safe_desired_curvature_rate = clip(desired_curvature_rate,
                                           -max_curvature_rate,
                                           max_curvature_rate)
