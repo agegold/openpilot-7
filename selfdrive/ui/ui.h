@@ -304,7 +304,7 @@ typedef struct UIScene {
     bool lanelessModeStatus;
 
     float vCurvature;
-    float curvatures[0]
+    float curvatures[0];
   } lateralPlan;
 
   struct _LiveNaviData
