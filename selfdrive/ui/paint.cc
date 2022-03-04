@@ -46,7 +46,7 @@ static void ui_draw_text(const UIState *s, float x, float y, const char *string,
 static void draw_chevron(UIState *s, float x, float y, float sz, NVGcolor fillColor, NVGcolor glowColor) {
   // glow
   float g_xo = sz/5;
-  float g_yo = sz/10;
+  // float g_yo = sz/10;
   nvgBeginPath(s->vg);
   nvgMoveTo(s->vg, x+(sz*1.35)+g_xo, y+15);
   // nvgLineTo(s->vg, x, y-g_xo);
