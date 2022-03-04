@@ -137,7 +137,7 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
   } else {
     // draw_chevron(s, x, y, sz, nvgRGBA(120, 120, 255, fillAlpha), COLOR_BLUE);
     // ui_draw_text(s, x, y + sz/1.5f, "CAM", 80, COLOR_WHITE, "sans-bold");
-    ui_draw_circle_image(s, x, y, sz, "custom_lead_vision", true);
+    ui_draw_circle_image_rotation(s, x, y, sz, "custom_lead_vision", nvgRGBA(0, 0, 0, 0), 0.7f, s->scene.bearingUblox);
   }
 }
 
