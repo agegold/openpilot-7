@@ -46,24 +46,24 @@ static void ui_draw_text(const UIState *s, float x, float y, const char *string,
 static void draw_chevron(UIState *s, float x, float y, float sz, NVGcolor fillColor, NVGcolor glowColor) {
   // glow
   float g_xo = sz/5;
-  float g_yo = sz/10;
+  // float g_yo = sz/10;
   nvgBeginPath(s->vg);
-  nvgMoveTo(s->vg, x+(sz*1.35)+g_xo, y+sz+g_yo+10);
+  nvgMoveTo(s->vg, x+(sz*1.35)+g_xo, y+15);
   // nvgLineTo(s->vg, x, y-g_xo);
-  nvgLineTo(s->vg, x+((sz*1.35)+g_xo)/2, y-g_xo+10); //
-  nvgLineTo(s->vg, x-((sz*1.35)+g_xo)/2, y-g_xo+10); //
-  nvgLineTo(s->vg, x-(sz*1.35)-g_xo, y+sz+g_yo+10);
+  nvgLineTo(s->vg, x+((sz*1.35)+g_xo)/2, y); //
+  nvgLineTo(s->vg, x-((sz*1.35)+g_xo)/2, y); //
+  nvgLineTo(s->vg, x-(sz*1.35)-g_xo, y+15);
   nvgClosePath(s->vg);
   nvgFillColor(s->vg, glowColor);
   nvgFill(s->vg);
 
   // chevron
   nvgBeginPath(s->vg);
-  nvgMoveTo(s->vg, x+(sz*1.25), y+sz+10);
+  nvgMoveTo(s->vg, x+(sz*1.25), y+15);
   // nvgLineTo(s->vg, x, y);
-  nvgLineTo(s->vg, x+((sz*1.25))/2, y+10);  //
-  nvgLineTo(s->vg, x-((sz*1.25))/2, y+10);  //
-  nvgLineTo(s->vg, x-(sz*1.25), y+sz+10);
+  nvgLineTo(s->vg, x+((sz*1.25))/2, y+5);  //
+  nvgLineTo(s->vg, x-((sz*1.25))/2, y+5);  //
+  nvgLineTo(s->vg, x-(sz*1.25), y+15);
   nvgClosePath(s->vg);
   nvgFillColor(s->vg, fillColor);
   nvgFill(s->vg);
@@ -101,8 +101,8 @@ static void ui_draw_circle_image(const UIState *s, int center_x, int center_y, i
 
 static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &lead_data, const vertex_data &vd) {
   // Draw lead car indicator
+  const float speed = std::max(0.0, (*s->sm)["carState"].getCarState().getVEgo()*(s->scene.is_metric ? 3.6 : 2.2369363));
   auto [x, y] = vd;
-
   float fillAlpha = 0;
   float speedBuff = 10.;
   float leadBuff = 40.;
@@ -119,15 +119,15 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
   float radar_dist = s->scene.radarDistance;
   // const std::string radarDist_str = std::to_string((int)std::nearbyint(radar_dist));
   // ui_draw_text(s, rect.centerX(), bdr_s+165, radarDist_str.c_str(), 48 * 2.5, COLOR_WHITE, "sans-bold");
-  float sz = std::clamp((25 * 120) / (d_rel / 3 + 30), 15.0f, 30.0f) * 2.35;
+  float sz = std::clamp((25 * 54) / (d_rel / 2 + 15), 20.0f, 90.0f) * 2.35;
   x = std::clamp(x, 0.f, s->fb_w - sz / 2);
   y = std::fmin(s->fb_h - sz * .6, y);
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   snprintf(radarDist, sizeof(radarDist), "%.0fm", radar_dist);
   if (s->scene.radarDistance < 149) {
-    if (d_rel < leadBuff) {
+    if (d_rel / speed < 0.5) {
       draw_chevron(s, x, y, sz, nvgRGBA(201, 34, 49, fillAlpha), nvgRGBA(201, 34, 49, fillAlpha));
-    } else if (d_rel < 80) {
+    } else if (d_rel / speed < 0.8) {
       draw_chevron(s, x, y, sz, nvgRGBA(240, 160, 0, 200), nvgRGBA(240, 160, 0, 200));
     } else {
       draw_chevron(s, x, y, sz, nvgRGBA(0, 160, 0, 200), nvgRGBA(0, 160, 0, 200));
