@@ -48,22 +48,22 @@ static void draw_chevron(UIState *s, float x, float y, float sz, NVGcolor fillCo
   float g_xo = sz/5;
   float g_yo = sz/10;
   nvgBeginPath(s->vg);
-  nvgMoveTo(s->vg, x+(sz*1.35)+g_xo, y+g_yo+10);
+  nvgMoveTo(s->vg, x+(sz*1.35)+g_xo, y+15);
   // nvgLineTo(s->vg, x, y-g_xo);
-  nvgLineTo(s->vg, x+((sz*1.35)+g_xo)/2, y-g_xo+10); //
-  nvgLineTo(s->vg, x-((sz*1.35)+g_xo)/2, y-g_xo+10); //
-  nvgLineTo(s->vg, x-(sz*1.35)-g_xo, y+g_yo+10);
+  nvgLineTo(s->vg, x+((sz*1.35)+g_xo)/2, y); //
+  nvgLineTo(s->vg, x-((sz*1.35)+g_xo)/2, y); //
+  nvgLineTo(s->vg, x-(sz*1.35)-g_xo, y+15);
   nvgClosePath(s->vg);
   nvgFillColor(s->vg, glowColor);
   nvgFill(s->vg);
 
   // chevron
   nvgBeginPath(s->vg);
-  nvgMoveTo(s->vg, x+(sz*1.25), y+10);
+  nvgMoveTo(s->vg, x+(sz*1.25), y+15);
   // nvgLineTo(s->vg, x, y);
-  nvgLineTo(s->vg, x+((sz*1.25))/2, y+10);  //
-  nvgLineTo(s->vg, x-((sz*1.25))/2, y+10);  //
-  nvgLineTo(s->vg, x-(sz*1.25), y+10);
+  nvgLineTo(s->vg, x+((sz*1.25))/2, y+5);  //
+  nvgLineTo(s->vg, x-((sz*1.25))/2, y+5);  //
+  nvgLineTo(s->vg, x-(sz*1.25), y+15);
   nvgClosePath(s->vg);
   nvgFillColor(s->vg, fillColor);
   nvgFill(s->vg);
