@@ -379,8 +379,8 @@ static void ui_draw_debug(UIState *s) {
     ui_print(s, ui_viz_rx, ui_viz_ry+400, "SC:%.2f", scene.lateralPlan.steerRateCost);
     ui_print(s, ui_viz_rx, ui_viz_ry+440, "OS:%.2f", abs(scene.output_scale));
     // ui_print(s, ui_viz_rx, ui_viz_ry+480, "← %.2f  %.2f →", scene.lateralPlan.lProb, scene.lateralPlan.rProb);
-    ui_print(s, ui_viz_rx, ui_viz_ry+480, "%.2f  %.2f", scene.lateralPlan.lProb, scene.lateralPlan.rProb);
-    ui_print(s, ui_viz_rx, ui_viz_ry+520, "%.1f  %.1fm", scene.lateralPlan.dProb, scene.lateralPlan.laneWidth); // High dProb is more related to LaneLine, Low is Laneless
+    ui_print(s, ui_viz_rx, ui_viz_ry+480, "<-%4.1f  %4.1f->", scene.lateralPlan.lProb*100, scene.lateralPlan.rProb*100);
+    ui_print(s, ui_viz_rx, ui_viz_ry+520, "<>%4.1f  %3.1fm", scene.lateralPlan.dProb*100, scene.lateralPlan.laneWidth); // High dProb is more related to LaneLine, Low is Laneless
     // const std::string stateStrings[] = {"disabled", "preEnabled", "enabled", "softDisabling"};
     // ui_print(s, ui_viz_rx, ui_viz_ry+520, "%s", stateStrings[(int)(*s->sm)["controlsState"].getControlsState().getState()].c_str());
     //ui_print(s, ui_viz_rx, ui_viz_ry+800, "A:%.5f", scene.accel_sensor2);
@@ -395,7 +395,7 @@ static void ui_draw_debug(UIState *s) {
       ui_print(s, ui_viz_rx, ui_viz_ry+600, "DS:%.0f", (*s->sm)["carState"].getCarState().getSafetyDist());
     }
     if (scene.cal_view) {
-      ui_print(s, ui_viz_rx, ui_viz_ry+760, "%.1f  %.1f", scene.accel_prob[0], scene.accel_prob[1]);
+      ui_print(s, ui_viz_rx, ui_viz_ry+560, "BF:%.1f   RL:%.1f°", scene.accel_prob[0], scene.accel_prob[1]);
     }
     if (scene.osm_enabled) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+240, "SL:%.0f", scene.liveMapData.ospeedLimit);
