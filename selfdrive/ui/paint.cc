@@ -396,7 +396,10 @@ static void ui_draw_debug(UIState *s) {
     }
     if (scene.cal_view) {
       nvgFontSize(s->vg, 100);
-      ui_print(s, ui_viz_rx + 400, ui_viz_ry+440, "BF:%.1f   RL:%.1f°", scene.accel_prob[0], scene.accel_prob[1]);
+      nvgFillColor(s->vg, COLOR_YELLOW_ALPHA(125));
+      ui_print(s, ui_viz_rx + 450, ui_viz_ry+440, "BF:%.1f   RL:%.1f°", scene.accel_prob[0], scene.accel_prob[1]);
+      nvgFontSize(s->vg, 50);
+      nvgFillColor(s->vg, COLOR_WHITE_ALPHA(125));
     }
     if (scene.osm_enabled) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+240, "SL:%.0f", scene.liveMapData.ospeedLimit);
