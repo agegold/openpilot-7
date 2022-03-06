@@ -413,9 +413,9 @@ static void ui_draw_debug(UIState *s) {
     }
     if (scene.cal_view) {
       nvgFontSize(s->vg, 120);
-      nvgFillColor(s->vg, COLOR_YELLOW_ALPHA(200));
+      nvgFillColor(s->vg, COLOR_RED_ALPHA(200));
       nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-      ui_print(s, ui_viz_rx + 450, ui_viz_ry+440, "BF:%.1f   RL:%.1f°", scene.accel_prob[0], scene.accel_prob[1]);
+      ui_print(s, ui_viz_rx_center, ui_viz_ry+440, "BF:%.1f   RL:%.1f°", scene.accel_prob[0], scene.accel_prob[1]);
     }    
   }
 }
