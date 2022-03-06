@@ -18,7 +18,7 @@ from selfdrive.version import is_dirty
 MAX_CACHE_SIZE = 4e9 if "CI" in os.environ else 2e9
 CACHE_DIR = Path("/data/scons_cache" if TICI else "/tmp/scons_cache")
 
-TOTAL_SCONS_NODES = 2150
+TOTAL_SCONS_NODES = 2160
 MAX_BUILD_PROGRESS = 100
 PREBUILT = os.path.exists(os.path.join(BASEDIR, 'prebuilt'))
 
@@ -43,19 +43,19 @@ def build(spinner: Spinner, dirty: bool = False) -> None:
       if line is None:
         continue
       line = line.rstrip()
-
       prefix = b'progress: '
+      elapsed = time.time() - start
+      elapsed_time = str(datetime.timedelta(seconds=elapsed))
+      elapsed_out = elapsed_time[2:7]
+      i = 0
       if line.startswith(prefix):
         i = int(line[len(prefix):])
-        elapsed = time.time() - start
-        elapsed_time = str(datetime.timedelta(seconds=elapsed))
-        elapsed_out = elapsed_time[2:7]
-        scons_node = str(i) + " / " + str(TOTAL_SCONS_NODES)
-        str_out = "Elapsed: " + str(elapsed_out) + "            Nodes: " + str(scons_node)
-        spinner.update(str_out)
       elif len(line):
         compile_output.append(line)
         print(line.decode('utf8', 'replace'))
+      scons_node = str(i) + " / " + str(TOTAL_SCONS_NODES)
+      str_out = "Elapsed: " + str(elapsed_out) + "            Nodes: " + str(scons_node)
+      spinner.update(str_out)
     except Exception:
       pass
 
