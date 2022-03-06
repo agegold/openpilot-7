@@ -415,7 +415,7 @@ static void ui_draw_debug(UIState *s) {
       nvgFontSize(s->vg, 120);
       nvgFillColor(s->vg, COLOR_RED_ALPHA(200));
       nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-      ui_print(s, ui_viz_rx_center, ui_viz_ry+440, "BF:%.1f   RL:%.1f°", scene.accel_prob[0], scene.accel_prob[1]);
+      ui_print(s, ui_viz_rx_center, ui_viz_ry+600, "BF:%.1f   RL:%.1f°", scene.accel_prob[0], scene.accel_prob[1]);
     }    
   }
 }
@@ -1670,17 +1670,17 @@ static void ui_draw_grid(UIState *s) {
   nvgBeginPath(s->vg);
   nvgStrokeWidth(s->vg, 3);
   nvgStrokeColor(s->vg, color);
-  for (int i = 0; i < 8; i++) {
-    nvgMoveTo(s->vg, s->fb_w/2 + (i*120), 0);
-    nvgLineTo(s->vg, s->fb_w/2 + (i*120) , s->fb_h);
-    nvgMoveTo(s->vg, s->fb_w/2 - (i*120), 0);
-    nvgLineTo(s->vg, s->fb_w/2 - (i*120) , s->fb_h);
+  for (int i = 0; i < 6; i++) {
+    nvgMoveTo(s->vg, s->fb_w/2 + (i*160), 0);
+    nvgLineTo(s->vg, s->fb_w/2 + (i*160) , s->fb_h);
+    nvgMoveTo(s->vg, s->fb_w/2 - (i*160), 0);
+    nvgLineTo(s->vg, s->fb_w/2 - (i*160) , s->fb_h);
   }
-  for (int i = 0; i < 5; i++) {
-    nvgMoveTo(s->vg, 0, s->fb_h/2 + (i*108));
-    nvgLineTo(s->vg, s->fb_w, s->fb_h/2 + (i*108));
-    nvgMoveTo(s->vg, 0, s->fb_h/2 - (i*108));
-    nvgLineTo(s->vg, s->fb_w, s->fb_h/2 - (i*108));
+  for (int i = 0; i < 4; i++) {
+    nvgMoveTo(s->vg, 0, s->fb_h/2 + (i*240));
+    nvgLineTo(s->vg, s->fb_w, s->fb_h/2 + (i*240));
+    nvgMoveTo(s->vg, 0, s->fb_h/2 - (i*240));
+    nvgLineTo(s->vg, s->fb_w, s->fb_h/2 - (i*240));
   }
   nvgStroke(s->vg);
 }
