@@ -238,7 +238,7 @@ static void ui_draw_world(UIState *s) {
   nvgResetScissor(s->vg);
 }
 
-TPMS code added from Neokii
+//  TPMS code added from Neokii
 static NVGcolor get_tpms_color(float tpms) {
     if(tpms < 30 || tpms > 45) // N/A
         return nvgRGBA(255, 0, 0, 200);
