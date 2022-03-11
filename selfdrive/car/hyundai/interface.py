@@ -113,9 +113,8 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpV = [0.1, PidKp]
       ret.lateralTuning.pid.kiBP = [0., 9.]
       ret.lateralTuning.pid.kiV = [0.01, PidKi]
-      ret.lateralTuning.pid.kdBP = [0., 9.]
-      ret.lateralTuning.pid.kdV = [0.1, PidKd]
-      ret.lateralTuning.pid.kf = 1. # !!! ONLY for sigmoid feedforward !!!      
+      ret.lateralTuning.pid.kdBP = [0.]
+      ret.lateralTuning.pid.kdV = [PidKd]
     elif lat_control_method == 1:
       ret.lateralTuning.init('indi')
       ret.lateralTuning.indi.innerLoopGainBP = [0.]
