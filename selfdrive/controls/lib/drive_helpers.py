@@ -2,7 +2,7 @@ import math
 from cereal import car
 from common.numpy_fast import clip, interp
 from common.realtime import DT_MDL
-from selfdrive.config import Conversions as CV
+from common.conversions import Conversions as CV
 from selfdrive.modeld.constants import T_IDXS
 from common.params import Params
 from decimal import Decimal
@@ -61,7 +61,7 @@ def update_v_cruise(v_cruise_kph, buttonEvents, button_timers, enabled, metric):
   long_press = False
   button_type = None
 
-  v_cruise_delta = 1. if metric else 1.609344
+  v_cruise_delta = 1. if metric else CV.MPH_TO_KPH
 
   for b in buttonEvents:
     if b.type.raw in button_timers and not b.pressed:
