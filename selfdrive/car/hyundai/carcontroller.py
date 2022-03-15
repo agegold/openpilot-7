@@ -322,7 +322,7 @@ class CarController():
     if pcm_cancel_cmd and self.longcontrol:
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL, clu11_speed, CS.CP.sccBus))
 
-    차간거리를 주행속도에 맞춰 변환하기
+    # 차간거리를 주행속도에 맞춰 변환하기
     if self.opkr_drivingcruisegap_auto_adj :
       if CS.acc_active and not CS.out.gasPressed and not CS.out.brakePressed:
         if (CS.out.vEgo * CV.MS_TO_KPH) >= 85: # 시속 85킬로 이상 GAP_DIST 4칸 유지
