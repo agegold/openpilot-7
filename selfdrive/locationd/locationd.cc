@@ -195,14 +195,6 @@ VectorXd Localizer::get_stdev() {
   return this->kf->get_P().diagonal().array().sqrt();
 }
 
-VectorXd Localizer::get_state() {
-  return this->kf->get_x();
-}
-
-VectorXd Localizer::get_stdev() {
-  return this->kf->get_P().diagonal().array().sqrt();
-}
-
 void Localizer::handle_sensors(double current_time, const capnp::List<cereal::SensorEventData, capnp::Kind::STRUCT>::Reader& log) {
   // TODO does not yet account for double sensor readings in the log
   for (int i = 0; i < log.size(); i++) {
@@ -465,16 +457,15 @@ void Localizer::handle_msg(const cereal::Event::Reader& log) {
 }
 
 kj::ArrayPtr<capnp::byte> Localizer::get_message_bytes(MessageBuilder& msg_builder, uint64_t logMonoTime,
-  bool inputsOK, bool sensorsOK, bool gpsOK, bool msgValid)
+  bool inputsOK, bool sensorsOK, bool gpsOK)
 {
   cereal::Event::Builder evt = msg_builder.initEvent();
   evt.setLogMonoTime(logMonoTime);
-  evt.setValid(msgValid);
+  evt.setValid(inputsOK);
   cereal::LiveLocationKalman::Builder liveLoc = evt.initLiveLocationKalman();
   this->build_live_location(liveLoc);
   liveLoc.setSensorsOK(sensorsOK);
   liveLoc.setGpsOK(gpsOK);
-  liveLoc.setInputsOK(inputsOK);
   return msg_builder.toBytes();
 }
 
@@ -506,21 +497,19 @@ int Localizer::locationd_thread() {
   SubMaster sm(service_list, nullptr, { "gpsLocationExternal" });
 
   uint64_t cnt = 0;
-  bool filterInitialized = false;
 
   while (!do_exit) {
     sm.update();
-    if (filterInitialized){
+    if (sm.allAliveAndValid()){
       for (const char* service : service_list) {
-        if (sm.updated(service) && sm.valid(service)){
+        if (sm.updated(service)){
           const cereal::Event::Reader log = sm[service];
           this->handle_msg(log);
         }
       }
-    } else {
-      filterInitialized = sm.allAliveAndValid();
     }
     
+
 
     if (sm.updated("cameraOdometry")) {
       uint64_t logMonoTime = sm["cameraOdometry"].getLogMonoTime();
@@ -529,7 +518,7 @@ int Localizer::locationd_thread() {
       bool gpsOK = this->isGpsOK();
 
       MessageBuilder msg_builder;
-      kj::ArrayPtr<capnp::byte> bytes = this->get_message_bytes(msg_builder, logMonoTime, inputsOK, sensorsOK, gpsOK, filterInitialized);
+      kj::ArrayPtr<capnp::byte> bytes = this->get_message_bytes(msg_builder, logMonoTime, inputsOK, sensorsOK, gpsOK);
       pm.send("liveLocationKalman", bytes.begin(), bytes.size());
 
       if (cnt % 1200 == 0 && gpsOK) {  // once a minute
