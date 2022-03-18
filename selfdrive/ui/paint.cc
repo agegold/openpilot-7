@@ -492,7 +492,7 @@ static void ui_draw_debug(UIState *s) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+360, "TSL:%.0f", scene.liveMapData.oturnSpeedLimit);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+400, "TSLED:%.0f", scene.liveMapData.oturnSpeedLimitEndDistance);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+440, "TSLS:%d", scene.liveMapData.oturnSpeedLimitSign);
-      ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+480, "%s", scene.liveMapData.ocurrentRoadName.c_str());
+      ui_draw_text(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+480, scene.liveMapData.ocurrentRoadName.c_str(), 32, COLOR_WHITE_ALPHA(125), "KaiGenGothicKR-Medium");
     }
     nvgFontSize(s->vg, 50);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
@@ -1859,6 +1859,9 @@ void ui_nvg_init(UIState *s) {
       {"sans-regular", "../assets/fonts/opensans_regular.ttf"},
       {"sans-semibold", "../assets/fonts/opensans_semibold.ttf"},
       {"sans-bold", "../assets/fonts/opensans_bold.ttf"},
+      {"KaiGenGothicKR-Normal", "../assets/addon/font/KaiGenGothicKR-Normal.ttf"},
+      {"KaiGenGothicKR-Medium", "../assets/addon/font/KaiGenGothicKR-Medium.ttf"},
+      {"KaiGenGothicKR-Bold", "../assets/addon/font/KaiGenGothicKR-Bold.ttf"},
   };
   for (auto [name, file] : fonts) {
     int font_id = nvgCreateFont(s->vg, name, file);
