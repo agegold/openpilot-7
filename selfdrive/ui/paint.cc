@@ -485,14 +485,14 @@ static void ui_draw_debug(UIState *s) {
       ui_print(s, ui_viz_rx, ui_viz_ry+560, "SL:%.0f", (*s->sm)["carState"].getCarState().getSafetySign());
       ui_print(s, ui_viz_rx, ui_viz_ry+600, "DS:%.0f", (*s->sm)["carState"].getCarState().getSafetyDist());
     }
-    nvgFontSize(s->vg, 50);
+    nvgFontSize(s->vg, 80);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     if (scene.lateralControlMethod == 0) {
-      ui_print(s, ui_viz_rx_center, bdr_s+295, "PID");
+      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "PID", 50, COLOR_YELLOW_ALPHA(200), "sans-bold");
     } else if (scene.lateralControlMethod == 1) {
-      ui_print(s, ui_viz_rx_center, bdr_s+295, "INDI");
+      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "INDI", 50, COLOR_YELLOW_ALPHA(200), "sans-bold");
     } else if (scene.lateralControlMethod == 2) {
-      ui_print(s, ui_viz_rx_center, bdr_s+295, "LQR");
+      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "LQR", 50, COLOR_YELLOW_ALPHA(200), "sans-bold");
     }
     if (scene.osm_enabled) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+240, "SL:%.0f", scene.liveMapData.ospeedLimit);
