@@ -716,10 +716,8 @@ TuningPanel::TuningPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(horizontal_line());
 
   layout->addWidget(new LabelControl("〓〓〓〓〓〓〓【 LONGCONTROL 】〓〓〓〓〓〓〓", ""));
-  layout->addWidget(new CustomTRToggle());
+  layout->addWidget(new DynamicTR());
   layout->addWidget(new CruiseGapTR());
-  layout->addWidget(new DynamicTRGap());
-  layout->addWidget(new DynamicTRBySpeed());
   layout->addWidget(new RadarLongHelperOption());
   layout->addWidget(new StoppingDistAdjToggle());
   layout->addWidget(new E2ELongToggle());
