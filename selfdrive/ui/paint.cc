@@ -502,6 +502,9 @@ static void ui_draw_debug(UIState *s) {
     } else if (scene.lateralControlMethod == 2) {
       ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "LQR", 60, COLOR_YELLOW_ALPHA(200), "sans-bold");
     }
+    if (scene.osm_enabled && !scene.mapbox_running) {  
+      ui_draw_text(s, ui_viz_rx_center, ui_viz_ry+760, scene.liveMapData.ocurrentRoadName.c_str(), 50, COLOR_YELLOW_ALPHA(200), "KaiGenGothicKR-Medium");
+    }
   }
   if (scene.cal_view) {
     nvgFontSize(s->vg, 120);
