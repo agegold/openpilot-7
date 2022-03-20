@@ -449,7 +449,7 @@ static void ui_draw_debug(UIState *s) {
   }
 
   
-  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(125));
+  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(150));
   if (scene.nDebugUi2) {
     //if (scene.gpsAccuracyUblox != 0.00) {
     //  nvgFontSize(s->vg, 34);
@@ -485,15 +485,6 @@ static void ui_draw_debug(UIState *s) {
       ui_print(s, ui_viz_rx, ui_viz_ry+560, "SL:%.0f", (*s->sm)["carState"].getCarState().getSafetySign());
       ui_print(s, ui_viz_rx, ui_viz_ry+600, "DS:%.0f", (*s->sm)["carState"].getCarState().getSafetyDist());
     }
-    nvgFontSize(s->vg, 80);
-    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-    if (scene.lateralControlMethod == 0) {
-      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "PID", 50, COLOR_YELLOW_ALPHA(200), "sans-bold");
-    } else if (scene.lateralControlMethod == 1) {
-      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "INDI", 50, COLOR_YELLOW_ALPHA(200), "sans-bold");
-    } else if (scene.lateralControlMethod == 2) {
-      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "LQR", 50, COLOR_YELLOW_ALPHA(200), "sans-bold");
-    }
     if (scene.osm_enabled) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+240, "SL:%.0f", scene.liveMapData.ospeedLimit);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+280, "SLA:%.0f", scene.liveMapData.ospeedLimitAhead);
@@ -502,6 +493,14 @@ static void ui_draw_debug(UIState *s) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+400, "TSLED:%.0f", scene.liveMapData.oturnSpeedLimitEndDistance);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+440, "TSLS:%d", scene.liveMapData.oturnSpeedLimitSign);
       ui_draw_text(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+480, scene.liveMapData.ocurrentRoadName.c_str(), 34, COLOR_WHITE_ALPHA(125), "KaiGenGothicKR-Medium");
+    }
+    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+    if (scene.lateralControlMethod == 0) {
+      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "PID", 60, COLOR_YELLOW_ALPHA(200), "sans-bold");
+    } else if (scene.lateralControlMethod == 1) {
+      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "INDI", 60, COLOR_YELLOW_ALPHA(200), "sans-bold");
+    } else if (scene.lateralControlMethod == 2) {
+      ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "LQR", 60, COLOR_YELLOW_ALPHA(200), "sans-bold");
     }
   }
   if (scene.cal_view) {
