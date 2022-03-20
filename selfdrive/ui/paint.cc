@@ -1561,10 +1561,10 @@ static void ui_draw_blindspot_mon(UIState *s) {
       if (scene.blindspot_blinkingrate < 0) scene.blindspot_blinkingrate = 120;
       if (scene.blindspot_blinkingrate >= 60) {
         car_valid_alpha1 = 230;
-        car_valid_alpha2 = 0;
+        car_valid_alpha2 = 30;
       } else {
-        car_valid_alpha1 = 50;
-        car_valid_alpha2 = 0;
+        car_valid_alpha1 = 80;
+        car_valid_alpha2 = 10;
       }
     } else {
       scene.blindspot_blinkingrate = 120;
