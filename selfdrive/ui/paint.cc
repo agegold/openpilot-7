@@ -470,8 +470,8 @@ static void ui_draw_debug(UIState *s) {
     ui_print(s, ui_viz_rx, ui_viz_ry+400, "SC:%.2f", scene.lateralPlan.steerRateCost);
     ui_print(s, ui_viz_rx, ui_viz_ry+440, "OS:%.2f", abs(scene.output_scale));
     // ui_print(s, ui_viz_rx, ui_viz_ry+480, "← %.2f  %.2f →", scene.lateralPlan.lProb, scene.lateralPlan.rProb);
-    ui_print(s, ui_viz_rx, ui_viz_ry+480, "<-%4.1f  %4.1f->", scene.lateralPlan.lProb*100, scene.lateralPlan.rProb*100);
-    ui_print(s, ui_viz_rx, ui_viz_ry+520, "<>%4.1f  %3.1fm", scene.lateralPlan.dProb*100, scene.lateralPlan.laneWidth); // High dProb is more related to LaneLine, Low is Laneless
+    ui_print(s, ui_viz_rx, ui_viz_ry+480, "%4.1f | %4.1f", scene.lateralPlan.lProb*100, scene.lateralPlan.rProb*100);
+    ui_print(s, ui_viz_rx, ui_viz_ry+520, "%4.1f / %3.1fm", scene.lateralPlan.dProb*100, scene.lateralPlan.laneWidth); // High dProb is more related to LaneLine, Low is Laneless
     // const std::string stateStrings[] = {"disabled", "preEnabled", "enabled", "softDisabling"};
     // ui_print(s, ui_viz_rx, ui_viz_ry+520, "%s", stateStrings[(int)(*s->sm)["controlsState"].getControlsState().getState()].c_str());
     //ui_print(s, ui_viz_rx, ui_viz_ry+800, "A:%.5f", scene.accel_sensor2);
@@ -492,7 +492,7 @@ static void ui_draw_debug(UIState *s) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+360, "TSL:%.0f", scene.liveMapData.oturnSpeedLimit);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+400, "TSLED:%.0f", scene.liveMapData.oturnSpeedLimitEndDistance);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+440, "TSLS:%d", scene.liveMapData.oturnSpeedLimitSign);
-      ui_draw_text(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+480, scene.liveMapData.ocurrentRoadName.c_str(), 34, COLOR_WHITE_ALPHA(125), "KaiGenGothicKR-Medium");
+      ui_draw_text(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+480, scene.liveMapData.ocurrentRoadName.c_str(), 34, COLOR_YELLOW_ALPHA(200), "KaiGenGothicKR-Medium");
     }
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     if (scene.lateralControlMethod == 0) {
