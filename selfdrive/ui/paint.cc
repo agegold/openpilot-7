@@ -492,7 +492,7 @@ static void ui_draw_debug(UIState *s) {
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+360, "TSL:%.0f", scene.liveMapData.oturnSpeedLimit);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+400, "TSLED:%.0f", scene.liveMapData.oturnSpeedLimitEndDistance);
       ui_print(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+440, "TSLS:%d", scene.liveMapData.oturnSpeedLimitSign);
-      ui_draw_text(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+480, scene.liveMapData.ocurrentRoadName.c_str(), 34, COLOR_WHITE_ALPHA(200), "KaiGenGothicKR-Medium");
+      // ui_draw_text(s, ui_viz_rx+(scene.mapbox_running ? 150:200), ui_viz_ry+480, scene.liveMapData.ocurrentRoadName.c_str(), 34, COLOR_WHITE_ALPHA(200), "KaiGenGothicKR-Medium");
     }
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     if (scene.lateralControlMethod == 0) {
@@ -503,7 +503,7 @@ static void ui_draw_debug(UIState *s) {
       ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "LQR", 60, COLOR_YELLOW_ALPHA(200), "sans-bold");
     }
     if (scene.osm_enabled && !scene.mapbox_running) {  
-      ui_draw_text(s, ui_viz_rx_center, ui_viz_ry+760, scene.liveMapData.ocurrentRoadName.c_str(), 50, COLOR_ORANGE_ALPHA(250), "KaiGenGothicKR-Medium");
+      ui_draw_text(s, ui_viz_rx_center, ui_viz_ry+700, scene.liveMapData.ocurrentRoadName.c_str(), 50, COLOR_ORANGE_ALPHA(250), "KaiGenGothicKR-Medium");
     }
   }
   if (scene.cal_view) {
