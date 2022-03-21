@@ -1862,13 +1862,6 @@ private:
   void refresh();
 };
 
-class OCurvSpeedUD : public AbstractControl {
-  Q_OBJECT
-
-public:
-  OCurvSpeedUD();
-};
-
 class GetOffAlert : public AbstractControl {
   Q_OBJECT
 
@@ -2038,13 +2031,6 @@ private:
   Params params;
 
   void refresh();
-};
-
-class OSMCustomSpeedLimitUD : public AbstractControl {
-  Q_OBJECT
-
-public:
-  OSMCustomSpeedLimitUD();
 };
 
 class DesiredCurvatureLimit : public AbstractControl {
