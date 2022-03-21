@@ -1814,13 +1814,6 @@ private:
   void refresh();
 };
 
-class VCurvSpeedUD : public AbstractControl {
-  Q_OBJECT
-
-public:
-  VCurvSpeedUD();
-};
-
 class OCurvSpeed : public AbstractControl {
   Q_OBJECT
 
@@ -1834,13 +1827,6 @@ private:
   Params params;
 
   void refresh();
-};
-
-class OCurvSpeedUD : public AbstractControl {
-  Q_OBJECT
-
-public:
-  OCurvSpeedUD();
 };
 
 class GetOffAlert : public AbstractControl {
@@ -2007,13 +1993,6 @@ private:
   void refresh();
 };
 
-class OSMCustomSpeedLimitUD : public AbstractControl {
-  Q_OBJECT
-
-public:
-  OSMCustomSpeedLimitUD();
-};
-
 class DesiredCurvatureLimit : public AbstractControl {
   Q_OBJECT
 
@@ -2036,6 +2015,36 @@ class DynamicTRBySpeed : public AbstractControl {
 
 public:
   DynamicTRBySpeed();
+
+private:
+  QPushButton btn;
+  QLineEdit edit1;
+  QLineEdit edit2;
+  Params params;
+
+  void refresh();
+};
+
+class LaneWidth : public AbstractControl {
+  Q_OBJECT
+
+public:
+  LaneWidth();
+
+private:
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
+  Params params;
+  
+  void refresh();
+};
+
+class SpeedLaneWidth : public AbstractControl {
+  Q_OBJECT
+
+public:
+  SpeedLaneWidth();
 
 private:
   QPushButton btn;
