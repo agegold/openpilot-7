@@ -503,7 +503,7 @@ static void ui_draw_debug(UIState *s) {
       ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "LQR", 60, COLOR_YELLOW_ALPHA(200), "sans-bold");
     }
     if (scene.osm_enabled && !scene.mapbox_running) {  
-      ui_draw_text(s, ui_viz_rx_center, ui_viz_ry+700, scene.liveMapData.ocurrentRoadName.c_str(), 50, COLOR_ORANGE_ALPHA(250), "KaiGenGothicKR-Medium");
+      ui_draw_text(s, ui_viz_rx_center, ui_viz_ry+760, scene.liveMapData.ocurrentRoadName.c_str(), 50, COLOR_BLACK_ALPHA(250), "KaiGenGothicKR-Medium");
     }
   }
   if (scene.cal_view) {
