@@ -5066,9 +5066,6 @@ void OCurvSpeed::refresh() {
   btn.setText("EDIT");
 }
 
-OCurvSpeedUD::OCurvSpeedUD() : AbstractControl("OSMCurvDecel([TSL] [TargetSpeed])", "Adjust the curve deceleration speed according to turn speed limit of OSM. (interpolation value)", "../assets/offroad/icon_shell.png") {
-}
-
 GetOffAlert::GetOffAlert() : AbstractControl("EON Detach Alert Sound", "Device alert you a alarm to detach the EON when ignition off.(NO Alert/KOR/ENG)", "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
@@ -5908,9 +5905,6 @@ void OSMCustomSpeedLimit::refresh() {
   edit1.setText(QString::fromStdString(strs1.toStdString()));
   edit2.setText(QString::fromStdString(strs2.toStdString()));
   btn.setText("EDIT");
-}
-
-OSMCustomSpeedLimitUD::OSMCustomSpeedLimitUD() : AbstractControl("OSMCustomSpeedLimit([SL] [TargetSpeed])", "Set the offset speed according to speed limit of OSM. (interpolation value)", "../assets/offroad/icon_shell.png") {
 }
 
 DesiredCurvatureLimit::DesiredCurvatureLimit() : AbstractControl("DesiredCurvatureLimit", "Adjust DisiredCurvatureLimit, Default is 0.05(DT_MDL), For HKG, maybe 1.0~2.0 is preferred from user's experience. If the steering digs into inside on intersection, upper the value. And then it will limit your scope of steering angle. In case of opposite situation, lower the value. this is multiplier of desired curvature rate not real limit value.", "../assets/offroad/icon_shell.png") {
