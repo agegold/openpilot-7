@@ -604,6 +604,9 @@ DrivingPanel::DrivingPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new AutoResCondition());
   layout->addWidget(new AutoResLimitTime());
   layout->addWidget(new AutoRESDelay());
+  layout->addWidget(new LaneWidth());
+  layout->addWidget(new SpeedLaneWidthUD());
+  layout->addWidget(new SpeedLaneWidth());
 }
 
 DeveloperPanel::DeveloperPanel(QWidget *parent) : QFrame(parent) {
@@ -719,6 +722,7 @@ TuningPanel::TuningPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new CustomTRToggle());
   layout->addWidget(new CruiseGapTR());
   layout->addWidget(new DynamicTRGap());
+  layout->addWidget(new DynamicTRUD());
   layout->addWidget(new DynamicTRBySpeed());
   layout->addWidget(new RadarLongHelperOption());
   layout->addWidget(new StoppingDistAdjToggle());

@@ -1682,6 +1682,13 @@ private:
   void refresh();
 };
 
+class DynamicTRUD : public AbstractControl {
+  Q_OBJECT
+
+public:
+  DynamicTRUD();
+};
+
 class LCTimingFactor : public AbstractControl {
   Q_OBJECT
 
@@ -1799,6 +1806,13 @@ private:
   void refresh();
 };
 
+class VCurvSpeedUD : public AbstractControl {
+  Q_OBJECT
+
+public:
+  VCurvSpeedUD();
+};
+
 class VCurvSpeed : public AbstractControl {
   Q_OBJECT
 
@@ -1814,11 +1828,11 @@ private:
   void refresh();
 };
 
-class VCurvSpeedUD : public AbstractControl {
+class OCurvSpeedUD : public AbstractControl {
   Q_OBJECT
 
 public:
-  VCurvSpeedUD();
+  OCurvSpeedUD();
 };
 
 class OCurvSpeed : public AbstractControl {
@@ -1992,6 +2006,13 @@ private:
   void refresh();
 };
 
+class OSMCustomSpeedLimitUD : public AbstractControl {
+  Q_OBJECT
+
+public:
+  OSMCustomSpeedLimitUD();
+};
+
 class OSMCustomSpeedLimit : public AbstractControl {
   Q_OBJECT
 
@@ -2036,6 +2057,43 @@ class DynamicTRBySpeed : public AbstractControl {
 
 public:
   DynamicTRBySpeed();
+
+private:
+  QPushButton btn;
+  QLineEdit edit1;
+  QLineEdit edit2;
+  Params params;
+
+  void refresh();
+};
+
+class LaneWidth : public AbstractControl {
+  Q_OBJECT
+
+public:
+  LaneWidth();
+
+private:
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
+  Params params;
+  
+  void refresh();
+};
+
+class SpeedLaneWidthUD : public AbstractControl {
+  Q_OBJECT
+
+public:
+  SpeedLaneWidthUD();
+};
+
+class SpeedLaneWidth : public AbstractControl {
+  Q_OBJECT
+
+public:
+  SpeedLaneWidth();
 
 private:
   QPushButton btn;
