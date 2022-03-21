@@ -641,7 +641,7 @@ static void ui_draw_center_wheel(UIState *s) {
 static void ui_draw_road(UIState *s) {
   const UIScene &scene = s->scene;
   const int width = 400;
-  const Rect rect = {s->fb_w/2 - width/2, 950, width, 80};  
+  const Rect rect = {s->fb_w/2 - width/2, 980, width, 80};  
 
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   ui_fill_rect(s->vg, rect, COLOR_BLACK_ALPHA(200), 30.);
