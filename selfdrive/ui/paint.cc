@@ -837,10 +837,7 @@ static void ui_draw_vision_event(UIState *s) {
     } else {
       ui_draw_circle_image_rotation(s, bg_wheel_x, bg_wheel_y+20, bg_wheel_size, "wheel", nvgRGBA(0x17, 0x33, 0x49, 0xc8), 1.0f, angleSteers);
     }
-  } else {
-    if (!s->scene.comma_stock_ui) ui_draw_gear(s);
-  }
-  if (!s->scene.comma_stock_ui) ui_draw_debug(s);
+  } 
 }
 
 static void ui_draw_turn_signal(UIState *s) { // Hoya modified with Neokii code
@@ -1511,10 +1508,10 @@ static void ui_draw_vision_header(UIState *s) {
     ui_draw_center_wheel(s);
     ui_draw_vision_accel_brake(s);
     ui_draw_tpms(s);
+    draw_safetysign(s);
 
     if (s->scene.controls_state.getEnabled()) {
       ui_draw_standstill(s);
-      draw_safetysign(s);
     }
     if (s->scene.navi_select == 0 || s->scene.navi_select == 1 || s->scene.mapbox_running) {
       draw_navi_button(s);
@@ -1522,6 +1519,8 @@ static void ui_draw_vision_header(UIState *s) {
     if (s->scene.end_to_end) {
       draw_laneless_button(s);
     }
+    
+    ui_draw_debug(s);
   }
 }
 
