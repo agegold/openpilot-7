@@ -623,7 +623,7 @@ static void ui_draw_vision_autohold(UIState *s) {
 static void ui_draw_center_wheel(UIState *s) {
   const int wheel_size = 200;
   const int wheel_x = 1920 / 2 - 20;
-  const int wheel_y = 1080 - 120;
+  const int wheel_y = 1080 - 40;
   const QColor &color = bg_colors[s->status];
   NVGcolor nvg_color = nvgRGBA(color.red(), color.green(), color.blue(), color.alpha());
   if (s->scene.controls_state.getEnabled() || s->scene.comma_stock_ui) {
@@ -635,20 +635,6 @@ static void ui_draw_center_wheel(UIState *s) {
     }
   } else {
     ui_draw_circle_image_rotation(s, wheel_x, wheel_y, wheel_size, "center_wheel", nvg_color, 0.7f);
-  }
-}
-
-static void ui_draw_road(UIState *s) {
-  const UIScene &scene = s->scene;
-  const int width = 400;
-  const Rect rect = {s->fb_w/2 - width/2, 980, width, 80};  
-
-  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-  ui_fill_rect(s->vg, rect, COLOR_BLACK_ALPHA(200), 30.);
-  ui_draw_rect(s->vg, rect, COLOR_WHITE_ALPHA(50), 0, 20.);
-
-  if (scene.osm_enabled) {  
-    ui_draw_text(s, rect.centerX(), rect.centerY(), scene.liveMapData.ocurrentRoadName.c_str(), 40, COLOR_YELLOW_ALPHA(250), "KaiGenGothicKR-Medium");
   }
 }
 
@@ -1530,8 +1516,6 @@ static void ui_draw_vision_header(UIState *s) {
       draw_laneless_button(s);
     }
     ui_draw_debug(s);
-    if (s->scene.osm_enabled) {
-      ui_draw_road(s);
     }
   }
 }
