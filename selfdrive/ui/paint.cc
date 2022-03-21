@@ -1516,7 +1516,6 @@ static void ui_draw_vision_header(UIState *s) {
       draw_laneless_button(s);
     }
     ui_draw_debug(s);
-    }
   }
 }
 
