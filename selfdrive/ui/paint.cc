@@ -502,9 +502,6 @@ static void ui_draw_debug(UIState *s) {
     } else if (scene.lateralControlMethod == 2) {
       ui_draw_text(s, ui_viz_rx_center, bdr_s+310, "LQR", 60, COLOR_YELLOW_ALPHA(200), "sans-bold");
     }
-    if (scene.osm_enabled && !scene.mapbox_running) {  
-      ui_draw_text(s, ui_viz_rx_center, ui_viz_ry+760, scene.liveMapData.ocurrentRoadName.c_str(), 50, COLOR_YELLOW_ALPHA(250), "KaiGenGothicKR-Medium");
-    }
   }
   if (scene.cal_view) {
     nvgFontSize(s->vg, 120);
@@ -626,7 +623,7 @@ static void ui_draw_vision_autohold(UIState *s) {
 static void ui_draw_center_wheel(UIState *s) {
   const int wheel_size = 200;
   const int wheel_x = 1920 / 2 - 20;
-  const int wheel_y = 1080 - 40;
+  const int wheel_y = 1080 - 140;
   const QColor &color = bg_colors[s->status];
   NVGcolor nvg_color = nvgRGBA(color.red(), color.green(), color.blue(), color.alpha());
   if (s->scene.controls_state.getEnabled() || s->scene.comma_stock_ui) {
@@ -639,6 +636,19 @@ static void ui_draw_center_wheel(UIState *s) {
   } else {
     ui_draw_circle_image_rotation(s, wheel_x, wheel_y, wheel_size, "center_wheel", nvg_color, 0.7f);
   }
+}
+
+static void ui_draw_road(UIState *s) {
+  const UIScene &scene = s->scene;
+  const int width = 400;
+  const Rect rect = {s->fb_w/2 - width/2, 950, width, 100};  
+
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+  ui_fill_rect(s->vg, rect, COLOR_BLACK_ALPHA(100), 30.);
+  ui_draw_rect(s->vg, rect, COLOR_WHITE_ALPHA(50), 10, 20.);
+
+  if (scene.osm_enabled) {  
+    ui_draw_text(s, rect.centerX(), rect.centerY(), scene.liveMapData.ocurrentRoadName.c_str(), 40, COLOR_YELLOW_ALPHA(250), "KaiGenGothicKR-Medium");
 }
 
 static void ui_draw_vision_accel_brake(UIState *s) {
@@ -1519,8 +1529,10 @@ static void ui_draw_vision_header(UIState *s) {
     if (s->scene.end_to_end) {
       draw_laneless_button(s);
     }
-    
     ui_draw_debug(s);
+    if (s->scene.osm_enabled) {
+      ui_draw_road(s);
+    }
   }
 }
 
@@ -1774,7 +1786,7 @@ static void ui_draw_auto_hold(UIState *s) {
   if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || s->scene.stand_still) && !s->scene.steer_wind_down && s->scene.car_state.getSteeringAngleDeg() < 90) {
     y_pos = 500;
   } else {
-    y_pos = 740;
+    y_pos = 740-140;
   }
   const int width = 500;
   const Rect rect = {s->fb_w/2 - width/2, y_pos, width, 145};
