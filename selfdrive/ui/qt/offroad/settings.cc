@@ -266,7 +266,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   gitCommitLbl = new LabelControl("Git Commit");
   osVersionLbl = new LabelControl("OS Version");
   versionLbl = new LabelControl("Fork");
-  lastUpdateLbl = new LabelControl("Last Updates Date", "", "");
+  lastUpdateLbl = new LabelControl("Last Updates Check Date", "", "");
   updateBtn = new ButtonControl("Check for Updates", "");
   connect(updateBtn, &ButtonControl::clicked, [=]() {
     if (params.getBool("IsOffroad")) {
