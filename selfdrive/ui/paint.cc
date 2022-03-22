@@ -1610,13 +1610,13 @@ void draw_top_text(UIState *s) {
   const std::string road_name = s->scene.liveMapData.ocurrentRoadName;
   std::string text_out = "";
   if (s->scene.top_text_view == 1) {
-    snprintf(now,sizeof(now),"%02d-%02d %s %02d:%02d:%02d", tm.tm_mon + 1, tm.tm_mday, dayofweek, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    snprintf(now,sizeof(now),"%02d/%02d %s %02d:%02d:%02d", tm.tm_mon + 1, tm.tm_mday, dayofweek, tm.tm_hour, tm.tm_min, tm.tm_sec);
     std::string str(now);
     text_out = str;
     rect_w = 650;
     rect_x = s->fb_w/2 - rect_w/2;
   } else if (s->scene.top_text_view == 2) {
-    snprintf(now,sizeof(now),"%02d-%02d %s", tm.tm_mon + 1, tm.tm_mday, dayofweek);
+    snprintf(now,sizeof(now),"%02d/%02d %s", tm.tm_mon + 1, tm.tm_mday, dayofweek);
     std::string str(now);
     text_out = str;
     rect_w = 400;
@@ -1628,13 +1628,13 @@ void draw_top_text(UIState *s) {
     rect_w = 300;
     rect_x = s->fb_w/2 - rect_w/2;
   } else if (s->scene.top_text_view == 4 && s->scene.osm_enabled) {
-    snprintf(now,sizeof(now),"%02d-%02d %s %02d:%02d:%02d ", tm.tm_mon + 1, tm.tm_mday, dayofweek, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    snprintf(now,sizeof(now),"%02d/%02d %s %02d:%02d:%02d ", tm.tm_mon + 1, tm.tm_mday, dayofweek, tm.tm_hour, tm.tm_min, tm.tm_sec);
     std::string str(now);
     text_out = road_name + "  " + str;
     rect_w = 1450; //1050
     rect_x = s->fb_w/2 - rect_w/2;
   } else if (s->scene.top_text_view == 5 && s->scene.osm_enabled) {
-    snprintf(now,sizeof(now),"%02d-%02d %s ", tm.tm_mon + 1, tm.tm_mday, dayofweek);
+    snprintf(now,sizeof(now),"%02d/%02d %s ", tm.tm_mon + 1, tm.tm_mday, dayofweek);
     std::string str(now);
     text_out = road_name + "  " + str;
     rect_w = 1100; //850;
