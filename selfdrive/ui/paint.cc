@@ -920,19 +920,31 @@ static int bb_ui_draw_measure(UIState *s, const char* bb_value, const char* bb_u
     int bb_valueFontSize, int bb_labelFontSize, int bb_uomFontSize, bool other)  {
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   if (other) {
+    int num_value = atoi(bb_value);
     nvgBeginPath(s->vg);
     nvgMoveTo(s->vg, bb_x-80, bb_y+90);
-    nvgLineTo(s->vg, bb_x+80, bb_y+20);
+    nvgLineTo(s->vg, bb_x+80, bb_y+32);
     nvgLineTo(s->vg, bb_x+80, bb_y+90);
     nvgLineTo(s->vg, bb_x-80, bb_y+90);
     nvgClosePath(s->vg);
     nvgStrokeWidth(s->vg, 1);
     nvgStrokeColor(s->vg, COLOR_WHITE_ALPHA(200));
     nvgStroke(s->vg);
+
+    nvgBeginPath(s->vg);
+    nvgMoveTo(s->vg, bb_x-80, bb_y+90);
+    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 6400)*0.025), bb_y+90-(fmin(num_value, 6400)*0.0090625));
+    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 6400)*0.025), bb_y+90);
+    nvgLineTo(s->vg, bb_x-80, bb_y+90);
+    nvgClosePath(s->vg);
+    NVGpaint rpm_gradient = nvgLinearGradient(s->vg, bb_x-80, bb_y+90, bb_x+80, bb_y+32, COLOR_GREEN_ALPHA(100), COLOR_RED_ALPHA(255));
+    nvgFillPaint(s->vg, rpm_gradient);
+    nvgFill(s->vg);
+
     //print label
     nvgFontFace(s->vg, "sans-regular");
     nvgFontSize(s->vg, bb_labelFontSize*2.5);
-    nvgFillColor(s->vg, bb_labelColor);
+    nvgFillColor(s->vg, bb_valueColor);
     nvgText(s->vg, bb_x, bb_y + (int)(bb_valueFontSize*2.5)+5 + (int)(bb_labelFontSize*2.5)+5, bb_label, NULL);
     //print uom
     if (strlen(bb_uom) > 0) {
@@ -1104,11 +1116,10 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
         value_fontSize, label_fontSize, uom_fontSize, false);
   }
   //engine rpm
-  // if (scene.batt_less && scene.engine_rpm > 1) {
-  if (true) {
+  if (scene.batt_less && scene.engine_rpm > 1) {
     //char val_str[16];
     char uom_str[6];
-    std::string engine_rpm_val = std::to_string(int(3000));
+    std::string engine_rpm_val = std::to_string(int(scene.engine_rpm));
     NVGcolor val_color = COLOR_WHITE_ALPHA(200);
     if(scene.engine_rpm > 3000) {
       val_color = nvgRGBA(255, 188, 3, 200);
