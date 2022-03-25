@@ -919,6 +919,7 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   vCurvature @35 :Float32;
   lanelessMode @36 :Bool;
   modelSpeed @37 :Float32;
+  totalCameraOffset @38 :Float32;
 
   enum Desire {
     none @0;
@@ -1414,6 +1415,7 @@ struct LiveMapData {
   lastGpsBearingDeg @17 :Float32;
   lastGpsAccuracy @18 :Float32;
   lastGpsBearingAccuracyDeg @19 :Float32;
+  roadCameraOffset @20 :Float32;
 }
 
 struct CameraOdometry {

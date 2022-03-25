@@ -2,7 +2,7 @@
 from cereal import car
 from panda import Panda
 from common.params import Params
-from selfdrive.config import Conversions as CV
+from common.conversions import Conversions as CV
 from selfdrive.car.hyundai.values import CAR, EV_CAR, HYBRID_CAR, Buttons, CarControllerParams
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint
 from selfdrive.car.interfaces import CarInterfaceBase
@@ -72,8 +72,8 @@ class CarInterface(CarInterfaceBase):
     ret.longitudinalTuning.kfV = [1., 1., 1., 1., 1., 1.]
 
     ret.stoppingControl = False
-    ret.vEgoStopping = 0.3  # 1.0, 0.5
-    ret.vEgoStarting = 0.3  # needs to be >= vEgoStopping to avoid state transition oscillation
+    ret.vEgoStopping = 0.5  # 1.0, 0.5
+    ret.vEgoStarting = 0.5  # needs to be >= vEgoStopping to avoid state transition oscillation
     ret.stopAccel = -0.5 # 0.0, -0.5    
     ret.stoppingDecelRate = 3.0 # 0.8, 0.2  # brake_travel/s while trying to stop
     

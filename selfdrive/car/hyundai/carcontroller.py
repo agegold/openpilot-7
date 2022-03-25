@@ -1,7 +1,7 @@
 from cereal import car, messaging
 from common.realtime import DT_CTRL
 from common.numpy_fast import clip, interp
-from selfdrive.config import Conversions as CV
+from common.conversions import Conversions as CV
 from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfahda_mfc, create_hda_mfc, \
                                              create_scc11, create_scc12, create_scc13, create_scc14, \
@@ -323,35 +323,35 @@ class CarController():
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL, clu11_speed, CS.CP.sccBus))
 
     # 차간거리를 주행속도에 맞춰 변환하기
-    # if self.opkr_drivingcruisegap_auto_adj :
-    #   if CS.acc_active and not CS.out.gasPressed and not CS.out.brakePressed:
-    #     if (CS.out.vEgo * CV.MS_TO_KPH) >= 85: # 시속 85킬로 이상 GAP_DIST 4칸 유지
-    #       self.cruise_gap_auto_switch_timer += 1
-    #       if self.cruise_gap_auto_switch_timer > 20 and (CS.cruiseGapSet != 4.0) :
-    #         can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST)) if not self.longcontrol \
-    #           else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST, clu11_speed, CS.CP.sccBus))
-    #         self.cruise_gap_auto_switch_timer = 0
-    #       if CS.cruiseGapSet == 4.0:
-    #         self.cruise_gap_auto_switch_timer = 0
-    #     elif (CS.out.vEgo * CV.MS_TO_KPH) >= 40 :# 시속 40킬로 이상 GAP_DIST 3칸 유지
-    #       self.cruise_gap_auto_switch_timer += 1
-    #       if self.cruise_gap_auto_switch_timer > 20 and (CS.cruiseGapSet != 3.0) :
-    #         can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST)) if not self.longcontrol \
-    #           else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST, clu11_speed, CS.CP.sccBus))
-    #         self.cruise_gap_auto_switch_timer = 0
-    #       if CS.cruiseGapSet == 3.0:
-    #         self.cruise_gap_auto_switch_timer = 0  
-    #     elif (CS.out.vEgo * CV.MS_TO_KPH) >= 20 :# 시속 20킬로 이상 GAP_DIST 2칸 유지지
-    #       self.cruise_gap_auto_switch_timer += 1
-    #       if self.cruise_gap_auto_switch_timer > 20 and (CS.cruiseGapSet != 2.0) :
-    #         can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST)) if not self.longcontrol \
-    #           else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST, clu11_speed, CS.CP.sccBus))
-    #         self.cruise_gap_auto_switch_timer = 0
-    #       if CS.cruiseGapSet == 2.0:
-    #         self.cruise_gap_auto_switch_timer = 0          
-    #     else:
-    #       self.cruise_gap_auto_switch_timer += 1 
-          # pass
+    if self.opkr_drivingcruisegap_auto_adj :
+      if CS.acc_active and not CS.out.gasPressed and not CS.out.brakePressed:
+        if (CS.out.vEgo * CV.MS_TO_KPH) >= 85: # 시속 85킬로 이상 GAP_DIST 4칸 유지
+          self.cruise_gap_auto_switch_timer += 1
+          if self.cruise_gap_auto_switch_timer > 20 and (CS.cruiseGapSet != 4.0) :
+            can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST)) if not self.longcontrol \
+              else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST, clu11_speed, CS.CP.sccBus))
+            self.cruise_gap_auto_switch_timer = 0
+          if CS.cruiseGapSet == 4.0:
+            self.cruise_gap_auto_switch_timer = 0
+        elif (CS.out.vEgo * CV.MS_TO_KPH) >= 40 :# 시속 40킬로 이상 GAP_DIST 3칸 유지
+          self.cruise_gap_auto_switch_timer += 1
+          if self.cruise_gap_auto_switch_timer > 20 and (CS.cruiseGapSet != 3.0) :
+            can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST)) if not self.longcontrol \
+              else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST, clu11_speed, CS.CP.sccBus))
+            self.cruise_gap_auto_switch_timer = 0
+          if CS.cruiseGapSet == 3.0:
+            self.cruise_gap_auto_switch_timer = 0  
+        elif (CS.out.vEgo * CV.MS_TO_KPH) >= 20 :# 시속 20킬로 이상 GAP_DIST 2칸 유지지
+          self.cruise_gap_auto_switch_timer += 1
+          if self.cruise_gap_auto_switch_timer > 20 and (CS.cruiseGapSet != 2.0) :
+            can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST)) if not self.longcontrol \
+              else can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.GAP_DIST, clu11_speed, CS.CP.sccBus))
+            self.cruise_gap_auto_switch_timer = 0
+          if CS.cruiseGapSet == 2.0:
+            self.cruise_gap_auto_switch_timer = 0          
+        else:
+          self.cruise_gap_auto_switch_timer += 1 
+          pass
     if CS.out.cruiseState.standstill:
       self.standstill_status = 1
       if self.opkr_autoresume:
@@ -366,7 +366,7 @@ class CarController():
           self.switch_timer -= 1
           self.standstill_fault_reduce_timer += 1
         # at least 0.1 sec delay after entering the standstill
-        elif 10 < self.standstill_fault_reduce_timer and CS.lead_distance != self.last_lead_distance:
+        elif 10 < self.standstill_fault_reduce_timer and CS.lead_distance != self.last_lead_distance and abs(CS.lead_distance - self.last_lead_distance) > 0.05:
           self.acc_standstill_timer = 0
           self.acc_standstill = False
           if self.standstill_resume_alt: # for D.Fyffe, code from neokii
@@ -678,8 +678,8 @@ class CarController():
             elif aReqValue > 0.0:
               stock_weight = interp(CS.lead_distance, [3.5, 8.0, 15.0], [0.2, 0.8, 1.0])
               accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
-            elif aReqValue < 0.0 and CS.lead_distance <= 4.3 and accel >= aReqValue and self.stopping_dist_adj_enabled:
-              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 5.0]))
+            elif aReqValue < 0.0 and CS.lead_distance <= 4.2 and accel >= aReqValue and self.stopping_dist_adj_enabled:
+              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 4.0]))
             elif aReqValue < 0.0 and lead_objspd < -15:
               accel = (aReqValue + accel) / 2
             elif aReqValue < 0.0 and self.stopping_dist_adj_enabled:

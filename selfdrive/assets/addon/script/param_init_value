@@ -81,7 +81,10 @@ CruiseGap1:10
 CruiseGap2:12
 CruiseGap3:14
 CruiseGap4:16
-DynamicTR:2
+DynamicTRGap:2
+DynamicTRSpd:0,20,40,60,110
+DynamicTRSet:1.2,1.3,1.4,1.5,1.6
+CustomTREnabled:0
 LCTimingFactorUD:1
 LCTimingFactor30:10
 LCTimingFactor60:20
@@ -105,6 +108,7 @@ OSMCustomSpeedLimitC:30,40,50,60,70,90
 OSMCustomSpeedLimitT:30,40,65,72,80,95
 StockNaviSpeedEnabled:0
 E2ELong:0
+OSMEnable:0
 OSMSpeedLimitEnable:0
 OPKRMapboxStyleSelect:0
 RESCountatStandstill:20
@@ -114,4 +118,7 @@ AutoRESDelay:0
 UseRadarTrack:0
 RadarDisable:0
 DesiredCurvatureLimit:5
-C2WithCommaPower:0
+LaneWidth:3.7
+SpdLaneWidthSpd:0,31
+SpdLaneWidthSet:2.8,3.5
+CloseToRoadEdge:0

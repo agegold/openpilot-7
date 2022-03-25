@@ -250,6 +250,7 @@ static void update_state(UIState *s) {
     scene.lateralPlan.steerRateCost = lp_data.getSteerRateCost();
     scene.lateralPlan.standstillElapsedTime = lp_data.getStandstillElapsedTime();
     scene.lateralPlan.lanelessModeStatus = lp_data.getLanelessMode();
+    scene.lateralPlan.totalCameraOffset = lp_data.getTotalCameraOffset();
   }
   // opkr
   if (sm.updated("liveNaviData")) {
@@ -271,6 +272,7 @@ static void update_state(UIState *s) {
     scene.liveMapData.oturnSpeedLimit = lmap_data.getTurnSpeedLimit();
     scene.liveMapData.oturnSpeedLimitEndDistance = lmap_data.getTurnSpeedLimitEndDistance();
     scene.liveMapData.oturnSpeedLimitSign = lmap_data.getTurnSpeedLimitSign();
+    scene.liveMapData.ocurrentRoadName = lmap_data.getCurrentRoadName();
   }
   if ((!scene.started || s->is_OpenpilotViewEnabled || scene.cal_view) && sm.updated("sensorEvents")) {
     for (auto sensor : sm["sensorEvents"].getSensorEvents()) {
@@ -378,13 +380,13 @@ static void update_status(UIState *s) {
       s->scene.navi_on_boot = true;
     }
   }
-  if (!s->scene.move_to_background && (s->sm->frame - s->scene.started_frame > 10*UI_FREQ)) {
+  if (!s->scene.move_to_background && (s->sm->frame - s->scene.started_frame > 5*UI_FREQ)) {
     if (params.getBool("OpkrRunNaviOnBoot") && params.getBool("OpkrMapEnable") && params.getBool("ControlsReady") && (params.get("CarParams").size() > 0)) {
       s->scene.move_to_background = true;
       s->scene.map_on_top = false;
       s->scene.map_on_overlay = true;
       system("am start --activity-task-on-home com.opkr.maphack/com.opkr.maphack.MainActivity");
-    } else if (s->sm->frame - s->scene.started_frame > 5*UI_FREQ) {
+    } else if (s->sm->frame - s->scene.started_frame > 2*UI_FREQ) {
       s->scene.move_to_background = true;
     }
   }
@@ -432,14 +434,13 @@ static void update_status(UIState *s) {
     s->scene.navi_select = std::stoi(params.get("OPKRNaviSelect"));
     s->scene.radar_long_helper = std::stoi(params.get("RadarLongHelper"));
     s->scene.live_tune_panel_enable = params.getBool("OpkrLiveTunePanelEnable");
-    s->scene.kr_date_show = params.getBool("KRDateShow");
-    s->scene.kr_time_show = params.getBool("KRTimeShow");
+    s->scene.top_text_view = std::stoi(params.get("TopTextView"));
     s->scene.steer_wind_down = params.getBool("SteerWindDown");
     s->scene.show_error = params.getBool("ShowError");
     s->scene.limitSCOffsetOption = params.getBool("OpkrSpeedLimitOffsetOption");
     s->scene.speedlimit_signtype = params.getBool("OpkrSpeedLimitSignType");
     s->scene.sl_decel_off = params.getBool("SpeedLimitDecelOff");
-    s->scene.osm_enabled = params.getBool("OSMSpeedLimitEnable") || std::stoi(params.get("CurvDecelOption")) == 1 || std::stoi(params.get("CurvDecelOption")) == 3;
+    s->scene.osm_enabled = params.getBool("OSMEnable") || params.getBool("OSMSpeedLimitEnable") || std::stoi(params.get("CurvDecelOption")) == 1 || std::stoi(params.get("CurvDecelOption")) == 3;
 
     if (s->scene.autoScreenOff > 0) {
       s->scene.nTime = s->scene.autoScreenOff * 60 * UI_FREQ;

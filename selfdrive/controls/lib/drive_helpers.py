@@ -2,7 +2,7 @@ import math
 from cereal import car
 from common.numpy_fast import clip, interp
 from common.realtime import DT_MDL
-from selfdrive.config import Conversions as CV
+from common.conversions import Conversions as CV
 from selfdrive.modeld.constants import T_IDXS
 from common.params import Params
 from decimal import Decimal
@@ -23,9 +23,8 @@ LON_MPC_N = 32
 CONTROL_N = 17
 CAR_ROTATION_RADIUS = 0.0
 
-# this corresponds to 80deg/s and 20deg/s steering angle in a toyota corolla
-MAX_CURVATURE_RATES = [0.03762194918267951, 0.003441203371932992] # [0.03, 0.005, 0.0001] # more curvature by hoya // 
-MAX_CURVATURE_RATE_SPEEDS = [0, 35] # [3., 20., 30.] # hoya 11/72/108km/h // 
+# EU guidelines
+MAX_LATERAL_JERK = 5.0
 
 CRUISE_LONG_PRESS = 50
 CRUISE_NEAREST_FUNC = {
@@ -61,7 +60,7 @@ def update_v_cruise(v_cruise_kph, buttonEvents, button_timers, enabled, metric):
   long_press = False
   button_type = None
 
-  v_cruise_delta = 1 if metric else 1.6
+  v_cruise_delta = 1. if metric else CV.MPH_TO_KPH
 
   for b in buttonEvents:
     if b.type.raw in button_timers and not b.pressed:
@@ -98,9 +97,9 @@ def initialize_v_cruise(v_ego, buttonEvents, v_cruise_last):
 
 def get_lag_adjusted_curvature(CP, v_ego, psis, curvatures, curvature_rates):
   if len(psis) != CONTROL_N:
-    psis = [0.0 for i in range(CONTROL_N)]
-    curvatures = [0.0 for i in range(CONTROL_N)]
-    curvature_rates = [0.0 for i in range(CONTROL_N)]
+    psis = [0.0]*CONTROL_N
+    curvatures = [0.0]*CONTROL_N
+    curvature_rates = [0.0]*CONTROL_N
 
   # TODO this needs more thought, use .2s extra for now to estimate other delays
   delay = max(0.01, CP.steerActuatorDelay)
@@ -115,12 +114,13 @@ def get_lag_adjusted_curvature(CP, v_ego, psis, curvatures, curvature_rates):
   curvature_diff_from_psi = psi / (max(v_ego, 1e-1) * delay) - current_curvature
   desired_curvature = current_curvature + 2 * curvature_diff_from_psi
 
-  max_curvature_rate = interp(v_ego, MAX_CURVATURE_RATE_SPEEDS, MAX_CURVATURE_RATES)
-  # max_curvature_rate = interp(round(abs(current_curvature), 4), [0.03, 0.0001], MAX_CURVATURE_RATES) # 현재 곡률에 따른 최대 변동 곡률 가변 적용
+  v_ego = max(v_ego, 0.1)
+  max_curvature_rate = MAX_LATERAL_JERK / (v_ego**2)
   safe_desired_curvature_rate = clip(desired_curvature_rate,
                                           -max_curvature_rate,
                                           max_curvature_rate)
   safe_desired_curvature = clip(desired_curvature,
                                      current_curvature - max_curvature_rate * DESIRED_CURVATURE_LIMIT,
                                      current_curvature + max_curvature_rate * DESIRED_CURVATURE_LIMIT)
+                                     
   return safe_desired_curvature, safe_desired_curvature_rate

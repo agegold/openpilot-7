@@ -5,7 +5,7 @@ from selfdrive.controls.lib.pid import LongPIDController
 from selfdrive.controls.lib.drive_helpers import CONTROL_N
 from selfdrive.modeld.constants import T_IDXS
 from selfdrive.car.hyundai.values import CAR
-from selfdrive.config import Conversions as CV
+from common.conversions import Conversions as CV
 from common.params import Params
 
 import common.log as trace1
@@ -119,7 +119,7 @@ class LongControl():
       if 1 < CS.radarDistance <= 149:
         stop = True if (dRel <= 3.5 and radarState.leadOne.status) else False
       else:
-        stop = True if (dRel < 5.5 and radarState.leadOne.status) else False
+        stop = True if (dRel < 6.0 and radarState.leadOne.status) else False
     else:
       stop = False
     self.long_control_state = long_control_state_trans(CP, active, self.long_control_state, CS.vEgo,
