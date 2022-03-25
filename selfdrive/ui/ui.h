@@ -195,7 +195,7 @@ typedef struct UIScene {
   bool standStill;
   int limitSpeedCamera;
   float limitSpeedCameraDist;
-  bool limitSCOffsetOption;
+  int limitSCOffsetOption;
   int mapSign;
   float vSetDis;
   bool cruiseAccStatus;
@@ -325,6 +325,7 @@ typedef struct UIScene {
     float oturnSpeedLimitEndDistance;
     int oturnSpeedLimitSign;
     std::string ocurrentRoadName;
+    bool onSpeedControl;
     //float turnSpeedLimitsAhead[16]; // List
     //float turnSpeedLimitsAheadDistances[16]; // List
     //int turnSpeedLimitsAheadSigns[16]; // List
