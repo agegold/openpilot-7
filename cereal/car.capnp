@@ -236,7 +236,7 @@ struct CarState {
   engineRpm @54 :Float32;
   ctrlSpeed @55 :Float32;
 
-  currentGear @55 :Float32;  
+  currentGear @56 :Float32;  
 
   struct TPMS {
     unit @0 :Int8;
