@@ -668,17 +668,7 @@ static void ui_draw_vision_maxspeed_org(UIState *s) {
   float maxspeed = round(s->scene.controls_state.getVCruise());
   float cruise_speed = round(s->scene.vSetDis);
   const bool is_cruise_set = maxspeed != 0 && maxspeed != SET_SPEED_NA;
-  if (s->scene.limitSCOffsetOption == 0) {
-    s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.limitSpeedCamera+s->scene.speed_lim_off)+1.5 < s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363));
-  } else if (s->scene.limitSCOffsetOption == 1) {
-    s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.limitSpeedCamera+round(s->scene.limitSpeedCamera*0.01*s->scene.speed_lim_off))+1.5 < s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363));
-  } else if (s->scene.limitSCOffsetOption == 2) {
-    if (s->scene.liveMapData.onSpeedControl) {
-      s->scene.is_speed_over_limit = true;
-    } else {
-      s->scene.is_speed_over_limit = false;
-    }
-  }
+  s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363)) > s->scene.ctrl_speed);
   //if (is_cruise_set && !s->scene.is_metric) { maxspeed *= 0.6225; }
 
   const Rect rect = {bdr_s, bdr_s, 184, 202};
@@ -737,18 +727,8 @@ static void ui_draw_vision_cruise_speed(UIState *s) {
   int limitspeedcamera = s->scene.limitSpeedCamera;
   //if (is_cruise_set && !s->scene.is_metric) { maxspeed *= 0.6225; }
   float cruise_speed = round(s->scene.vSetDis);
+  s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363)) > s->scene.ctrl_speed);
 
-  if (s->scene.limitSCOffsetOption == 0) {
-    s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.limitSpeedCamera+s->scene.speed_lim_off)+1.5 < s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363));
-  } else if (s->scene.limitSCOffsetOption == 1) {
-    s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.limitSpeedCamera+round(s->scene.limitSpeedCamera*0.01*s->scene.speed_lim_off))+1.5 < s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363));
-  } else if (s->scene.limitSCOffsetOption == 2) {
-    if (s->scene.liveMapData.onSpeedControl) {
-      s->scene.is_speed_over_limit = true;
-    } else {
-      s->scene.is_speed_over_limit = false;
-    }
-  }
   const Rect rect = {bdr_s, bdr_s, 184, 202};
 
   NVGcolor color = COLOR_GREY;
@@ -791,7 +771,7 @@ static void ui_draw_vision_speed(UIState *s) {
   UIScene &scene = s->scene;  
   NVGcolor val_color = COLOR_WHITE;
 
-  float act_accel = (!scene.longitudinal_control || scene.radar_long_helper == 2)?scene.a_req_value:0;
+  float act_accel = (!scene.longitudinal_control)?scene.a_req_value:scene.accel;
   float gas_opacity = act_accel*255>255?255:act_accel*255;
   float brake_opacity = abs(act_accel*175)>255?255:abs(act_accel*175);
 
@@ -933,11 +913,11 @@ static int bb_ui_draw_measure(UIState *s, const char* bb_value, const char* bb_u
 
     nvgBeginPath(s->vg);
     nvgMoveTo(s->vg, bb_x-80, bb_y+90);
-    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 6400)*0.025), bb_y+90-(fmin(num_value, 6400)*0.0090625));
-    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 6400)*0.025), bb_y+90);
+    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 5000)*0.032), bb_y+90-(fmin(num_value, 5000)*0.0116));
+    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 5000)*0.032), bb_y+90);
     nvgLineTo(s->vg, bb_x-80, bb_y+90);
     nvgClosePath(s->vg);
-    NVGpaint rpm_gradient = nvgLinearGradient(s->vg, bb_x-80, bb_y+90, bb_x+80, bb_y+32, COLOR_GREEN_ALPHA(100), COLOR_RED_ALPHA(255));
+    NVGpaint rpm_gradient = nvgLinearGradient(s->vg, bb_x-80, bb_y+90, bb_x+80, bb_y+32, COLOR_GREEN_ALPHA(80), COLOR_RED_ALPHA(255));
     nvgFillPaint(s->vg, rpm_gradient);
     nvgFill(s->vg);
 
