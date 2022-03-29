@@ -7,6 +7,8 @@ from selfdrive.modeld.constants import T_IDXS
 from common.params import Params
 from decimal import Decimal
 
+import common.MoveAvg as mvAvg
+
 # from chanhojung's idea, parameterized by opkr
 if Params().get("DesiredCurvatureLimit", encoding="utf8") is not None:
   DESIRED_CURVATURE_LIMIT = float(Decimal(Params().get("DesiredCurvatureLimit", encoding="utf8")) * Decimal('0.01'))
@@ -31,6 +33,8 @@ MAX_LATERAL_JERK = 5.0
 # MAX_LATERAL_JERK_SPEEDS = [0, 10*CV.KPH_TO_MS, 50*CV.KPH_TO_MS]
 STEER_ACTUATOR_DELAYS =[0.5, 0.3, 0.1]
 STEER_ACTUATOR_DELAY_SPEEDS = [10*CV.KPH_TO_MS, 50*CV.KPH_TO_MS, 100*CV.KPH_TO_MS]
+
+moveAvg = mvAvg.MoveAvg()
 
 CRUISE_LONG_PRESS = 50
 CRUISE_NEAREST_FUNC = {
@@ -114,7 +118,14 @@ def get_lag_adjusted_curvature(CP, v_ego, psis, curvatures, curvature_rates):
   delay = max(0.01, interp(v_ego, STEER_ACTUATOR_DELAY_SPEEDS, STEER_ACTUATOR_DELAYS))
   # LATERAL_JERK = interp(v_ego, MAX_LATERAL_JERK_SPEEDS, MAX_LATERAL_JERKS)
 
-  current_curvature = curvatures[0]
+  # current_curvature = curvatures[0]
+
+  if v_ego < 3:
+    #current_curvature = moveAvg.get_min(curvatures[0], 5)
+    current_curvature = moveAvg.get_avg(curvatures[0], 5)
+  else:
+    current_curvature = curvatures[0]
+
   psi = interp(delay, T_IDXS[:CONTROL_N], psis)
   desired_curvature_rate = curvature_rates[0]
 
