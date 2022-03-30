@@ -706,6 +706,7 @@ class Controls:
 
     CC = car.CarControl.new_message()
     CC.enabled = self.enabled
+    CC.active = self.active
     CC.actuators = actuators
 
     # Orientation and angle rates can be useful for carcontroller
