@@ -29,8 +29,8 @@ CAR_ROTATION_RADIUS = 0.0
 MAX_LATERAL_JERK = 5.0
 
 # atom
-# MAX_LATERAL_JERKS = [0, 0.0000001, MAX_LATERAL_JERK]
-# MAX_LATERAL_JERK_SPEEDS = [0, 10*CV.KPH_TO_MS, 50*CV.KPH_TO_MS]
+# MAX_LATERAL_JERKS = [0, 0.000001, MAX_LATERAL_JERK]
+# MAX_LATERAL_JERK_SPEEDS = [0, 20*CV.KPH_TO_MS, 50*CV.KPH_TO_MS]
 STEER_ACTUATOR_DELAYS =[0.5, 0.3, 0.1]
 STEER_ACTUATOR_DELAY_SPEEDS = [10*CV.KPH_TO_MS, 50*CV.KPH_TO_MS, 100*CV.KPH_TO_MS]
 
@@ -122,7 +122,7 @@ def get_lag_adjusted_curvature(CP, v_ego, psis, curvatures, curvature_rates):
 
   if v_ego < 3:
     #current_curvature = moveAvg.get_min(curvatures[0], 5)
-    current_curvature = moveAvg.get_avg(curvatures[0], 5)
+    current_curvature = moveAvg.get_avg(curvatures[0], 3)
   else:
     current_curvature = curvatures[0]
 
