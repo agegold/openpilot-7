@@ -266,6 +266,9 @@ class CarController():
     if lkas_active or CS.out.steeringPressed:
       self.steer_wind_down = 0
 
+    if frame % 95 == 0 and abs(CS.out.steeringAngleDeg) >= 90: # test from Greg's comment
+      lkas_active = 0
+
     self.apply_steer_last = apply_steer
 
     if CS.cruise_active and CS.lead_distance > 149 and self.dRel < ((CS.out.vEgo * CV.MS_TO_KPH)+5) < 100 and \
@@ -679,14 +682,14 @@ class CarController():
               stock_weight = interp(CS.lead_distance, [3.5, 8.0, 15.0], [0.2, 0.8, 1.0])
               accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
             elif aReqValue < 0.0 and CS.lead_distance <= 4.2 and accel >= aReqValue and self.stopping_dist_adj_enabled:
-              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 4.0]))
+              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 3.0]))
             elif aReqValue < 0.0 and lead_objspd < -15:
               accel = (aReqValue + accel) / 2
             elif aReqValue < 0.0 and self.stopping_dist_adj_enabled:
-              stock_weight = interp(CS.lead_distance, [6.0, 10.0, 18.0, 25.0, 35.0], [0.1, 0.85, 1.0, 0.5, 1.0])
+              stock_weight = interp(CS.lead_distance, [6.0, 10.0, 18.0, 25.0, 32.0], [0.2, 0.85, 1.0, 0.4, 1.0])
               accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
             elif aReqValue < 0.0:
-              stock_weight = interp(CS.lead_distance, [6.0, 10.0, 18.0, 25.0, 35.0], [1.0, 0.85, 1.0, 0.5, 1.0])
+              stock_weight = interp(CS.lead_distance, [6.0, 10.0, 18.0, 25.0, 32.0], [1.0, 0.85, 1.0, 0.4, 1.0])
               accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
             else:
               stock_weight = 0.0
@@ -797,7 +800,7 @@ class CarController():
       can_sends.append(create_lfahda_mfc(self.packer, lkas_active))
 
     elif frame % 5 == 0 and self.car_fingerprint in FEATURES["send_hda_mfa"]:
-      can_sends.append(create_hda_mfc(self.packer, CS, enabled, left_lane, right_lane ))
+      can_sends.append(create_hda_mfc(self.packer, CS, enabled, left_lane, right_lane))
 
     new_actuators = actuators.copy()
     new_actuators.steer = apply_steer / self.p.STEER_MAX

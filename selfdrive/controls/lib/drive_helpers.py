@@ -4,6 +4,7 @@ from common.numpy_fast import clip, interp
 from common.realtime import DT_MDL
 from common.conversions import Conversions as CV
 from selfdrive.modeld.constants import T_IDXS
+
 from common.params import Params
 from decimal import Decimal
 
@@ -55,10 +56,6 @@ class MPC_COST_LAT:
 
 def rate_limit(new_value, last_value, dw_step, up_step):
   return clip(new_value, last_value + dw_step, last_value + up_step)
-
-
-def get_steer_max(CP, v_ego):
-  return interp(v_ego, CP.steerMaxBP, CP.steerMaxV)
 
 
 def update_v_cruise(v_cruise_kph, buttonEvents, button_timers, enabled, metric):
@@ -143,5 +140,4 @@ def get_lag_adjusted_curvature(CP, v_ego, psis, curvatures, curvature_rates):
   safe_desired_curvature = clip(desired_curvature,
                                      current_curvature - max_curvature_rate * DESIRED_CURVATURE_LIMIT,
                                      current_curvature + max_curvature_rate * DESIRED_CURVATURE_LIMIT)
-                                     
   return safe_desired_curvature, safe_desired_curvature_rate
