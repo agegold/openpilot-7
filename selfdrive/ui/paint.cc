@@ -163,8 +163,7 @@ static void ui_draw_vision_lane_lines(UIState *s) {
   const UIScene &scene = s->scene;
   NVGpaint track_bg;
   int steerOverride = scene.car_state.getSteeringPressed();
-  float steer_max_v = scene.steerMax_V - (1.5 * (scene.steerMax_V - 0.9));
-  int torque_scale = (int)fabs(255*(float)scene.output_scale*steer_max_v);
+  int torque_scale = (int)fabs(255*(float)scene.output_scale*0.9);
   int red_lvl = fmin(255, torque_scale);
   int green_lvl = fmin(255, 255-torque_scale);
 
@@ -268,7 +267,7 @@ static void ui_draw_tpms(UIState *s) {
     const int w = 55;
     const int h = 123;
     int x = 1920 - 160;
-    int y = 740;
+    int y = 920;
     int txt_x_gap = 5;
 
     const Rect rect = {x - w - 10, y - 5, w * 3 + 20, h + 10};
@@ -668,7 +667,11 @@ static void ui_draw_vision_maxspeed_org(UIState *s) {
   float maxspeed = round(s->scene.controls_state.getVCruise());
   float cruise_speed = round(s->scene.vSetDis);
   const bool is_cruise_set = maxspeed != 0 && maxspeed != SET_SPEED_NA;
-  s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363)) > s->scene.ctrl_speed);
+  if (s->scene.cruiseAccStatus) {
+    s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363))+1.5 > s->scene.ctrl_speed);
+  } else {
+    s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363))+1.5 > s->scene.limitSpeedCamera);
+  }
   //if (is_cruise_set && !s->scene.is_metric) { maxspeed *= 0.6225; }
 
   const Rect rect = {bdr_s, bdr_s, 184, 202};
@@ -727,7 +730,11 @@ static void ui_draw_vision_cruise_speed(UIState *s) {
   int limitspeedcamera = s->scene.limitSpeedCamera;
   //if (is_cruise_set && !s->scene.is_metric) { maxspeed *= 0.6225; }
   float cruise_speed = round(s->scene.vSetDis);
-  s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363)) > s->scene.ctrl_speed);
+  if (s->scene.cruiseAccStatus) {
+    s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363))+1.5 > s->scene.ctrl_speed);
+  } else {
+    s->scene.is_speed_over_limit = s->scene.limitSpeedCamera > 19 && ((s->scene.car_state.getVEgo() * (s->scene.is_metric ? 3.6 : 2.2369363))+1.5 > s->scene.limitSpeedCamera);
+  }
 
   const Rect rect = {bdr_s, bdr_s, 184, 202};
 
@@ -913,8 +920,8 @@ static int bb_ui_draw_measure(UIState *s, const char* bb_value, const char* bb_u
 
     nvgBeginPath(s->vg);
     nvgMoveTo(s->vg, bb_x-80, bb_y+90);
-    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 5000)*0.032), bb_y+90-(fmin(num_value, 5000)*0.0116));
-    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 5000)*0.032), bb_y+90);
+    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 3200)*0.05), bb_y+90-(fmin(num_value, 3200)*0.018125));
+    nvgLineTo(s->vg, bb_x-80+(fmin(num_value, 3200)*0.05), bb_y+90);
     nvgLineTo(s->vg, bb_x-80, bb_y+90);
     nvgClosePath(s->vg);
     NVGpaint rpm_gradient = nvgLinearGradient(s->vg, bb_x-80, bb_y+90, bb_x+80, bb_y+32, COLOR_GREEN_ALPHA(80), COLOR_RED_ALPHA(255));
@@ -1096,15 +1103,15 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
         value_fontSize, label_fontSize, uom_fontSize, false);
   }
   //engine rpm
-  if (scene.batt_less && scene.engine_rpm > 1) {
+  if (scene.engine_rpm > 1) {
     //char val_str[16];
     char uom_str[6];
     std::string engine_rpm_val = std::to_string(int(scene.engine_rpm));
     NVGcolor val_color = COLOR_WHITE_ALPHA(200);
-    if(scene.engine_rpm > 3000) {
+    if(scene.engine_rpm > 2500) {
       val_color = nvgRGBA(255, 188, 3, 200);
     }
-    if(scene.engine_rpm > 5000) {
+    if(scene.engine_rpm > 3500) {
       val_color = nvgRGBA(255, 0, 0, 200);
     }
     snprintf(uom_str, sizeof(uom_str), "rpm");
@@ -1780,7 +1787,7 @@ static void ui_draw_live_tune_panel(UIState *s) {
 
 static void ui_draw_auto_hold(UIState *s) {
   int y_pos = 0;
-  if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || s->scene.stand_still) && !s->scene.steer_wind_down && s->scene.car_state.getSteeringAngleDeg() < 90) {
+  if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || s->scene.stand_still) && s->scene.car_state.getSteeringAngleDeg() < 90) {
     y_pos = 500;
   } else {
     y_pos = 740-140;
