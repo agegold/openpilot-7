@@ -267,7 +267,7 @@ static void ui_draw_tpms(UIState *s) {
     const int w = 55;
     const int h = 123;
     int x = 1920 - 160;
-    int y = 740;
+    int y = 870;
     int txt_x_gap = 5;
 
     const Rect rect = {x - w - 10, y - 5, w * 3 + 20, h + 10};
@@ -1103,7 +1103,7 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
         value_fontSize, label_fontSize, uom_fontSize, false);
   }
   //engine rpm
-  if (scene.batt_less && scene.engine_rpm > 1) {
+  if (scene.engine_rpm > 1) {
     //char val_str[16];
     char uom_str[6];
     std::string engine_rpm_val = std::to_string(int(scene.engine_rpm));
